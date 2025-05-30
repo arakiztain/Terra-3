@@ -9,7 +9,7 @@ router.get("/",(req,res)=>{
 })
 
 router.use("/",authRouter);
-router.use("/user", isLoggedInAPI, userRouter);
+router.use("/user", /* isLoggedInAPI, */ userRouter);
 
 
 export default router
