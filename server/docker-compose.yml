@@ -10,7 +10,7 @@ services:
       - .:/app
       - node_modules:/app/node_modules
     networks:
-      - jantoki_network
+      - terraRipple_network
   mongo:
     image: mongo
     container_name: ${DB_HOST}
@@ -22,7 +22,7 @@ services:
     ports:
       - ${DB_PORT}:27017
     networks:
-      - jantoki_network
+      - terraRipple_network
     volumes:
       - mongo_data:/data/db
   
@@ -31,5 +31,5 @@ volumes:
   mongo_data:
 
 networks:
-  jantoki_network:
+  terraRipple_network:
     
