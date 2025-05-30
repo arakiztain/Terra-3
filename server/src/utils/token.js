@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET;
 
-// Token de sesión (para usuarios autenticados)
 function createToken(userData) {
   const token = jwt.sign(
     { _id: userData._id, role: userData.role },
@@ -14,7 +13,6 @@ function createToken(userData) {
   return token;
 }
 
-// Token de activación (solo email)
 function createActivationToken(email) {
   return jwt.sign({ email }, JWT_SECRET, { expiresIn: '24h' });
 }

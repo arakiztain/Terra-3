@@ -20,6 +20,9 @@ const login = async (req, res, next) => {
     if (!password) throw new UserPasswordNotProvided();
 
     const user = await userModel.findOne({ email });
+    if (!user || !user.isActive || !user.password) {
+    return res.status(401).json({ error: 'Usuario no activo o sin contraseña' });
+}
     if (!user) throw new EmailNotFound();
 
     const isMatch = await bcrypt.compare(password, user.password);

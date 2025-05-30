@@ -92,14 +92,11 @@ export const createUser = async (req, res) => {
   const { email } = req.body;
 
   try {
-    // Comprobamos si el usuario ya existe
     const existingUser = await userModel.findOne({ email });
     if (existingUser) return res.status(400).json({ error: "El usuario ya existe" });
 
-    // Generamos token de activación
     const token = createActivationToken(email);
 
-    // Creamos el usuario (sin contraseña aún)
     const newUser = new userModel({
       email,
       isActive: false,
@@ -107,13 +104,12 @@ export const createUser = async (req, res) => {
     });
     await newUser.save();
 
-    // Enviamos correo con enlace correcto (usando ruta con params)
-    const activationUrl = `http://localhost:3004/activate/${token}`;
+    const activationUrl = `http://localhost:${process.env.APP_PORT}/activate/${token}`;
     await sendEmail(
       email,
-      "Activa tu cuenta en Txuletak",
+      "Activa tu cuenta en Terra Ripple",
       `<p>Haz clic aquí para activar tu cuenta y establecer tu contraseña:</p>
-       <a href="${activationUrl}">${activationUrl}</a>`
+       <a href="${activationUrl}">Terra Ripple</a>`
     );
 
     res.status(201).json({ message: "Usuario creado y correo enviado" });
