@@ -2,8 +2,29 @@ import { useState } from "react";
 import styles from "./FeedbackForm.module.css";
 
 const FeedbackForm = () => {
-    const [browser, setBrowser] = useState("");
+    const [browser, setBrowser] = useState(getBrowser());
     const [otherBrowser, setOtherBrowser] = useState("");
+
+    function getBrowser() {
+        const ua = navigator.userAgent;
+
+        if (ua.includes("Firefox/")) return "Firefox";
+        if (ua.includes("Edg/")) return "Edge";
+        if (ua.includes("Chrome/") && !ua.includes("Edg/") && !ua.includes("OPR/")) return "Chrome";
+        if (ua.includes("Safari/") && !ua.includes("Chrome/")) return "Safari";
+        if (ua.includes("OPR/") || ua.includes("Opera")) return "Opera";
+        return "";
+    }
+
+    function getDeviceTypeWithFallback() {
+        const ua = navigator.userAgent;
+        const width = window.innerWidth;
+
+        if (/Tablet|iPad/.test(ua) || (width >= 600 && width <= 1024)) return "tablet";
+        if (/Mobi|Android|iPhone|BlackBerry|IEMobile|Silk/.test(ua) || width < 600) return "mobile";
+        return "desktop";
+    }
+
 
     return(
         <form className={styles.form}>
@@ -43,11 +64,11 @@ const FeedbackForm = () => {
 
         <label>
             Device:
-            <select name="device" required>
-            <option value="">Select...</option>
-            <option value="desktop">Desktop</option>
-            <option value="mobile">Mobile</option>
-            <option value="tablet">Tablet</option>
+            <select name="device" value={getDeviceTypeWithFallback()} required>
+                <option value="">Select...</option>
+                <option value="desktop">Desktop</option>
+                <option value="mobile">Mobile</option>
+                <option value="tablet">Tablet</option>
             </select>
         </label>
 

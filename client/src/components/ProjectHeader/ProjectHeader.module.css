@@ -8,9 +8,12 @@
 
 .projectLink{
     grid-column:3;
+    display:flex;
+    justify-content:center;
+    text-decoration: none;
 }
 
-.projectLinkButton{
+.projectLinkButton, .issueButton{
     border-radius:25px;
     border:3px solid #FFFFFF;
     color:#FFFFFF;
@@ -18,8 +21,19 @@
     font-size:1.1rem;
     font-weight:700;
     height:3rem;
-    width:10rem;
+    width:25rem;
     background-color:#0F0F0F;
+}
+
+.menuButton{
+    border-radius:25px;
+    border:3px solid #FFFFFF;
+    color:#0F0F0F;
+    background-color:#FFFFFF;
+    width:10rem;
+    margin-top:1.5rem;
+    font-size:1.1rem;
+    font-weight:700;
 }
 
 .issueButton{
@@ -28,4 +42,54 @@
 
 .menuButton{
     grid-column:5;
+}
+
+.menuContainer{
+    display:flex;
+    flex-direction:column;
+}
+
+.menuDropdown{
+    display:flex;
+    flex-direction:column;
+    background-color:#FFFFFF;
+    border-radius:25px;
+    border:3px solid #FFFFFF;
+    width:10rem;
+    margin-top:3rem;
+    right:1rem;
+    padding:1rem;
+}
+
+.menuProfile, .menuRecord, .menuContact, .menuGuide, .menuTerrahq, .menuSignout{
+    margin:0.45rem 0 0.45rem 0;
+    font-weight:700;
+    display:flex;
+    justify-content:center;
+    text-decoration: none;
+    color:#0F0F0F;
+}
+
+.menuProfile:hover{
+    color:#7CE55E;
+}
+
+.menuRecord:hover{
+    color:#F78BD8;
+}
+
+.menuContact:hover{
+    color:#FFB41D;
+}
+
+.menuGuide:hover{
+    color:#F96E43;
+}
+
+.menuTerrahq:hover{
+    color:#189B5C;
+}
+
+.menuSignout:hover{
+    color:#3D9DD8;
 }

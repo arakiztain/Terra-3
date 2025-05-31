@@ -12,7 +12,6 @@ const Login = () =>{
 
     return(
         <div className={styles.fullscreen}>
-
             <div className={styles.formGrid}>
                 <div className={styles.formWrapper}>
                     <form onSubmit={handleSubmit} className={styles.form}>
