@@ -1,0 +1,31 @@
+.projectHeader{
+    position:absolute;
+    top:0px;
+    display:grid;
+    grid-template-columns: 1fr 2fr 2fr 2fr 1fr;
+    width:100%;
+}
+
+.projectLink{
+    grid-column:3;
+}
+
+.projectLinkButton{
+    border-radius:25px;
+    border:3px solid #FFFFFF;
+    color:#FFFFFF;
+    margin-top:1.5rem;
+    font-size:1.1rem;
+    font-weight:700;
+    height:3rem;
+    width:10rem;
+    background-color:#0F0F0F;
+}
+
+.issueButton{
+    grid-column:4;
+}
+
+.menuButton{
+    grid-column:5;
+}
