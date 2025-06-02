@@ -9,13 +9,17 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
+        /* required: true, */
+        required: false,
         trim: true
     },
     role: {
         type: String,
         enum: ["admin","client"],
         default: "client"
+    },
+    activationToken: {
+         type: String
     },
     createdAt: {
         type: Date,
