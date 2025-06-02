@@ -15,26 +15,26 @@ const Login = () =>{
             <div className={styles.formGrid}>
                 <div className={styles.formWrapper}>
                     <form onSubmit={handleSubmit} className={styles.form}>
-                        <div class={styles.field}>
+                        <div className={styles.field}>
                             <input className={styles.input} placeholder="" type="email" name="email" required />
                             <label className={styles.label}>Email</label>
                         </div>
-                        <div class={styles.field}>
+                        <div className={styles.field}>
                             <input className={styles.input} placeholder="" type="password" name="password" required />
                             <label className={styles.label}>Password</label>
                         </div>
                         <button className={styles.formButton} type="submit">Log in!</button>
                     </form>
                 </div>
+                            <div className={styles.terraformBottom}>
+                <img src={icon4} className="icon" />
+                <img src={icon5} className="icon" />
+                <img src={icon6} className="icon" />
+            </div>
             </div>
             <div className={styles.lettering}>
-                <h1 class={styles.hello}>Hello</h1>
-                <h1 class={styles.again}>again!</h1>
-                <div className={styles.terraformBottom}>
-                    <img src={icon4} className="icon" />
-                    <img src={icon5} className="icon" />
-                    <img src={icon6} className="icon" />
-                </div>
+                <h1 className={styles.hello}>Hello</h1>
+                <h1 className={styles.again}>again!</h1>
             </div>
         </div>
     )
