@@ -105,11 +105,13 @@
   border-radius: 30px;
   height:3rem;
   width:10rem;
+  background-color:white;
+
 }
 
 .label {
   position: absolute;
-  top: 1.2rem;
+  top: 1.5rem;
   left: 1.2rem;
   color: #FFFFFF;
   font-size: 1rem;
