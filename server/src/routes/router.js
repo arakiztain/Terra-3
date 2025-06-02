@@ -8,8 +8,8 @@ router.get("/",(req,res)=>{
     res.send("hola terra")
 })
 
-router.use("/",authRouter);
-router.use("/user", isLoggedInAPI, userRouter);
+router.use("/", authRouter);
+router.use("/user", /* isLoggedInAPI, */ userRouter);
 
 
 export default router

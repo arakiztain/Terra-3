@@ -13,6 +13,8 @@
   font-size:12rem;
   overflow:hidden;
   display:grid;
+  align-items: end;
+grid-auto-rows: min-content;
   grid-template-columns: 3fr 2fr;
   grid-template-rows: auto auto;
   line-height:1.45em;
@@ -111,12 +113,17 @@
   border-radius: 30px;
   height:3rem;
   width:10rem;
+<<<<<<< HEAD
   background-color: #FFFFFF;
+=======
+  background-color:#FFFFFF;
+
+>>>>>>> 99f424e23c425814ee1a4b3fed6ad512d457dcee
 }
 
 .label {
   position: absolute;
-  top: 1.2rem;
+  top: 1.5rem;
   left: 1.2rem;
   color: #FFFFFF;
   font-size: 1rem;

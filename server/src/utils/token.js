@@ -13,6 +13,9 @@ function createToken(userData) {
   return token;
 }
 
+function createActivationToken(email) {
+  return jwt.sign({ email }, JWT_SECRET, { expiresIn: '24h' });
+}
 
 function verifyToken(token) {
   try {
@@ -21,7 +24,9 @@ function verifyToken(token) {
     throw error;
   }
 }
+
 export {
-    createToken,
-    verifyToken
-}
+  createToken,
+  createActivationToken,
+  verifyToken
+};

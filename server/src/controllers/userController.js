@@ -14,6 +14,12 @@ import {
   InvalidUserId,
   UserNotFound
 } from "../utils/errors.js";
+import bcrypt from "bcrypt";
+import {
+  createActivationToken,
+  verifyToken
+} from "../utils/token.js";
+import { sendEmail } from "../utils/sendEmail.js";
 
 const getUsers = async (req, res, next) => {
   try {
@@ -53,7 +59,7 @@ const getUserById = async (req, res, next) => {
   }
 };
 
-const createUser = async (req, res, next) => {
+/* const createUser = async (req, res, next) => {
   try {
     const { username, email, password, role } = req.body;
 
@@ -80,6 +86,71 @@ const createUser = async (req, res, next) => {
       next(error);
   }
 };
+ */
+
+export const createUser = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const existingUser = await userModel.findOne({ email });
+    if (existingUser) return res.status(400).json({ error: "El usuario ya existe" });
+
+    const token = createActivationToken(email);
+
+    const newUser = new userModel({
+      email,
+      isActive: false,
+      activationToken: token,
+    });
+    await newUser.save();
+
+    const activationUrl = `http://localhost:${process.env.APP_PORT}/activate/${token}`;
+    await sendEmail(
+      email,
+      "Activa tu cuenta en Terra Ripple",
+      `<p>Haz clic aquí para activar tu cuenta y establecer tu contraseña:</p>
+       <a href="${activationUrl}">Terra Ripple</a>`
+    );
+
+    res.status(201).json({ message: "Usuario creado y correo enviado" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al crear usuario" });
+  }
+};
+
+export const activateUser = async (req, res) => {
+  const token = req.params.token;
+  console.log("Token recibido:", token);
+  const { password } = req.body;
+
+  try {
+    const { email } = verifyToken(token);
+    console.log("Email del token:", email);
+
+    const user = await userModel.findOne({ email });
+    if (!user) return res.status(400).json({ error: "Usuario no encontrado" });
+
+    if (user.activationToken !== token) {
+      console.log("Token en DB:", user.activationToken);
+      return res.status(400).json({ error: "Token inválido" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    user.password = hashedPassword;
+    user.isActive = true;
+    user.activationToken = undefined;
+
+    await user.save();
+
+    res.json({ message: "Cuenta activada con éxito" });
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({ error: "Token inválido o expirado" });
+  }
+};
+
 
 const updateUser = async (req, res, next) => {
   const id = req.params.id;
@@ -158,6 +229,7 @@ export default {
   getUsers,
   getUserById,
   createUser,
+  activateUser,
   updateUser,
   deleteUser,
   updateCurrentUser
