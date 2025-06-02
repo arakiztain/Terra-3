@@ -6,6 +6,8 @@ import Login from './pages/Login/Login';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Admin from './pages/Admin/Admin';
 import Feedback from './pages/Feedback/Feedback';
+import Guide from './pages/Guide/Guide'
+import Faq from './pages/Faq/Faq';
 import './global.css';
 
 const router = createBrowserRouter([
@@ -33,6 +35,14 @@ const router = createBrowserRouter([
     {
       path:"projects/:id",
       element: <Feedback/>
+    },
+    {
+      path: "guide",
+      element:<Guide/>
+    },
+    {
+      path: "faq",
+      element:<Faq/>
     }
   ],
 },

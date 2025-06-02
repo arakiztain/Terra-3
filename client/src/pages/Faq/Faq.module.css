@@ -1,0 +1,42 @@
+.container {
+  padding: 40px;
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  margin-top: 50px;
+}
+
+.title {
+  text-align: center;
+  /* color: #333; */
+  margin-bottom: 20px;
+}
+
+.accordion {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.accordionHeader {
+  background-color: #f7f7f7;
+  padding: 15px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #333;
+}
+
+.accordionContent {
+  background-color: #fff;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  color: black;
+  padding: 0; /* Elimina el padding cuando está cerrado */
+}
+
+.accordionContent.open {
+  max-height: 200px; /* Ajusta según el contenido */
+  padding: 15px; /* Aplica el padding solo cuando está abierto */
+}
