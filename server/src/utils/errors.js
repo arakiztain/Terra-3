@@ -278,6 +278,23 @@ class InvalidTokenError extends Error {
     this.statusCode = 401;
   }
 }
+//------------------------------------------------------------
+class NotFoundError extends Error {
+  constructor(message = "Resource not found") {
+    super(message);
+    this.name = "NotFoundError";
+    this.statusCode = 404;
+  }
+}
+
+class ForbiddenError extends Error {
+  constructor(message = "You do not have permission to access this resource") {
+    super(message);
+    this.name = "ForbiddenError";
+    this.statusCode = 403;
+  }
+}
+
 
 export {
     RestaurantNotFound ,
@@ -316,5 +333,7 @@ export {
     InvalidPaginationParams,
     UnauthorizedError,
     TokenExpiredError,
-    InvalidTokenError
+    InvalidTokenError,
+    NotFoundError,
+    ForbiddenError
 }

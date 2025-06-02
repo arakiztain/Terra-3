@@ -7,7 +7,7 @@ const router = Router();
 
 router.put("/me",userController.updateCurrentUser);
 
-router.get("/",/* isAdmin, */userController.getUsers);
+router.get("/", /*isAdmin,*/ userController.getUsers);
 router.get("/:id",isAdmin, userController.getUserById);
 router.post("/", isLoggedInAPI, isAdmin, userController.createUser);
 router.post("/activate/:token",/* isAdmin, */ userController.activateUser);
