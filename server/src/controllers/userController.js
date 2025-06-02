@@ -94,24 +94,7 @@ export const createUser = async (req, res) => {
   try {
     const existingUser = await userModel.findOne({ email });
     if (existingUser) return res.status(400).json({ error: "El usuario ya existe" });
-
-    const token = createActivationToken(email);
-
-    const newUser = new userModel({
-      email,
-      isActive: false,
-      activationToken: token,
-    });
-    await newUser.save();
-
-    const activationUrl = `http://localhost:${process.env.APP_PORT}/activate/${token}`;
-    await sendEmail(
-      email,
-      "Activa tu cuenta en Terra Ripple",
-      `<p>Haz clic aquí para activar tu cuenta y establecer tu contraseña:</p>
-       <a href="${activationUrl}">Terra Ripple</a>`
-    );
-
+    await createUserWithEmail(email);
     res.status(201).json({ message: "Usuario creado y correo enviado" });
   } catch (err) {
     console.error(err);
@@ -225,7 +208,7 @@ const updateCurrentUser = async (req, res, next) => {
 	}
   };
 
-  async function generateAccounts(req, res) {
+async function associateAccounts(req, res) {
   //Should get the emails, check if they are already in our db, if not, add them
   //Either way, assign them to projects
   try{
@@ -237,16 +220,31 @@ const updateCurrentUser = async (req, res, next) => {
     //Check if we already have the email
     const existingEmail = await userModel.findOne({ email });
     if(!existingEmail){
-      //Do the acc generation process
-      //adapt createuser above
-    }else{
-      //Assign that user to that project
+      await createUserWithEmail(email);
     }
+      //Assign that user to that project
 
   } catch (error) {
     next(error);
   }
 
+}
+
+const createUserWithEmail = async ( email ) =>{
+  const token = createActivationToken(email);
+  const newUser = new userModel({
+    email,
+    isActive: false,
+    activationToken: token,
+  });
+  await newUser.save();
+  const activationUrl = `http://localhost:${process.env.APP_PORT}/activate/${token}`;
+  await sendEmail(
+    email,
+    "Activa tu cuenta en Terra Ripple",
+    `<p>Haz clic aquí para activar tu cuenta y establecer tu contraseña:</p>
+    <a href="${activationUrl}">Terra Ripple</a>`
+  );
 }
 
 export default {
