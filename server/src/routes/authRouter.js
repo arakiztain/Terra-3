@@ -6,6 +6,7 @@ const router = Router();
 
 router.post("/login",authController.login);
 router.post("/register",authController.register);
-router.get("/logout",isLoggedInAPI,authController.logout);
+//router.get("/logout",isLoggedInAPI,authController.logout);
 
+router.post('/test-email', authController.sendEmail);
 export default router

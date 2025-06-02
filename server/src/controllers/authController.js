@@ -10,6 +10,7 @@ import {
   UserEmailAlreadyExists,
   UsernameAlreadyExists
 } from "../utils/errors.js";
+import { sendEmail } from "../utils/sendEmail.js";
 
 const login = async (req, res, next) => {
   try {
@@ -19,9 +20,13 @@ const login = async (req, res, next) => {
     if (!password) throw new UserPasswordNotProvided();
 
     const user = await userModel.findOne({ email });
+    /* if (!user || !user.isActive || !user.password) {
+    return res.status(401).json({ error: 'Usuario no activo o sin contraseña' });
+    } */
     if (!user) throw new EmailNotFound();
 
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log(password, user.password);
     if (!isMatch) throw new IncorrectPassword();
 
     const token = jwt.sign(
@@ -55,25 +60,22 @@ const login = async (req, res, next) => {
 
 const register = async (req, res, next) => {
   try {
-    const { email, password, username} = req.body;
+    const { email, password, role} = req.body;
 	console.log("req.body", req.body);
 
     if (!email) throw new UserEmailNotProvided();
     if (!password) throw new UserPasswordNotProvided();
-    if (!username) throw new UserNameNotProvided();
+
 
     const existingEmail = await userModel.findOne({ email });
     if (existingEmail) throw new UserEmailAlreadyExists();
-
-    const existingUsername = await userModel.findOne({ username });
-    if (existingUsername) throw new UsernameAlreadyExists();
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new userModel({
       email,
       password: hashedPassword,
-      username
+      role
     });
     
     await newUser.save();
@@ -128,5 +130,6 @@ async function getUserInfo(req, res) {
 export default {
 	getUserInfo,
 	login,
-	register
+	register,
+    sendEmail
 };
