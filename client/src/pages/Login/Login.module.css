@@ -13,6 +13,8 @@
   font-size:12rem;
   overflow:hidden;
   display:grid;
+  align-items: end;
+grid-auto-rows: min-content;
   grid-template-columns: 3fr 2fr;
   grid-template-rows: auto auto;
   line-height:1.65em;
@@ -105,7 +107,7 @@
   border-radius: 30px;
   height:3rem;
   width:10rem;
-  background-color:white;
+  background-color:#FFFFFF;
 
 }
 
