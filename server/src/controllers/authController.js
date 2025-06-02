@@ -131,5 +131,5 @@ export default {
 	getUserInfo,
 	login,
 	register,
-    sendEmail
+  sendEmail
 };

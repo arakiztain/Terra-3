@@ -1,0 +1,20 @@
+.title{
+    position:absolute;
+    top:0.25em;
+    left:1.5em;
+    display:flex;
+    align-items:center;
+    font-size:3em;
+    font-weight:800;
+    word-wrap:none;
+    letter-spacing: 0em;
+    white-space: nowrap;
+    user-select:none;
+}
+
+.icon{
+    height:0.9em;
+    object-fit:contain;
+    display:block;
+    object-fit:contain;
+}
