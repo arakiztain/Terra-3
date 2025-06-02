@@ -15,23 +15,23 @@ async function getIssues(req, res) {
     );
     return res.json(response.data.tasks);
   } catch (error) {
-    console.error('Error al obtener tareas:', error.response?.data || error.message);
+    console.error('Error fetching tasks:', error.response?.data || error.message);
     throw error;
   }
 };
 
-async function reportIssue (req, res) {
+async function reportIssue(req, res) {
   const { name, description, priority, tags } = req.body;
 
   if (!name || !description) {
-    return res.status(400).json({ error: "Faltan campos obligatorios: name o description" });
+    return res.status(400).json({ error: "Missing required fields: name or description" });
   }
 
   const taskData = {
     name,
     description,
     tags: tags || [],
-    priority: priority || 3 // valores de 1 (Urgente) a 4 (Baja)  
+    priority: priority || 3 // values from 1 (Urgent) to 4 (Low)
   };
 
   try {
@@ -47,37 +47,69 @@ async function reportIssue (req, res) {
     );
 
     res.status(201).json({
-      message: "✅ Issue creado correctamente en ClickUp",
+      message: "✅ Issue successfully created in ClickUp",
       task: response.data
     });
   } catch (error) {
-    console.error("❌ Error al crear tarea en ClickUp:", error.response?.data || error.message);
+    console.error("❌ Error creating task in ClickUp:", error.response?.data || error.message);
     res.status(500).json({
-      error: "No se pudo crear la tarea en ClickUp",
+      error: "Could not create task in ClickUp",
       details: error.response?.data || error.message
     });
   }
 };
 
-async function updateIssue (req, res) {
+async function updateIssue(req, res) {
   try {
     const issueId = req.params.issueId;
     const updateFields = req.body;
 
     const response = await axios.put(
       `https://api.clickup.com/api/v2/task/${issueId}`,
-      updateFields
+      updateFields,
+      {
+        headers: {
+          Authorization: process.env.CLICKUP_API_TOKEN,
+          "Content-Type": "application/json"
+        }
+      }
     );
-    console.log("✅ Tarea actualizada:", response.data);
+
+    console.log("✅ Task updated:", response.data);
     return res.json(response.data);
+
   } catch (error) {
-    console.error("❌ Error al actualizar la tarea:", error.response?.data || error.message);
-    throw new Error("No se pudo actualizar la tarea");
+    console.error("❌ Error updating task:", error.response?.data || error.message);
+    res.status(500).json({ error: "Could not update the task" });
   }
-};
+}
+
+async function deleteIssue(req, res) {
+  try {
+    const issueId = req.params.issueId;
+
+    const response = await axios.delete(
+      `https://api.clickup.com/api/v2/task/${issueId}`,
+      {
+        headers: {
+          Authorization: process.env.CLICKUP_API_TOKEN,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    console.log("🗑️ Task deleted:", response.data);
+    return res.json({ message: "Task successfully deleted" });
+
+  } catch (error) {
+    console.error("❌ Error deleting task:", error.response?.data || error.message);
+    res.status(500).json({ error: "Could not delete the task" });
+  }
+}
 
 export default {
-	getIssues,
+  getIssues,
   reportIssue,
-  updateIssue
+  updateIssue,
+  deleteIssue
 };
