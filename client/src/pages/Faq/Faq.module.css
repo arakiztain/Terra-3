@@ -8,35 +8,57 @@
 
 .title {
   text-align: center;
-  /* color: #333; */
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  color: white;
 }
 
+/* Estilos para el acordeón */
 .accordion {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  overflow: hidden;
+  border-top: 1px solid #444;
+  margin-top: 1rem;
 }
 
-.accordionHeader {
-  background-color: #f7f7f7;
-  padding: 15px;
+.item {
+  border-bottom: 1px solid #444;
+}
+
+.itemBtn {
   cursor: pointer;
-  font-weight: bold;
-  color: #333;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+  padding: 1rem;
+  font-size: 1rem;
+  text-align: left;
+  /* color: #F78BD8; */
+  background-color: transparent;
+  border: none;
 }
 
-.accordionContent {
-  background-color: #fff;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-  color: black;
-  padding: 0; /* Elimina el padding cuando está cerrado */
+.itemBtn:hover {
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
-.accordionContent.open {
-  max-height: 200px; /* Ajusta según el contenido */
-  padding: 15px; /* Aplica el padding solo cuando está abierto */
+.itemBtnExpanded {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.itemContent {
+  transition: height 0.25s cubic-bezier(0, 0, 0, 1);
+}
+
+.itemPanel {
+  padding: 1rem;
+  color: #ccc;
+}
+
+.chevron {
+  margin-left: auto;
+  transition: transform 0.25s cubic-bezier(0, 0, 0, 1);
+  filter: invert(1); /* Para que el icono se vea en blanco */
+}
+
+.itemBtnExpanded .chevron {
+  transform: rotate(180deg);
 }
