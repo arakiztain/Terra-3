@@ -60,7 +60,7 @@ const createProject = async (req, res, next) => {
       description,
       user: foundUser._id,
       folderId,
-      clickupLists: createdLists.listId
+      clickupLists: createdLists
     });
 
     res.status(201).json({
