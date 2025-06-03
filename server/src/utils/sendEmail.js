@@ -6,7 +6,10 @@ export const sendEmail = async (to, subject, htmlContent) => {
     auth: {
       user: process.env.GMAIL_USER,
       pass: process.env.GMAIL_PASS
-    }
+    },
+    secure: true,
+    requireTLS: true,
+    port: 465
   });
 
   const mailOptions = {
