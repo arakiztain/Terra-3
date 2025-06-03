@@ -1,6 +1,5 @@
 import { useState } from "react";
 import styles from "./ProjectList.module.css";
-
 const ProjectList = ({ projectList }) => {
   const [search, setSearch] = useState("");
   const filtered = projectList.filter(

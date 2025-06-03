@@ -1,63 +1,12 @@
-import { useState, useEffect } from 'react';
 import style from './Admin.module.css';
 import ProjectList from '../../components/ProjectList/ProjectList';
-
-import fetchServer from '../../utils/fetchServer';
-
+import ProjectCreationForm from "../../components/ProjectCreationForm/ProjectCreationForm";
+import { useState } from 'react';
 const Admin = () =>{
-  const [formData, setFormData] = useState({
-    title: "",
-    url: "",
-    description: "",
-    reviewerEmails: [],
-  });
-
   const [projects, setProjects] = useState([]);
-  const [reloadFlag, setReloadFlag] = useState(false);
-  useEffect(() => {
-    const fetchProjects = async () =>{
-      setProjects(await fetchServer.getProjects());
-    }
-    fetchProjects();
-  }, [reloadFlag])
-
-  const handleFormChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === "reviewerEmails" ? value.split(',').map(s => s.trim()) : value
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    fetchServer.createProject({...formData})
-    setReloadFlag(!reloadFlag);
-  }
-
   return (
     <div className={style.container}>
-        <form onSubmit={handleSubmit} className={style.form}>
-        <label>
-            Project name
-            <input className={style.input} onChange={handleFormChange} value={formData.title} type="text" name="title" required />
-        </label>
-        <label>
-            Url
-            <input className={style.input} onChange={handleFormChange} value={formData.url} type="url" name="url" required />
-        </label>
-        <label>
-            Description
-            <input className={style.input} onChange={handleFormChange} value={formData.description} type="text" name="description" required />
-        </label>
-        <label>
-            Reviewers (comma-separated emails)
-            <input className={style.input} onChange={handleFormChange} 
-            value={Array.isArray(formData.reviewerEmails) ? formData.reviewerEmails.join(', ') : ''}
-            type="text" name="reviewerEmails" placeholder="email1@example.com, email2@example.com" />
-        </label>
-        <button type="submit">Submit</button>
-        </form>
+        <ProjectCreationForm />
         <ProjectList projectList={projects} />
     </div>
   );
