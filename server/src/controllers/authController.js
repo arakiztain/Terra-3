@@ -26,7 +26,6 @@ const login = async (req, res, next) => {
     if (!user) throw new EmailNotFound();
 
     const isMatch = await bcrypt.compare(password, user.password);
-    console.log(password, user.password);
     if (!isMatch) throw new IncorrectPassword();
 
     const token = jwt.sign(
@@ -60,12 +59,11 @@ const login = async (req, res, next) => {
 
 const register = async (req, res, next) => {
   try {
-    const { email, password, /* role */} = req.body;
-	console.log("req.body", req.body);
+    const { email, password, role} = req.body;
 
     if (!email) throw new UserEmailNotProvided();
     if (!password) throw new UserPasswordNotProvided();
-
+    
 
     const existingEmail = await userModel.findOne({ email });
     if (existingEmail) throw new UserEmailAlreadyExists();
@@ -74,8 +72,8 @@ const register = async (req, res, next) => {
 
     const newUser = new userModel({
       email,
-      password: hashedPassword/* ,
-      role */
+      password: hashedPassword,
+      role
     });
     
     await newUser.save();

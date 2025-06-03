@@ -1,15 +1,71 @@
-import Project from "../models/project.js";
-import { NotFoundError, ForbiddenError } from "../utils/errors.js";
+import axios from "axios";
+import projectModel from "../models/project.js";
+import userModel from "../models/user.js";
+import { NotFoundError, ForbiddenError, UserNotFound, ProjectAlreadyExists} from "../utils/errors.js";
 
 const createProject = async (req, res, next) => {
   try {
-    const { title, description, user } = req.body;
+    const { title, description} = req.body;
+    const userId = req.params.userId;
 
-    const project = await Project.create({ title, description, user });
+    const foundUser = await userModel.findById(userId);
+    if (!foundUser) throw new UserNotFound();
+    
+    const existingProject = await projectModel.findOne({ title });
+    if (existingProject) throw new ProjectAlreadyExists();
 
-    res.status(201).json({ message: "Project created", project });
+    const response = await axios.post(
+      `https://api.clickup.com/api/v2/space/${process.env.CLICKUP_SPACE_ID}/folder`,
+      {
+        name: title
+      },
+      {
+        headers: {
+          Authorization: process.env.CLICKUP_API_TOKEN,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    const folderId = response.data.id;
+
+    const listNames = ["Copy Revision", "Design Issues", "Requested Change", "New Item"];
+
+    const createdLists = [];
+
+    for (const name of listNames) {
+      const response = await axios.post(
+        `https://api.clickup.com/api/v2/folder/${folderId}/list`,
+        {
+          name
+        },
+        {
+          headers: {
+            Authorization: process.env.CLICKUP_API_TOKEN,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+
+      createdLists.push({
+        name,
+        listId: response.data.id
+      });
+    }
+    
+    const project = await projectModel.create({
+      title,
+      description,
+      user: foundUser._id
+    });
+
+    res.status(201).json({
+      message: "Project created",
+      project,
+      clickupProject: response.data
+    });
   } catch (error) {
-    next(error);
+    console.error("Error creating folder:", error.response?.data || error.message);
   }
 };
 
@@ -18,9 +74,9 @@ const getAllProjects = async (req, res, next) => {
     let projects;
 
     if (req.user.role === "admin") {
-      projects = await Project.find().populate("user", "email role");
+      projects = await projectModel.find().populate("user", "email role");
     } else {
-      projects = await Project.find({ user: req.user._id }).populate("user", "email");
+      projects = await projectModel.find({ user: req.user._id }).populate("user", "email");
     }
 
     res.json(projects);
@@ -32,7 +88,7 @@ const getAllProjects = async (req, res, next) => {
 
 const getProjectById = async (req, res, next) => {
   try {
-    const project = await Project.findById(req.params.id).populate("user", "email");
+    const project = await projectModel.findById(req.params.id).populate("user", "email");
     if (!project) throw new NotFoundError("Project not found");
 
 
@@ -50,7 +106,7 @@ const getProjectById = async (req, res, next) => {
 const updateProject = async (req, res, next) => {
   try {
     const { title, description, user } = req.body;
-    const updated = await Project.findByIdAndUpdate(
+    const updated = await projectModel.findByIdAndUpdate(
       req.params.id,
       { title, description, user },
       { new: true }
@@ -64,7 +120,7 @@ const updateProject = async (req, res, next) => {
 
 const deleteProject = async (req, res, next) => {
   try {
-    const deleted = await Project.findByIdAndDelete(req.params.id);
+    const deleted = await projectModel.findByIdAndDelete(req.params.id);
     if (!deleted) throw new NotFoundError("Project not found");
     res.json({ message: "Project deleted" });
   } catch (error) {

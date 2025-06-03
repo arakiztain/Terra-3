@@ -1,5 +1,5 @@
 const isAdmin = (req, res, next) => {
-    console.log('isAdmin middleware - req.user:', req.user);
+    // console.log('isAdmin middleware - req.user:', req.user);
     const user = req.user;
 
     if (!user || user.role !== "admin") {
