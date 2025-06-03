@@ -208,26 +208,22 @@ const updateCurrentUser = async (req, res, next) => {
 	}
   };
 
-async function associateAccounts(req, res) {
-  //Should get the emails, check if they are already in our db, if not, add them
-  //Either way, assign them to projects
+async function associateAccounts(email, project) {
   try{
-    const {email, project} = req.body;
     if(!email) throw new UserEmailNotProvided();
     if(!project) throw new ProjectNameNotProvided();
-    const projectFound = await projectModel.findOne({name: project});
-    if(!projectFound) throw new ProjectNotFound();
-    //Check if we already have the email
-    const existingEmail = await userModel.findOne({ email });
+    const projectToAssign = await Project.findOne({name: project});
+    if(!projectToAssign) throw new ProjectNotFound();
+
+    let existingEmail = await userModel.findOne({ email });
     if(!existingEmail){
-      await createUserWithEmail(email);
+      existingEmail = await createUserWithEmail(email);
     }
-      //Assign that user to that project
-
+    projectToAssign.users.push(existingEmail._id);
+    await projectToAssign.save();
   } catch (error) {
-    next(error);
+    console.error(error);
   }
-
 }
 
 const createUserWithEmail = async ( email ) =>{
