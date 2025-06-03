@@ -15,7 +15,8 @@ import { sendEmail } from "../utils/sendEmail.js";
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-
+    console.log("Vars and things");
+    console.log(email, password);
     if (!email) throw new UserEmailNotProvided();
     if (!password) throw new UserPasswordNotProvided();
 
@@ -60,7 +61,7 @@ const login = async (req, res, next) => {
 
 const register = async (req, res, next) => {
   try {
-    const { email, password, role} = req.body;
+    const { email, password, /* role */} = req.body;
 	console.log("req.body", req.body);
 
     if (!email) throw new UserEmailNotProvided();
@@ -74,8 +75,8 @@ const register = async (req, res, next) => {
 
     const newUser = new userModel({
       email,
-      password: hashedPassword,
-      role
+      password: hashedPassword/* ,
+      role */
     });
     
     await newUser.save();

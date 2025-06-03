@@ -15,11 +15,14 @@ const projectSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    user: {
+    users: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true
+        ref: "User"
+    }],
+    url: {
+        type: String,
+        trim: true
     }
 });
 
-export default mongoose.model("Project",projectSchema);
+export default mongoose.model("Project", projectSchema);
