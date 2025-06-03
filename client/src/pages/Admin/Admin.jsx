@@ -1,29 +1,29 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import style from './Admin.module.css';
 import ProjectList from '../../components/ProjectList/ProjectList';
 
 import fetchServer from '../../utils/fetchServer';
 
-const mockData = [
-  {
-    id: 1,
-    title: "Project Alpha",
-    url: "https://alpha.example.com",
-    reviewers: ["alice@example.com", "bob@example.com"],
-  },
-  {
-    id: 2,
-    title: "Project Beta",
-    url: "https://beta.example.com",
-    reviewers: ["carol@example.com"],
-  },
-  {
-    id: 3,
-    title: "Project Gamma",
-    url: "https://gamma.example.com",
-    reviewers: ["dave@example.com", "eve@example.com", "frank@example.com"],
-  },
-];
+// const mockData = [
+//   {
+//     id: 1,
+//     title: "Project Alpha",
+//     url: "https://alpha.example.com",
+//     reviewers: ["alice@example.com", "bob@example.com"],
+//   },
+//   {
+//     id: 2,
+//     title: "Project Beta",
+//     url: "https://beta.example.com",
+//     reviewers: ["carol@example.com"],
+//   },
+//   {
+//     id: 3,
+//     title: "Project Gamma",
+//     url: "https://gamma.example.com",
+//     reviewers: ["dave@example.com", "eve@example.com", "frank@example.com"],
+//   },
+// ];
 
 const Admin = () =>{
   const [formData, setFormData] = useState({
@@ -32,6 +32,17 @@ const Admin = () =>{
     description: "",
     reviewers: [],
   });
+
+  const [projects, setProjects] = useState([]);
+  useEffect(() => {
+    const fetchProjects = async () =>{
+      setProjects(await fetchServer.getProjects());
+    }
+    fetchProjects();
+    console.log("this after fetchprojects");
+    console.log(projects);
+  }, [])
+
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -42,10 +53,7 @@ const Admin = () =>{
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // project/ PÔST
-    // const { title, url, description, user } = req.body;
     fetchServer.createProject({...formData})
-    console.log("at least im trying ok");
   }
 
   return (
@@ -71,7 +79,7 @@ const Admin = () =>{
         </label>
         <button type="submit">Submit</button>
         </form>
-        <ProjectList projectList={mockData} />
+        <ProjectList projectList={projects} />
     </div>
   );
 }

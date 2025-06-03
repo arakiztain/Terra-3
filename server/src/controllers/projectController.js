@@ -15,13 +15,21 @@ const createProject = async (req, res, next) => {
 };
 
 const getAllProjects = async (req, res, next) => {
+  if (process.env.NODE_ENV === 'development') {
+    req = {
+      user: {
+        email: "test@mail.com",
+        role: "admin"
+      }
+    }
+  }
   try {
     let projects;
 
     if (req.user.role === "admin") {
-      projects = await Project.find().populate("user", "email role");
+      projects = await Project.find().populate("users", "email role");
     } else {
-      projects = await Project.find({ user: req.user._id }).populate("user", "email");
+      projects = await Project.find({ user: req.user._id }).populate("users", "email");
     }
 
     res.json(projects);

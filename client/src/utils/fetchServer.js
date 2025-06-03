@@ -35,7 +35,22 @@ const createProject = async ({ title, url, description, user }) => {
     .catch(error => console.error('Error:', error));
 }
 
+const getProjects = async () => {
+  try {
+    const response = await fetch(`${serverUrl}/project`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+}
+
 export default {
     loginFetch,
-    createProject
+    createProject,
+    getProjects
 }
