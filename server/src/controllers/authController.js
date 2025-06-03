@@ -60,7 +60,7 @@ const login = async (req, res, next) => {
 
 const register = async (req, res, next) => {
   try {
-    const { email, password, role} = req.body;
+    const { email, password, /* role */} = req.body;
 	console.log("req.body", req.body);
 
     if (!email) throw new UserEmailNotProvided();
@@ -74,8 +74,8 @@ const register = async (req, res, next) => {
 
     const newUser = new userModel({
       email,
-      password: hashedPassword,
-      role
+      password: hashedPassword/* ,
+      role */
     });
     
     await newUser.save();
@@ -131,5 +131,5 @@ export default {
 	getUserInfo,
 	login,
 	register,
-    sendEmail
+  sendEmail
 };
