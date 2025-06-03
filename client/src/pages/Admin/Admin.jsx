@@ -2,6 +2,8 @@ import { useState } from 'react';
 import style from './Admin.module.css';
 import ProjectList from '../../components/ProjectList/ProjectList';
 
+import fetchServer from '../../utils/fetchServer';
+
 const mockData = [
   {
     id: 1,
@@ -25,8 +27,8 @@ const mockData = [
 
 const Admin = () =>{
   const [formData, setFormData] = useState({
-    projectName: "",
-    projectUrl: "",
+    title: "",
+    url: "",
     description: "",
     reviewers: [],
   });
@@ -40,18 +42,22 @@ const Admin = () =>{
 
   const handleSubmit = (e) => {
     e.preventDefault();
-}
+    // project/ PÔST
+    // const { title, url, description, user } = req.body;
+    fetchServer.createProject({...formData})
+    console.log("at least im trying ok");
+  }
 
   return (
     <div className={style.container}>
         <form onSubmit={handleSubmit} className={style.form}>
         <label>
             Project name
-            <input className={style.input} onChange={handleFormChange} value={formData.projectName} type="text" name="projectName" required />
+            <input className={style.input} onChange={handleFormChange} value={formData.title} type="text" name="title" required />
         </label>
         <label>
             Url
-            <input className={style.input} onChange={handleFormChange} value={formData.projectUrl} type="url" name="projectUrl" required />
+            <input className={style.input} onChange={handleFormChange} value={formData.url} type="url" name="url" required />
         </label>
         <label>
             Description

@@ -16,6 +16,26 @@ const loginFetch = async ({ email, password }) => {
     .catch(error => console.error('Error:', error));
 }
 
-const 
+const createProject = async ({ title, url, description, user }) => {
+    console.log("Really now");
+    fetch(`${serverUrl}/project`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            title,
+            url,
+            description,
+            user
+        })
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+}
 
-export default loginFetch;
+export default {
+    loginFetch,
+    createProject
+}
