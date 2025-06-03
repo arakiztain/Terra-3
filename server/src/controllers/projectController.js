@@ -52,11 +52,13 @@ const createProject = async (req, res, next) => {
         listId: response.data.id
       });
     }
-    
+
     const project = await projectModel.create({
       title,
       description,
-      user: foundUser._id
+      user: foundUser._id,
+      folderId,
+      clickupLists: createdLists.listId
     });
 
     res.status(201).json({
@@ -64,6 +66,9 @@ const createProject = async (req, res, next) => {
       project,
       clickupProject: response.data
     });
+
+    return createdLists;
+
   } catch (error) {
     console.error("Error creating folder:", error.response?.data || error.message);
   }
