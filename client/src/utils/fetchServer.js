@@ -16,4 +16,32 @@ const loginFetch = ({ email, password }) => {
     .catch(error => console.error('Error:', error));
 }
 
-export default loginFetch;
+const resetFetch = ({ email }) => {
+    fetch(`${serverUrl}/reset-password`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email
+        })
+    })    
+}
+
+const setPassword = ({ password, token }) => {
+    fetch(`${serverUrl}/set-password`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            password,
+            token
+        })
+    })
+}
+export default {
+    loginFetch,
+    resetFetch,
+    setPassword
+}

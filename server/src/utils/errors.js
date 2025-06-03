@@ -170,6 +170,13 @@ class IncorrectPassword extends Error{
         this.statusCode = 400;
     }
 }
+
+class TokenNotFound extends Error{
+      constructor(){
+        super("Account with token not found");
+        this.statusCode = 400;
+    }
+}
 /**
  *  userController
  */
@@ -316,5 +323,6 @@ export {
     InvalidPaginationParams,
     UnauthorizedError,
     TokenExpiredError,
-    InvalidTokenError
+    InvalidTokenError,
+    TokenNotFound
 }

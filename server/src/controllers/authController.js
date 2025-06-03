@@ -6,6 +6,7 @@ import {
   UserEmailNotProvided,
   UserPasswordNotProvided,
   EmailNotFound,
+  TokenNotFound,
   IncorrectPassword,
   UserEmailAlreadyExists,
   UsernameAlreadyExists
@@ -131,23 +132,44 @@ async function getUserInfo(req, res) {
 
 const resetPassword = async (req, res, next) => {
   const { email } = req.body;
-  console.log("email", email);
+  console.log(req.body);
+  console.log(req.body.email);
   try {
     const user = await userModel.findOne({ email });
     if (!user) throw new EmailNotFound();
     const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "1h" });
-    const resetUrl = `http://localhost:${process.env.APP_PORT}/reset-password/${token}`;
+    user.activationToken = token;
+    await user.save();
+    console.log("Esto ocurre");
+    const resetUrl = `${process.env.CLIENT_URL}/passwordReset/${token}`;
     await sendEmail(
       email,
       "Terra Ripple password reset",
       `<p>Haz clic aqui para restablecer tu contraseña:</p>
       <a href="${resetUrl}">Terra Ripple</a>`
       );
+
     res.json({ message: "Correo enviado" });
   } catch (error) {
     next(error);
   }
 }
+
+const setPassword = async (req, res, next) => {
+  const { token, password } = req.body;
+  try {
+    const user = await userModel.findOne({ activationToken:token });
+    if (!user) throw new TokenNotFound();
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    user.activationToken = undefined;
+    await user.save();
+    res.json({ message: "Contraseña restablecida" });
+  } catch (error) {
+    next(error);
+  }
+}
+
 const createUserWithEmail = async ( email ) =>{
   const token = createActivationToken(email);
   const newUser = new userModel({
@@ -171,5 +193,6 @@ export default {
 	login,
 	register,
   sendEmail,
-  resetPassword
+  resetPassword,
+  setPassword
 };
