@@ -98,7 +98,6 @@ const getAllProjects = async (req, res, next) => {
         folders.map(async (folder) => {
           const mongoProject = await projectModel.findOne({ folderId: folder.id }).populate("users", "email");
           return {
-            /* clickup: folder, */
             Projects: mongoProject || null
           };
         })
@@ -114,7 +113,7 @@ const getAllProjects = async (req, res, next) => {
   }
 };
 
-//MongoDb
+//MongoDb en clikcup no hay manera de buscar por id el folder, es esto o sacar todos y buscar por id en el response.data
 const getProjectById = async (req, res, next) => {
   try {
     const projectId = req.params.projectId;
@@ -135,6 +134,8 @@ const getProjectById = async (req, res, next) => {
     next(error);
   }
 };
+
+
 
 //clickup
 const updateProject = async (req, res, next) => {

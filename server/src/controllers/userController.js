@@ -243,6 +243,13 @@ const createUserWithEmail = async ( email ) =>{
   );
 }
 
+/* Obtener listas del folder (proyecto):
+GET /api/v2/folder/{folder_id}/list
+
+Obtener tareas del folder:
+GET /api/v2/folder/{folder_id}/task */
+
+
 export default {
   getUsers,
   getUserById,
