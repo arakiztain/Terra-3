@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const listSchema = new mongoose.Schema({
-  title: {
+  name: {
     type: String,
     required: true
   },
@@ -9,7 +9,8 @@ const listSchema = new mongoose.Schema({
     type: String,
     required: true
   }
-}, { _id: false });
+},
+ { _id: false });
 
 const projectSchema = new mongoose.Schema({
     title: {
