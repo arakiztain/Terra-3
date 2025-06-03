@@ -1,6 +1,6 @@
 const serverUrl = 'http://localhost:3004';
 
-const loginFetch = ({ email, password }) => {
+const loginFetch = async ({ email, password }) => {
     fetch(`${serverUrl}/login`, {
         method: 'POST',
         headers: {
@@ -15,5 +15,7 @@ const loginFetch = ({ email, password }) => {
     .then(data => console.log(data))
     .catch(error => console.error('Error:', error));
 }
+
+const 
 
 export default loginFetch;

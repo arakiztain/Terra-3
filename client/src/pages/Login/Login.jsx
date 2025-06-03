@@ -8,9 +8,9 @@ import icon6 from "../../assets/_Terraforms/Individual/SVG/Boba-Orange.svg";
 const Login = () =>{
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const handleSubmit = (e) =>{
+    const handleSubmit = async (e) =>{
         e.preventDefault();
-        loginFetch({email: email, password: password});
+        await loginFetch({email: email, password: password});
     }
 
     return(
