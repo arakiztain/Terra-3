@@ -1,7 +1,7 @@
-import './ProjectCreationForm.module.css';
+import style from './ProjectCreationForm.module.css';
 import { useState, useEffect } from 'react';
 import fetchServer from '../../utils/fetchServer';
-const ProjectCreationForm = () => {
+const ProjectCreationForm = ({ promptReload, reloadFlag, project }) => {
   const [formData, setFormData] = useState({
     title: "",
     url: "",
@@ -9,14 +9,16 @@ const ProjectCreationForm = () => {
     reviewerEmails: [],
   });
 
-  const [projects, setProjects] = useState([]);
-  const [reloadFlag, setReloadFlag] = useState(false);
-  useEffect(() => {
-    const fetchProjects = async () =>{
-      setProjects(await fetchServer.getProjects());
+    useEffect(() => {
+    if (project) {
+      setFormData({
+        title: project.title || "",
+        url: project.url || "",
+        description: project.description || "",
+        reviewerEmails: project.email || [],
+      });
     }
-    fetchProjects();
-  }, [reloadFlag])
+  }, [project]);
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
@@ -28,9 +30,13 @@ const ProjectCreationForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetchServer.createProject({...formData})
-    setReloadFlag(!reloadFlag);
-  }
+    if (project && project.id) {
+      fetchServer.updateProject(project.id, { ...formData });
+    } else {
+      fetchServer.createProject({ ...formData });
+    }
+    promptReload(!reloadFlag);
+  };
     return (
         <form onSubmit={handleSubmit} className={style.form}>
           <label>
@@ -51,7 +57,7 @@ const ProjectCreationForm = () => {
               value={Array.isArray(formData.reviewerEmails) ? formData.reviewerEmails.join(', ') : ''}
               type="text" name="reviewerEmails" placeholder="email1@example.com, email2@example.com" />
           </label>
-          <button type="submit">Submit</button>
+          <button type="submit">{project ? "Edit" : "Submit"}</button>
         </form>
     );
 };
