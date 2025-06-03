@@ -34,6 +34,7 @@ const Admin = () =>{
   });
 
   const [projects, setProjects] = useState([]);
+  const [reloadFlag, setReloadFlag] = useState(false);
   useEffect(() => {
     const fetchProjects = async () =>{
       setProjects(await fetchServer.getProjects());
@@ -41,7 +42,7 @@ const Admin = () =>{
     fetchProjects();
     console.log("this after fetchprojects");
     console.log(projects);
-  }, [])
+  }, [reloadFlag])
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
@@ -54,6 +55,7 @@ const Admin = () =>{
   const handleSubmit = (e) => {
     e.preventDefault();
     fetchServer.createProject({...formData})
+    setReloadFlag(!reloadFlag);
   }
 
   return (
