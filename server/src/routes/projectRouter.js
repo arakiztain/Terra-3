@@ -4,7 +4,7 @@ import { isAdmin } from "../middlewares/isAdmin.js";
 
 const router = Router();
 
-router.post("/:userId", isAdmin, projectController.createProject);
+router.post("/", isAdmin, projectController.createProject);
 
 router.get("/", projectController.getAllProjects);
 

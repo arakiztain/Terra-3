@@ -3,24 +3,24 @@ import projectModel from "../models/project.js";
 import userModel from "../models/user.js";
 import { NotFoundError, ForbiddenError, UserNotFound, ProjectAlreadyExists} from "../utils/errors.js";
 
-//TODO : check if user is admin
 const createProject = async (req, res, next) => {
   try {
+    const { title, description, url, email } = req.body;
 
-    const { title, description} = req.body;
-    const userId = req.params.userId;
+    let foundUser = null;
 
-    const foundUser = await userModel.findById(userId);
-    if (!foundUser) throw new UserNotFound();
-    
+    if (email) {
+      const user = await userModel.findOne({ email });
+      if (!user) throw new UserNotFound();
+      foundUser = user;
+    }
+
     const existingProject = await projectModel.findOne({ title });
     if (existingProject) throw new ProjectAlreadyExists();
 
-    const response = await axios.post(
+    const responseFolder = await axios.post(
       `https://api.clickup.com/api/v2/space/${process.env.CLICKUP_SPACE_ID}/folder`,
-      {
-        name: title
-      },
+      { name: title },
       {
         headers: {
           Authorization: process.env.CLICKUP_API_TOKEN,
@@ -29,18 +29,15 @@ const createProject = async (req, res, next) => {
       }
     );
 
-    const folderId = response.data.id;
+    const folderId = responseFolder.data.id;
 
     const listNames = ["Copy Revision", "Design Issues", "Requested Change", "New Item"];
-
     const createdLists = [];
 
     for (const name of listNames) {
-      const response = await axios.post(
+      const responseList = await axios.post(
         `https://api.clickup.com/api/v2/folder/${folderId}/list`,
-        {
-          name
-        },
+        { name },
         {
           headers: {
             Authorization: process.env.CLICKUP_API_TOKEN,
@@ -51,41 +48,31 @@ const createProject = async (req, res, next) => {
 
       createdLists.push({
         name,
-        listId: response.data.id
+        listId: responseList.data.id
       });
     }
 
     const project = await projectModel.create({
       title,
       description,
-      user: foundUser._id,
+      url,
+      users: foundUser ? foundUser._id : undefined,
       folderId,
       clickupLists: createdLists
     });
 
     res.status(201).json({
-      message: "Project created",
+      message: `Project created${foundUser ? '' : ' (without user)'}`,
       project,
-      clickupProject: response.data
+      clickupProject: responseFolder.data
     });
 
-    return createdLists;
-
-
   } catch (error) {
-    console.error("Error creating folder:", error.response?.data || error.message);
+    next(error);
   }
 };
 
 const getAllProjects = async (req, res, next) => {
-  if (process.env.NODE_ENV === 'development') {
-    req = {
-      user: {
-        email: "test@mail.com",
-        role: "admin"
-      }
-    }
-  }
   try {
     let projects;
 
