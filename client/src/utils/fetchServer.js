@@ -16,8 +16,7 @@ const loginFetch = async ({ email, password }) => {
     .catch(error => console.error('Error:', error));
 }
 
-const createProject = async ({ title, url, description, user }) => {
-    console.log("Really now");
+const createProject = async ({ title, url, description, users }) => {
     fetch(`${serverUrl}/project`, {
         method: 'POST',
         headers: {
@@ -27,7 +26,7 @@ const createProject = async ({ title, url, description, user }) => {
             title,
             url,
             description,
-            user
+            users
         })
     })
     .then(response => response.json())

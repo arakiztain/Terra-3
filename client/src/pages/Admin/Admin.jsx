@@ -4,33 +4,12 @@ import ProjectList from '../../components/ProjectList/ProjectList';
 
 import fetchServer from '../../utils/fetchServer';
 
-// const mockData = [
-//   {
-//     id: 1,
-//     title: "Project Alpha",
-//     url: "https://alpha.example.com",
-//     reviewers: ["alice@example.com", "bob@example.com"],
-//   },
-//   {
-//     id: 2,
-//     title: "Project Beta",
-//     url: "https://beta.example.com",
-//     reviewers: ["carol@example.com"],
-//   },
-//   {
-//     id: 3,
-//     title: "Project Gamma",
-//     url: "https://gamma.example.com",
-//     reviewers: ["dave@example.com", "eve@example.com", "frank@example.com"],
-//   },
-// ];
-
 const Admin = () =>{
   const [formData, setFormData] = useState({
     title: "",
     url: "",
     description: "",
-    reviewers: [],
+    reviewerEmails: [],
   });
 
   const [projects, setProjects] = useState([]);
@@ -40,15 +19,13 @@ const Admin = () =>{
       setProjects(await fetchServer.getProjects());
     }
     fetchProjects();
-    console.log("this after fetchprojects");
-    console.log(projects);
   }, [reloadFlag])
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: name === "reviewers" ? value.split(',').map(s => s.trim()) : value
+      [name]: name === "reviewerEmails" ? value.split(',').map(s => s.trim()) : value
     }));
   };
 
@@ -76,8 +53,8 @@ const Admin = () =>{
         <label>
             Reviewers (comma-separated emails)
             <input className={style.input} onChange={handleFormChange} 
-            value={Array.isArray(formData.reviewers) ? formData.reviewers.join(', ') : ''}
-            type="text" name="reviewers" placeholder="email1@example.com, email2@example.com" />
+            value={Array.isArray(formData.reviewerEmails) ? formData.reviewerEmails.join(', ') : ''}
+            type="text" name="reviewerEmails" placeholder="email1@example.com, email2@example.com" />
         </label>
         <button type="submit">Submit</button>
         </form>
