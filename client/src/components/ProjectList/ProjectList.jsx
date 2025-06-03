@@ -1,9 +1,7 @@
 import { useState } from "react";
 import styles from "./ProjectList.module.css";
-import ProjectCreationForm from "../ProjectCreationForm/ProjectCreationForm";
 const ProjectList = ({ projectList, onEditProject }) => {
   const [search, setSearch] = useState("");
-  const [showEdit, setShowEdit] = useState(false);
   const filtered = projectList.filter(
     ({ title, url, description, users }) =>
       title.toLowerCase().includes(search.toLowerCase()) ||
@@ -41,12 +39,6 @@ const ProjectList = ({ projectList, onEditProject }) => {
         )}
       </div>
     </div>
-    {showEdit && 
-    <div class={styles.fullScreenCover} onClick={() => setShowEdit(false) }>
-      <div onClick={(e) => e.stopPropagation()}>
-        <ProjectCreationForm/>
-      </div>
-    </div>}
   </>);
 }
 
