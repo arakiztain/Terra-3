@@ -3,12 +3,11 @@ import styles from "./ProjectList.module.css";
 
 const ProjectList = ({ projectList }) => {
   const [search, setSearch] = useState("");
-
   const filtered = projectList.filter(
-    ({ title, url, reviewers }) =>
+    ({ title, url, users }) =>
       title.toLowerCase().includes(search.toLowerCase()) ||
       url.toLowerCase().includes(search.toLowerCase()) ||
-      reviewers.some((r) => r.toLowerCase().includes(search.toLowerCase()))
+      users.some((r) => r.toLowerCase().includes(search.toLowerCase()))
   );
 
   return (
@@ -22,14 +21,14 @@ const ProjectList = ({ projectList }) => {
       />
       <div className={styles.cards}>
         {filtered.length > 0 ? (
-          filtered.map(({ id, title, url, reviewers }) => (
+          filtered.map(({ id, title, url, users }) => (
             <div key={id} className={styles.card}>
               <h2 className={styles.title}>{title}</h2>
               <a href={url} target="_blank" rel="noopener noreferrer" className={styles.url}>
                 {url}
               </a>
               <p className={styles.reviewers}>
-                Reviewers: {reviewers.join(", ")}
+                Reviewers: {users.join(", ")}
               </p>
             </div>
           ))

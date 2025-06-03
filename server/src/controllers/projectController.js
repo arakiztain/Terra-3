@@ -1,11 +1,12 @@
 import Project from "../models/project.js";
 import { NotFoundError, ForbiddenError } from "../utils/errors.js";
 
+//TODO : check if user is admin
 const createProject = async (req, res, next) => {
   try {
-    const { title, description, user } = req.body;
+    const { title, url, description, user } = req.body;
 
-    const project = await Project.create({ title, description, user });
+    const project = await Project.create({ title, url, description, user });
 
     res.status(201).json({ message: "Project created", project });
   } catch (error) {
@@ -14,13 +15,21 @@ const createProject = async (req, res, next) => {
 };
 
 const getAllProjects = async (req, res, next) => {
+  if (process.env.NODE_ENV === 'development') {
+    req = {
+      user: {
+        email: "test@mail.com",
+        role: "admin"
+      }
+    }
+  }
   try {
     let projects;
 
     if (req.user.role === "admin") {
-      projects = await Project.find().populate("user", "email role");
+      projects = await Project.find().populate("users", "email role");
     } else {
-      projects = await Project.find({ user: req.user._id }).populate("user", "email");
+      projects = await Project.find({ user: req.user._id }).populate("users", "email");
     }
 
     res.json(projects);
@@ -49,10 +58,10 @@ const getProjectById = async (req, res, next) => {
 
 const updateProject = async (req, res, next) => {
   try {
-    const { title, description, user } = req.body;
+    const { title, url, description, user } = req.body;
     const updated = await Project.findByIdAndUpdate(
       req.params.id,
-      { title, description, user },
+      { title, url, description, user },
       { new: true }
     );
     if (!updated) throw new NotFoundError("Project not found");

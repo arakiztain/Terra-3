@@ -1,4 +1,7 @@
 const isAdmin = (req, res, next) => {
+  if (process.env.NODE_ENV === 'development') {
+    return next();
+  }
     console.log('isAdmin middleware - req.user:', req.user);
     const user = req.user;
 
