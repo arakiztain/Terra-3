@@ -3,8 +3,10 @@ import projectModel from "../models/project.js";
 import userModel from "../models/user.js";
 import { NotFoundError, ForbiddenError, UserNotFound, ProjectAlreadyExists} from "../utils/errors.js";
 
+//TODO : check if user is admin
 const createProject = async (req, res, next) => {
   try {
+
     const { title, description} = req.body;
     const userId = req.params.userId;
 
@@ -69,19 +71,30 @@ const createProject = async (req, res, next) => {
 
     return createdLists;
 
+
   } catch (error) {
     console.error("Error creating folder:", error.response?.data || error.message);
   }
 };
 
 const getAllProjects = async (req, res, next) => {
+  if (process.env.NODE_ENV === 'development') {
+    req = {
+      user: {
+        email: "test@mail.com",
+        role: "admin"
+      }
+    }
+  }
   try {
     let projects;
 
     if (req.user.role === "admin") {
+
       projects = await projectModel.find().populate("user", "email role");
     } else {
-      projects = await projectModel.find({ user: req.user._id }).populate("user", "email");
+      projects = await projectModel.find({ user: req.user._id }).populate("user", "email")
+
     }
 
     res.json(projects);
@@ -110,10 +123,12 @@ const getProjectById = async (req, res, next) => {
 
 const updateProject = async (req, res, next) => {
   try {
+
     const { title, description, user } = req.body;
     const updated = await projectModel.findByIdAndUpdate(
+
       req.params.id,
-      { title, description, user },
+      { title, url, description, user },
       { new: true }
     );
     if (!updated) throw new NotFoundError("Project not found");

@@ -14,8 +14,8 @@ const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
 const app = express();
 
 const corsOptions = {
-	//origin: CLIENT_URL,
-	//credentials: true
+	origin: CLIENT_URL,
+	credentials: true
 }
 
 app.use(cors(corsOptions));
