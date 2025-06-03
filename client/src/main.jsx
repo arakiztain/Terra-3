@@ -6,6 +6,8 @@ import Login from './pages/Login/Login';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Admin from './pages/Admin/Admin';
 import Feedback from './pages/Feedback/Feedback';
+import PasswordReset from './pages/PasswordReset/PasswordReset';
+import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import './global.css';
 
 const router = createBrowserRouter([
@@ -33,6 +35,14 @@ const router = createBrowserRouter([
     {
       path:"projects/:id",
       element: <Feedback/>
+    },
+    {
+      path:"passwordReset/:token",
+      element: <PasswordReset/>
+    },
+    {
+      path:"forgotPassword",
+      element: <ForgotPassword/>
     }
   ],
 },

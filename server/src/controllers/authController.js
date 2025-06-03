@@ -128,9 +128,48 @@ async function getUserInfo(req, res) {
 	}
 	
 }
+
+const resetPassword = async (req, res, next) => {
+  const { email } = req.body;
+  console.log("email", email);
+  try {
+    const user = await userModel.findOne({ email });
+    if (!user) throw new EmailNotFound();
+    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    const resetUrl = `http://localhost:${process.env.APP_PORT}/reset-password/${token}`;
+    await sendEmail(
+      email,
+      "Terra Ripple password reset",
+      `<p>Haz clic aqui para restablecer tu contraseña:</p>
+      <a href="${resetUrl}">Terra Ripple</a>`
+      );
+    res.json({ message: "Correo enviado" });
+  } catch (error) {
+    next(error);
+  }
+}
+const createUserWithEmail = async ( email ) =>{
+  const token = createActivationToken(email);
+  const newUser = new userModel({
+    email,
+    isActive: false,
+    activationToken: token,
+  });
+  await newUser.save();
+  const activationUrl = `http://localhost:${process.env.APP_PORT}/activate/${token}`;
+  await sendEmail(
+    email,
+    "Activa tu cuenta en Terra Ripple",
+    `<p>Haz clic aquí para activar tu cuenta y establecer tu contraseña:</p>
+    <a href="${activationUrl}">Terra Ripple</a>`
+  );
+}
+
+
 export default {
 	getUserInfo,
 	login,
 	register,
-  sendEmail
+  sendEmail,
+  resetPassword
 };
