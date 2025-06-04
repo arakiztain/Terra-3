@@ -1,5 +1,5 @@
 import userModel from "../models/user.js";
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import {
   UserNameNotProvided,
@@ -19,14 +19,14 @@ const login = async (req, res, next) => {
     console.log(email, password);
     if (!email) throw new UserEmailNotProvided();
     if (!password) throw new UserPasswordNotProvided();
-
+    
     const user = await userModel.findOne({ email });
     /* if (!user || !user.isActive || !user.password) {
     return res.status(401).json({ error: 'Usuario no activo o sin contraseña' });
     } */
     if (!user) throw new EmailNotFound();
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = bcryptjs.compare(password, user.password);
     console.log(password, user.password);
     if (!isMatch) throw new IncorrectPassword();
 
@@ -43,7 +43,6 @@ const login = async (req, res, next) => {
       username: user.username,
       email: user.email,
       role: user.role,
-      activationToken: activationToken //ASKR: Ponerle el token?
     };
     console.log("user", user_pruba);
     res.json({
@@ -53,7 +52,6 @@ const login = async (req, res, next) => {
         username: user.username,
         email: user.email,
         role: user.role,
-        activationToken: user.activationToken, //ASKR: Ponerle el token?
       },
     });
   } catch (error) {
@@ -64,7 +62,7 @@ const login = async (req, res, next) => {
 //ASKR: Nosotros crearemos usuarios?
 const register = async (req, res, next) => {
   try {
-    const { email, password /* role */ } = req.body;
+    const { email, password ,  role  } = req.body;
     console.log("req.body", req.body);
 
     if (!email) throw new UserEmailNotProvided();
@@ -73,12 +71,12 @@ const register = async (req, res, next) => {
     const existingEmail = await userModel.findOne({ email });
     if (existingEmail) throw new UserEmailAlreadyExists();
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcryptjs.hash(password, 10);
 
     const newUser = new userModel({
       email,
-      password: hashedPassword /* ,
-      role */,
+      password: hashedPassword  ,
+      role 
     });
 
     await newUser.save();
