@@ -23,14 +23,20 @@ const AuthProvider = ({ children }) => {
     }
 
     const handleLogin = async (email, password) => {
+        console.log("handleLogin: email: ", email, "password: ", password);
         const result = await fetchServer.loginFetch({ email, password });
+        console.log("login result: ", result);
         if (result.error) {
             // removeToken();
             return result.error;
         } else {
             setUserData(result.user);
             // saveToken(result.token);
-            navigate("/");
+            if (result.user.role === "admin") {
+                navigate("/admin")
+            } else {
+                navigate("/dashboard");
+            }
             return null;
         }
     }
