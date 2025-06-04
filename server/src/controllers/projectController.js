@@ -101,13 +101,38 @@ const getAllProjects = async (req, res, next) => {
       const folders = clickupResponse.data.folders;
       projects = await Promise.all(
         folders.map(async (folder) => {
-          return await Project.findOne({ folderId: folder.id }).populate("users", "email");
+          const mongoProject = await Project.findOne({ folderId: folder.id }).populate("users", "email");
+          return {
+            mongoProject: mongoProject || null,
+            clickupFolder: folder
+          };
         })
       );
     } else {
-      projects = await Project.find({ user: req.user._id }).populate("users", "email");
-      if (!projects || projects.length === 0) throw new NotFoundError("You have no projects");
-      //clickup llamada id
+      const userProjects = await Project.find({ users: req.user._id }).populate("users", "email");
+
+      if (!userProjects || userProjects.length === 0) {
+        throw new NotFoundError("You have no projects");
+      }
+
+      projects = await Promise.all(
+        userProjects.map(async (project) => {
+          const clickupFolderResponse = await axios.get(
+            `https://api.clickup.com/api/v2/folder/${project.folderId}`,
+            {
+              headers: {
+                Authorization: process.env.CLICKUP_API_TOKEN,
+                "Content-Type": "application/json"
+              }
+            }
+          );
+
+          return {
+            mongoProject: project,
+            clickupFolder: clickupFolderResponse.data
+          };
+        })
+      );
     }
 
     res.json(projects);
@@ -115,7 +140,6 @@ const getAllProjects = async (req, res, next) => {
     next(error);
   }
 };
-
 //MongoDb en clikcup no hay manera de buscar por id el folder, es esto o sacar todos y buscar por id en el response.data
 const getProjectById = async (req, res, next) => {
   try {
