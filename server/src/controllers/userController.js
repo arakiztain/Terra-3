@@ -114,7 +114,7 @@ export const activateUser = async (req, res) => {
     const user = await userModel.findOne({ email });
     if (!user) return res.status(400).json({ error: "Usuario no encontrado" });
 
-    if (user.activationToken !== token) {
+    if (!crypto.timingSafeEqual(user.activationToken, token)) {
       console.log("Token en DB:", user.activationToken);
       return res.status(400).json({ error: "Token inválido" });
     }

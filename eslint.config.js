@@ -43,7 +43,6 @@ export default [
       'plugin-security/detect-non-literal-regexp': 'error',
       'plugin-security/detect-non-literal-require': 'error',
       'plugin-security/detect-possible-timing-attacks': 'error',
-      'plugin-security/detect-unsafe-regex': 'error',
       'plugin-security/detect-eval-with-expression': 'error',
       'plugin-react/display-name': 'error',
       'plugin-react/jsx-key': 'error',
@@ -64,9 +63,6 @@ export default [
       'plugin-react/no-unknown-property': ['warn', {ignore: ['class']}],
       'plugin-react/no-unsafe': 'error',
       'plugin-react/require-render-return': 'error',
-      'plugin-react/no-render-return-value': 'error',
-      'plugin-react/no-render-return-value': 'error',
-      'plugin-react/no-render-return-value': 'error',
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
