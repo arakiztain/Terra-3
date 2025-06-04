@@ -15,7 +15,8 @@ import { sendEmail } from "../utils/sendEmail.js";
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-
+    console.log("Vars and things");
+    console.log(email, password);
     if (!email) throw new UserEmailNotProvided();
     if (!password) throw new UserPasswordNotProvided();
 
@@ -26,7 +27,6 @@ const login = async (req, res, next) => {
     if (!user) throw new EmailNotFound();
 
     const isMatch = await bcrypt.compare(password, user.password);
-    console.log(password, user.password);
     if (!isMatch) throw new IncorrectPassword();
 
     const token = jwt.sign(
@@ -61,11 +61,10 @@ const login = async (req, res, next) => {
 const register = async (req, res, next) => {
   try {
     const { email, password, role} = req.body;
-	console.log("req.body", req.body);
 
     if (!email) throw new UserEmailNotProvided();
     if (!password) throw new UserPasswordNotProvided();
-
+    
 
     const existingEmail = await userModel.findOne({ email });
     if (existingEmail) throw new UserEmailAlreadyExists();
@@ -131,5 +130,5 @@ export default {
 	getUserInfo,
 	login,
 	register,
-    sendEmail
+  sendEmail
 };
