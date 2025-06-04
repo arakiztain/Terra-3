@@ -1,35 +1,117 @@
-import Project from "../models/project.js";
-import { NotFoundError, ForbiddenError } from "../utils/errors.js";
+import axios from "axios";
+import projectModel from "../models/project.js";
+import userModel from "../models/user.js";
+import { NotFoundError, ForbiddenError, UserNotFound, ProjectAlreadyExists} from "../utils/errors.js";
 
-//TODO : check if user is admin
+//clickup
 const createProject = async (req, res, next) => {
   try {
-    const { title, url, description, user } = req.body;
+    const { title, description, url, email } = req.body;
 
-    const project = await Project.create({ title, url, description, user });
+    let foundUsers = [];
 
-    res.status(201).json({ message: "Project created", project });
+    if (email) {
+      const emails = email.split(',').map(e => e.trim());
+      const users = await userModel.find({ email: { $in: emails } });
+
+      if (users.length !== emails.length) {
+        const foundEmails = users.map(u => u.email);
+        const notFoundEmails = emails.filter(e => !foundEmails.includes(e));
+        throw new UserNotFound(`The following emails were not found: ${notFoundEmails.join(', ')}`);
+      }
+
+      foundUsers = users.map(u => u._id);
+    }
+
+    const existingProject = await projectModel.findOne({ title });
+    if (existingProject) throw new ProjectAlreadyExists();
+
+    const responseFolder = await axios.post(
+      `https://api.clickup.com/api/v2/space/${process.env.CLICKUP_SPACE_ID}/folder`,
+      {
+        name: title,
+        content: description
+      },
+      {
+        headers: {
+          Authorization: process.env.CLICKUP_API_TOKEN,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    const folderId = responseFolder.data.id;
+
+    const listNames = ["Copy Revision", "Design Issues", "Requested Change", "New Item"];
+    const createdLists = [];
+
+    for (const name of listNames) {
+      const responseList = await axios.post(
+        `https://api.clickup.com/api/v2/folder/${folderId}/list`,
+        { name },
+        {
+          headers: {
+            Authorization: process.env.CLICKUP_API_TOKEN,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+
+      createdLists.push({
+        name,
+        listId: responseList.data.id
+      });
+    }
+
+    const project = await projectModel.create({
+      title,
+      description,
+      url,
+      users: foundUsers.length > 0 ? foundUsers : undefined,
+      folderId,
+      clickupLists: createdLists
+    });
+
+    res.status(201).json({
+      message: `Project created${foundUsers.length > 0 ? '' : ' (without users)'}`,
+      project,
+      clickupProject: responseFolder.data
+    });
+
   } catch (error) {
     next(error);
   }
 };
 
+//clickup
 const getAllProjects = async (req, res, next) => {
-  if (process.env.NODE_ENV === 'development') {
-    req = {
-      user: {
-        email: "test@mail.com",
-        role: "admin"
-      }
-    }
-  }
   try {
-    let projects;
+    let projects = [];
 
     if (req.user.role === "admin") {
-      projects = await Project.find().populate("users", "email role");
+      const clickupResponse = await axios.get(
+        `https://api.clickup.com/api/v2/space/${process.env.CLICKUP_SPACE_ID}/folder`,
+        {
+          headers: {
+            Authorization: process.env.CLICKUP_API_TOKEN,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+
+      const folders = clickupResponse.data.folders;
+
+      projects = await Promise.all(
+        folders.map(async (folder) => {
+          const mongoProject = await projectModel.findOne({ folderId: folder.id }).populate("users", "email");
+          return {
+            Projects: mongoProject || null
+          };
+        })
+      );
     } else {
-      projects = await Project.find({ user: req.user._id }).populate("users", "email");
+      projects = await projectModel.find({ user: req.user._id }).populate("users", "email");
+      if (!projects || projects.length === 0) throw new NotFoundError("You have no projects");
     }
 
     res.json(projects);
@@ -38,15 +120,20 @@ const getAllProjects = async (req, res, next) => {
   }
 };
 
-
+//MongoDb en clikcup no hay manera de buscar por id el folder, es esto o sacar todos y buscar por id en el response.data
 const getProjectById = async (req, res, next) => {
   try {
-    const project = await Project.findById(req.params.id).populate("user", "email");
+    const projectId = req.params.projectId.trim();
+
+    const project = await projectModel.findById(projectId).populate("users", "email");
     if (!project) throw new NotFoundError("Project not found");
 
+    const isUserInProject = project.users.some(
+      user => user._id.toString() === req.user._id.toString()
+    );
 
-    if (req.user.role !== "admin" && project.user._id.toString() !== req.user._id) {
-      throw new ForbiddenError("No tienes permiso para ver este proyecto");
+    if (req.user.role !== "admin" && !isUserInProject) {
+      throw new ForbiddenError("You don't have permission to access this project");
     }
 
     res.json(project);
@@ -56,25 +143,46 @@ const getProjectById = async (req, res, next) => {
 };
 
 
+
+//clickup
 const updateProject = async (req, res, next) => {
   try {
-    const { title, url, description, user } = req.body;
-    const updated = await Project.findByIdAndUpdate(
-      req.params.id,
+    const projectId = req.params.projectId.trim();
+    const { title, description, url, user } = req.body;
+
+    const updated = await projectModel.findByIdAndUpdate(
+      projectId,
       { title, url, description, user },
       { new: true }
     );
+
     if (!updated) throw new NotFoundError("Project not found");
-    res.json({ message: "Project not updated", project: updated });
+
+    await axios.put(`https://api.clickup.com/api/v2/folder/${updated.folderId}`, 
+      { name: title, content: description }, 
+      { headers: { Authorization: process.env.CLICKUP_API_TOKEN } }
+    );
+
+    res.json({ message: "Project updated", project: updated });
   } catch (error) {
     next(error);
   }
 };
 
+//clickup
 const deleteProject = async (req, res, next) => {
   try {
-    const deleted = await Project.findByIdAndDelete(req.params.id);
+    const projectId = req.params.projectId.trim();
+
+    const deleted = await projectModel.findByIdAndDelete(projectId);
     if (!deleted) throw new NotFoundError("Project not found");
+
+    await axios.delete(`https://api.clickup.com/api/v2/folder/${deleted.folderId}`, {
+      headers: {
+        Authorization: process.env.CLICKUP_API_TOKEN
+      }
+    });
+
     res.json({ message: "Project deleted" });
   } catch (error) {
     next(error);
