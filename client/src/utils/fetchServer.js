@@ -16,7 +16,7 @@ const loginFetch = async ({ email, password }) => {
     .catch(error => console.error('Error:', error));
 }
 
-const createProject = async ({ title, url, description, users }) => {
+const createProject = async ({ title, url, description, reviewerEmails:users }) => {
     fetch(`${serverUrl}/project`, {
         method: 'POST',
         headers: {

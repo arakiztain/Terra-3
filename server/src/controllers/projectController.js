@@ -1,12 +1,15 @@
 import Project from "../models/project.js";
+import User from "../models/user.js";
 import { NotFoundError, ForbiddenError } from "../utils/errors.js";
 
 //TODO : check if user is admin
 const createProject = async (req, res, next) => {
   try {
-    const { title, url, description, user } = req.body;
-
-    const project = await Project.create({ title, url, description, user });
+    const { title, url, description, users } = req.body;
+    
+    const userDocs = await User.find({ email: { $in: users } });
+    const userIds = userDocs.map(user => user._id);
+    const project = await Project.create({ title, url, description, users: userIds });
 
     res.status(201).json({ message: "Project created", project });
   } catch (error) {
