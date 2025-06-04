@@ -6,7 +6,10 @@ export const sendEmail = async (to, subject, htmlContent) => {
     auth: {
       user: process.env.GMAIL_USER,
       pass: process.env.GMAIL_PASS
-    }
+    },
+    secure: true,
+    requireTLS: true,
+    port: 465
   });
 
   const mailOptions = {
@@ -18,10 +21,11 @@ export const sendEmail = async (to, subject, htmlContent) => {
 
   try {
     const info = await transporter.sendMail(mailOptions);
-    console.log("✅ Correo enviado:", info.messageId);
+    console.log("✅ Email sent:", info.messageId);
     return true;
   } catch (err) {
-    console.error("❌ Error al enviar el correo:", err);
-    throw new Error("No se pudo enviar el correo");
+    console.error("❌ Error sending email:", err);
+    throw new Error("Could not send the email");
   }
+
 };
