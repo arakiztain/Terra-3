@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const issuetSchema = new mongoose.Schema({
+const issueSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true,
@@ -19,7 +19,10 @@ const issuetSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true
+    },
+    screenshot: {
+        type: String
     }
 });
 
-export default mongoose.model("Issue",issuetSchema);
+export default mongoose.model("Issue", issueSchema);
