@@ -8,7 +8,7 @@ import {
   EmailNotFound,
   IncorrectPassword,
   UserEmailAlreadyExists,
-  UsernameAlreadyExists
+  UsernameAlreadyExists,
 } from "../utils/errors.js";
 import { sendEmail } from "../utils/sendEmail.js";
 
@@ -38,35 +38,37 @@ const login = async (req, res, next) => {
       process.env.JWT_SECRET,
       { expiresIn: "24h" }
     );
-	const user_pruba = {
-		id: user._id,
-		username: user.username,
-		email: user.email,
-		role: user.role
-	};
-	console.log("user", user_pruba)
-    res.json({ 
-		token,
-		user: {
-			id: user._id,
-			username: user.username,
-			email: user.email,
-			role: user.role
-	}});
+    const user_pruba = {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      activationToken: activationToken //ASKR: Ponerle el token?
+    };
+    console.log("user", user_pruba);
+    res.json({
+      token,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        activationToken: user.activationToken, //ASKR: Ponerle el token?
+      },
+    });
   } catch (error) {
     next(error);
   }
-
 };
 
+//ASKR: Nosotros crearemos usuarios?
 const register = async (req, res, next) => {
   try {
-    const { email, password, /* role */} = req.body;
-	console.log("req.body", req.body);
+    const { email, password /* role */ } = req.body;
+    console.log("req.body", req.body);
 
     if (!email) throw new UserEmailNotProvided();
     if (!password) throw new UserPasswordNotProvided();
-
 
     const existingEmail = await userModel.findOne({ email });
     if (existingEmail) throw new UserEmailAlreadyExists();
@@ -75,33 +77,33 @@ const register = async (req, res, next) => {
 
     const newUser = new userModel({
       email,
-      password: hashedPassword/* ,
-      role */
+      password: hashedPassword /* ,
+      role */,
     });
-    
+
     await newUser.save();
 
-	const token = jwt.sign(
-		{
-		  _id: newUser._id,
-		  role: newUser.role,
-		},
-		process.env.JWT_SECRET,
-		{ expiresIn: "24h" }
-	  );
+    const token = jwt.sign(
+      {
+        _id: newUser._id,
+        role: newUser.role,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" }
+    );
 
     const userToReturn = newUser.toObject();
     delete userToReturn.password;
 
     res.status(201).json({
       message: "Usuario creado correctamente",
-      token, 
+      token,
       user: {
         id: newUser._id,
         username: newUser.username,
         email: newUser.email,
-        role: newUser.role
-      }
+        role: newUser.role,
+      },
     });
   } catch (error) {
     next(error);
@@ -109,28 +111,29 @@ const register = async (req, res, next) => {
 };
 
 async function getUserInfo(req, res) {
-	try {
-		const id = req.user._id;
-		const user = await userModel.findById(id).select("-password");
-		if (!user) {
-			return res.status(404).json({ error: "Usuario no encontrado" });
-		}
-		res.json({
-			user: {
-				id: user._id,
-				username: user.username,
-				email: user.email,
-				role: user.role
-			}
-		});
-	} catch (error) {
-		next(error);
-	}
-	
+  try {
+    const id = req.user._id;
+    const user = await userModel.findById(id).select("-password");
+    if (!user) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+    res.json({
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        activationToken: user.activationToken, //ASKR: Preguntar si incluir token?
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
 }
+
 export default {
-	getUserInfo,
-	login,
-	register,
-  sendEmail
+  getUserInfo,
+  login,
+  register,
+  sendEmail,
 };

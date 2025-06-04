@@ -12,6 +12,7 @@ function isLoggedInAPI(req, res, next) {
   const authorization = req.headers.authorization;
   console.log("authorization", authorization);
 
+  //ASKR: Ojo! no empieza con Bearer sino con PK_
   if (!authorization || !authorization.startsWith("Bearer ")) {
     return next(new UnauthorizedError("Token no proporcionado"));
   }
