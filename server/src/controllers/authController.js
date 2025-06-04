@@ -26,7 +26,7 @@ const login = async (req, res, next) => {
     } */
     if (!user) throw new EmailNotFound();
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcryptjs.compare(password, user.password);
     if (!isMatch) throw new IncorrectPassword();
 
     const token = jwt.sign(
@@ -98,8 +98,10 @@ const register = async (req, res, next) => {
   }
 };
 
-async function getUserInfo(req, res) {
+async function getUserInfo(req, res, next) {
   try {
+    console.log("requser");
+    console.log(req.user);
     const id = req.user._id;
     const user = await userModel.findById(id).select("-password");
     if (!user) {

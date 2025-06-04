@@ -29,17 +29,19 @@ const loginFetch = async ({ email, password }) => {
   }
 };
 
-const createProject = async ({ title, url, description, reviewerEmails:users }) => {
+const createProject = async ({ title, url, description, reviewerEmails:email }) => {
+    const token = localStorage.getItem("token");
     fetch(`${serverUrl}/project`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
             title,
             url,
             description,
-            users
+            email
         })
     })
     .then(response => response.json())
@@ -48,10 +50,14 @@ const createProject = async ({ title, url, description, reviewerEmails:users }) 
 }
 
 const getProjects = async () => {
+  const token = localStorage.getItem("token");
   try {
     const response = await fetch(`${serverUrl}/project`, {
       method: "GET",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
     });
     const data = await response.json();
     return data;
@@ -62,10 +68,14 @@ const getProjects = async () => {
 };
 
 const getIssues = async () => {
+    const token = localStorage.getItem("token");
     try{
         const response = await fetch(`${serverUrl}/issue`, {
             method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 
+              'Content-Type': 'application/json',
+              "Authorization": `Bearer ${token}`,
+             },
         });
         const data = await response.json();
         return data;
@@ -75,10 +85,15 @@ const getIssues = async () => {
     }
 }
 const setIssue = async ({ formData }) =>{
+    const token = localStorage.getItem("token");
     try{
-        const response = await fetch(`${serverUrl}/issue/report-issue/901511683211`, {
+        const response = await fetch(`${serverUrl}/issue/report-issue/684077b8ceed6d9c2be69759`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+              'Content-Type': 'application/json',
+              "Authorization": `Bearer ${token}`,
+             },
+            
             body: JSON.stringify(formData)
         });
         const data = await response.json();

@@ -9,11 +9,11 @@ const createProject = async (req, res, next) => {
     const { title, description, url, email } = req.body;
 
     let foundUsers = [];
-
     if (email) {
-      const emails = email.split(',').map(e => e.trim());
+      const emails = email.map(e => e.trim());
       const users = await User.find({ email: { $in: emails } });
-
+      console.log("These are the emails", emails);
+      console.log("These are the users", users);
       if (users.length !== emails.length) {
         const foundEmails = users.map(u => u.email);
         const notFoundEmails = emails.filter(e => !foundEmails.includes(e));
@@ -87,7 +87,6 @@ const createProject = async (req, res, next) => {
 const getAllProjects = async (req, res, next) => {
   try {
     let projects = [];
-
     if (req.user.role === "admin") {
       const clickupResponse = await axios.get(
         `https://api.clickup.com/api/v2/space/${process.env.CLICKUP_SPACE_ID}/folder`,
@@ -100,13 +99,9 @@ const getAllProjects = async (req, res, next) => {
       );
 
       const folders = clickupResponse.data.folders;
-
       projects = await Promise.all(
         folders.map(async (folder) => {
-          const mongoProject = await Project.findOne({ folderId: folder.id }).populate("users", "email");
-          return {
-            Projects: mongoProject || null
-          };
+          return await Project.findOne({ folderId: folder.id }).populate("users", "email");
         })
       );
     } else {

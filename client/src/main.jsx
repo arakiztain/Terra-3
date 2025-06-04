@@ -13,12 +13,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      
         <AuthProvider>
           <Title />
           <Outlet />
         </AuthProvider>
-      
     ),
     children: [
       {

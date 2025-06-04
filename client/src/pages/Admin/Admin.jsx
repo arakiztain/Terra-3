@@ -11,8 +11,9 @@ const Admin = () =>{
   const [showEditForm, setShowEditForm] = useState(false);
     useEffect(() => {
     const fetchProjects = async () =>{
-      console.log("Does it yeah");
       setProjects(await fetchServer.getProjects());
+      console.log("this is projects oh no");
+      console.log(projects);
     }
     fetchProjects();
   }, [reloadFlag])
