@@ -14,5 +14,4 @@ router.put("/:projectId", isAdmin, projectController.updateProject);
 
 router.delete("/:projectId", isAdmin, projectController.deleteProject);
 
-
 export default router;

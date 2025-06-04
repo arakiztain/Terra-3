@@ -1,20 +1,33 @@
-const serverUrl = 'http://localhost:3004';
+const serverUrl = "http://localhost:3004";
+
+async function getUserInfo() {
+  try {
+    const response = await fetch(`${serverUrl}/user-info`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+}
 
 const loginFetch = async ({ email, password }) => {
-    fetch(`${serverUrl}/login`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            email,
-            password
-        })
-    })
-    .then(response => response.json())
-    .then(data => console.log(data))
-    .catch(error => console.error('Error:', error));
-}
+  try {
+    const response = await fetch(`${serverUrl}/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+};
 
 const createProject = async ({ title, url, description, reviewerEmails:users }) => {
     fetch(`${serverUrl}/project`, {
@@ -37,16 +50,16 @@ const createProject = async ({ title, url, description, reviewerEmails:users }) 
 const getProjects = async () => {
   try {
     const response = await fetch(`${serverUrl}/project`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
     });
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error:', error);
+    console.error("Error:", error);
     throw error;
   }
-}
+};
 
 const getIssues = async () => {
     try{
@@ -77,9 +90,10 @@ const setIssue = async ({ formData }) =>{
 }
 
 export default {
-    loginFetch,
-    createProject,
-    getProjects,
-    getIssues,
-    setIssue
+  loginFetch,
+  createProject,
+  getProjects,
+  getUserInfo,
+  getIssues,
+  setIssue  
 }
