@@ -37,6 +37,8 @@ const login = async (req, res, next) => {
       process.env.JWT_SECRET,
       { expiresIn: "24h" }
     );
+    console.log("This is the user");
+    console.log(user);
 	const user_pruba = {
 		id: user._id,
 		username: user.username,

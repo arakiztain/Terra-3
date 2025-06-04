@@ -1,6 +1,6 @@
+import Project from "../models/project.js";
+import User from "../models/user.js";
 import axios from "axios";
-import projectModel from "../models/project.js";
-import userModel from "../models/user.js";
 import { NotFoundError, ForbiddenError, UserNotFound, ProjectAlreadyExists} from "../utils/errors.js";
 
 //clickup
@@ -12,7 +12,7 @@ const createProject = async (req, res, next) => {
 
     if (email) {
       const emails = email.split(',').map(e => e.trim());
-      const users = await userModel.find({ email: { $in: emails } });
+      const users = await User.find({ email: { $in: emails } });
 
       if (users.length !== emails.length) {
         const foundEmails = users.map(u => u.email);
@@ -23,7 +23,7 @@ const createProject = async (req, res, next) => {
       foundUsers = users.map(u => u._id);
     }
 
-    const existingProject = await projectModel.findOne({ title });
+    const existingProject = await Project.findOne({ title });
     if (existingProject) throw new ProjectAlreadyExists();
 
     const responseFolder = await axios.post(
@@ -63,7 +63,7 @@ const createProject = async (req, res, next) => {
       });
     }
 
-    const project = await projectModel.create({
+    const project = await Project.create({
       title,
       description,
       url,
@@ -103,14 +103,14 @@ const getAllProjects = async (req, res, next) => {
 
       projects = await Promise.all(
         folders.map(async (folder) => {
-          const mongoProject = await projectModel.findOne({ folderId: folder.id }).populate("users", "email");
+          const mongoProject = await Project.findOne({ folderId: folder.id }).populate("users", "email");
           return {
             Projects: mongoProject || null
           };
         })
       );
     } else {
-      projects = await projectModel.find({ user: req.user._id }).populate("users", "email");
+      projects = await Project.find({ user: req.user._id }).populate("users", "email");
       if (!projects || projects.length === 0) throw new NotFoundError("You have no projects");
       //clickup llamada id
     }
@@ -126,7 +126,7 @@ const getProjectById = async (req, res, next) => {
   try {
     const projectId = req.params.projectId.trim();
 
-    const project = await projectModel.findById(projectId).populate("users", "email");
+    const project = await Project.findById(projectId).populate("users", "email");
     if (!project) throw new NotFoundError("Project not found");
 
     const isUserInProject = project.users.some(
@@ -151,7 +151,7 @@ const updateProject = async (req, res, next) => {
     const projectId = req.params.projectId.trim();
     const { title, description, url, user } = req.body;
 
-    const updated = await projectModel.findByIdAndUpdate(
+    const updated = await Project.findByIdAndUpdate(
       projectId,
       { title, url, description, user },
       { new: true }
@@ -175,7 +175,7 @@ const deleteProject = async (req, res, next) => {
   try {
     const projectId = req.params.projectId.trim();
 
-    const deleted = await projectModel.findByIdAndDelete(projectId);
+    const deleted = await Project.findByIdAndDelete(projectId);
     if (!deleted) throw new NotFoundError("Project not found");
 
     await axios.delete(`https://api.clickup.com/api/v2/folder/${deleted.folderId}`, {
