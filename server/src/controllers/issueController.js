@@ -1,3 +1,4 @@
+import projectModel from "../models/project.js";
 import axios from "axios";
 import dotenv from "dotenv";
 
@@ -21,7 +22,9 @@ async function getIssues(req, res) {
 };
 
 async function reportIssue(req, res) {
-  const { name, description, priority, tags } = req.body;
+  console.log("Reaches the report issue");
+  const projectId = req.params.projectId.trim();
+  const { name, description, priority, tags, request_type } = req.body;
 
   if (!name || !description) {
     return res.status(400).json({ error: "Missing required fields: name or description" });
@@ -31,12 +34,19 @@ async function reportIssue(req, res) {
     name,
     description,
     tags: tags || [],
-    priority: priority || 3 // values from 1 (Urgent) to 4 (Low)
+    priority: priority || 3, // values from 1 (Urgent) to 4 (Low)
+    request_type: request_type
   };
 
   try {
+    const project = await projectModel.findById(projectId);
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+    const listId = project.clickupLists.find(list => list.name === request_type.toLowerCase()).listId;
+    taskData.list_id = listId;
     const response = await axios.post(
-      `https://api.clickup.com/api/v2/list/${process.env.CLICKUP_LIST_ID}/task`,
+      `https://api.clickup.com/api/v2/list/${listId}/task`,
       taskData,
       {
         headers: {

@@ -1,35 +1,27 @@
-import { useEffect } from "react";
-import ProjectList from "../../components/ProjectList/ProjectList";
+import styles from "./Dashboard.module.css";
+import IssueForm from "../../components/IssueForm/IssueForm";
+import IssueCard from "../../components/IssueCard/IssueCard";
+import { useState, useEffect } from "react";
+import fetchServer from "../../utils/fetchServer";
 const Dashboard = () =>{
+    const [issues, setIssues] = useState([]);
     //ProjectList load, to render a project choice
     //Probably will need a spinner or something here.
     useEffect(()=>{
-
+        const fetchData = async () =>{
+            setIssues(await fetchServer.getIssues());
+        }
+        fetchData();
+        console.log(issues);
     },[])
-    const mockData = [
-    {
-        id: 1,
-        title: "Project Alpha",
-        url: "https://alpha.example.com",
-        reviewers: ["alice@example.com", "bob@example.com"],
-    },
-    {
-        id: 2,
-        title: "Project Beta",
-        url: "https://beta.example.com",
-        reviewers: ["carol@example.com"],
-    },
-    {
-        id: 3,
-        title: "Project Gamma",
-        url: "https://gamma.example.com",
-        reviewers: ["dave@example.com", "eve@example.com", "frank@example.com"],
-    },
-    ];
 
-    return(
-        <ProjectList projectList={mockData} />
-    )
+     return (
+        <div className="dashboard">
+            <h2>Dashboard</h2>
+            {issues && issues.length > 0 && issues.map(issue => <IssueCard key={issue._id} issue={issue}/>)}
+            <IssueForm />
+        </div>
+  );
 }
 
 export default Dashboard;

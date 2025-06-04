@@ -37,13 +37,6 @@ const login = async (req, res, next) => {
       process.env.JWT_SECRET,
       { expiresIn: "24h" }
     );
-    const user_pruba = {
-      id: user._id,
-      username: user.username,
-      email: user.email,
-      role: user.role,
-    };
-    console.log("user", user_pruba);
     res.json({
       token,
       user: {
@@ -58,7 +51,6 @@ const login = async (req, res, next) => {
   }
 };
 
-//ASKR: Nosotros crearemos usuarios?
 const register = async (req, res, next) => {
   try {
     const { email, password, role} = req.body;
@@ -119,7 +111,7 @@ async function getUserInfo(req, res) {
         username: user.username,
         email: user.email,
         role: user.role,
-        activationToken: user.activationToken, //ASKR: Preguntar si incluir token?
+        activationToken: user.activationToken,
       },
     });
   } catch (error) {

@@ -14,7 +14,7 @@
   overflow:hidden;
   display:grid;
   align-items: end;
-grid-auto-rows: min-content;
+  grid-auto-rows: min-content;
   grid-template-columns: 3fr 2fr;
   grid-template-rows: auto auto;
   line-height:1.45em;

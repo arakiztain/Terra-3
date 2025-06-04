@@ -14,7 +14,6 @@ async function getUserInfo() {
   }
 }
 
-
 const loginFetch = async ({ email, password }) => {
   try {
     const response = await fetch(`${serverUrl}/login`, {
@@ -30,24 +29,23 @@ const loginFetch = async ({ email, password }) => {
   }
 };
 
-const createProject = async ({ title, url, description, user }) => {
-  console.log("Really now");
-  fetch(`${serverUrl}/project`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      title,
-      url,
-      description,
-      user,
-    }),
-  })
-    .then((response) => response.json())
-    .then((data) => console.log(data))
-    .catch((error) => console.error("Error:", error));
-};
+const createProject = async ({ title, url, description, reviewerEmails:users }) => {
+    fetch(`${serverUrl}/project`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            title,
+            url,
+            description,
+            users
+        })
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+}
 
 const getProjects = async () => {
   try {
@@ -63,9 +61,39 @@ const getProjects = async () => {
   }
 };
 
+const getIssues = async () => {
+    try{
+        const response = await fetch(`${serverUrl}/issue`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}
+const setIssue = async ({ formData }) =>{
+    try{
+        const response = await fetch(`${serverUrl}/issue/report-issue/901511683211`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        });
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}
+
 export default {
   loginFetch,
   createProject,
   getProjects,
   getUserInfo,
-};
+  getIssues,
+  setIssue  
+}
