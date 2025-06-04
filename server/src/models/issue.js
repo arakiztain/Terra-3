@@ -3,12 +3,15 @@ import mongoose from "mongoose";
 const issueSchema = new mongoose.Schema({
   requestType: {
     type: String,
+    enum: ["copy revision", "design issues", "requested change", "new item"],
     required: true,
-    trim: true
+    trim: true,
+    lowercase: true
   },
   status: {
     type: String,
     enum: ['open', 'in_progress', 'closed'],
+    lowercase: true,
     default: 'open'
   },
   requestNumber: {

@@ -42,7 +42,7 @@ const createProject = async (req, res, next) => {
 
     const folderId = responseFolder.data.id;
 
-    const listNames = ["Copy Revision", "Design Issues", "Requested Change", "New Item"];
+    const listNames = ["copy revision", "design issues", "requested change", "new item"];
     const createdLists = [];
 
     for (const name of listNames) {
@@ -112,6 +112,7 @@ const getAllProjects = async (req, res, next) => {
     } else {
       projects = await projectModel.find({ user: req.user._id }).populate("users", "email");
       if (!projects || projects.length === 0) throw new NotFoundError("You have no projects");
+      //clickup llamada id
     }
 
     res.json(projects);
