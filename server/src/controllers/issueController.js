@@ -22,6 +22,7 @@ async function getIssues(req, res) {
 };
 
 async function reportIssue(req, res) {
+  console.log("Reaches the report issue");
   const projectId = req.params.projectId.trim();
   const { name, description, priority, tags, request_type } = req.body;
 

@@ -48,8 +48,38 @@ const getProjects = async () => {
   }
 }
 
+const getIssues = async () => {
+    try{
+        const response = await fetch(`${serverUrl}/issue`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}
+const setIssue = async ({ formData }) =>{
+    try{
+        const response = await fetch(`${serverUrl}/issue/report-issue/901511683211`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        });
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}
+
 export default {
     loginFetch,
     createProject,
-    getProjects
+    getProjects,
+    getIssues,
+    setIssue
 }
