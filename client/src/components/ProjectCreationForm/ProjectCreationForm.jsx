@@ -9,16 +9,17 @@ const ProjectCreationForm = ({ promptReload, reloadFlag, project }) => {
     reviewerEmails: [],
   });
 
-    useEffect(() => {
+  useEffect(() => {
     if (project) {
       setFormData({
         title: project.title || "",
         url: project.url || "",
         description: project.description || "",
-        reviewerEmails: project.email || [],
+        reviewerEmails: project.reviewerEmails || [],
       });
     }
   }, [project]);
+
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
