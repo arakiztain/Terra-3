@@ -8,12 +8,19 @@ const createProject = async (req, res, next) => {
   try {
     const { title, description, url, email } = req.body;
 
-    let foundUser = null;
+    let foundUsers = [];
 
     if (email) {
-      const user = await userModel.findOne({ email });
-      if (!user) throw new UserNotFound();
-      foundUser = user;
+      const emails = email.split(',').map(e => e.trim());
+      const users = await userModel.find({ email: { $in: emails } });
+
+      if (users.length !== emails.length) {
+        const foundEmails = users.map(u => u.email);
+        const notFoundEmails = emails.filter(e => !foundEmails.includes(e));
+        throw new UserNotFound(`The following emails were not found: ${notFoundEmails.join(', ')}`);
+      }
+
+      foundUsers = users.map(u => u._id);
     }
 
     const existingProject = await projectModel.findOne({ title });
@@ -23,7 +30,7 @@ const createProject = async (req, res, next) => {
       `https://api.clickup.com/api/v2/space/${process.env.CLICKUP_SPACE_ID}/folder`,
       {
         name: title,
-        content: description //No se muestra en clickup (solo internamente)
+        content: description
       },
       {
         headers: {
@@ -60,13 +67,13 @@ const createProject = async (req, res, next) => {
       title,
       description,
       url,
-      users: foundUser ? foundUser._id : undefined,
+      users: foundUsers.length > 0 ? foundUsers : undefined,
       folderId,
       clickupLists: createdLists
     });
 
     res.status(201).json({
-      message: `Project created${foundUser ? '' : ' (without user)'}`,
+      message: `Project created${foundUsers.length > 0 ? '' : ' (without users)'}`,
       project,
       clickupProject: responseFolder.data
     });
@@ -116,7 +123,7 @@ const getAllProjects = async (req, res, next) => {
 //MongoDb en clikcup no hay manera de buscar por id el folder, es esto o sacar todos y buscar por id en el response.data
 const getProjectById = async (req, res, next) => {
   try {
-    const projectId = req.params.projectId;
+    const projectId = req.params.projectId.trim();
 
     const project = await projectModel.findById(projectId).populate("users", "email");
     if (!project) throw new NotFoundError("Project not found");
@@ -140,7 +147,7 @@ const getProjectById = async (req, res, next) => {
 //clickup
 const updateProject = async (req, res, next) => {
   try {
-    const projectId = req.params.projectId;
+    const projectId = req.params.projectId.trim();
     const { title, description, url, user } = req.body;
 
     const updated = await projectModel.findByIdAndUpdate(
@@ -165,7 +172,7 @@ const updateProject = async (req, res, next) => {
 //clickup
 const deleteProject = async (req, res, next) => {
   try {
-    const projectId = req.params.projectId;
+    const projectId = req.params.projectId.trim();
 
     const deleted = await projectModel.findByIdAndDelete(projectId);
     if (!deleted) throw new NotFoundError("Project not found");
