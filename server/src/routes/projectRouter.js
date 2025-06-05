@@ -11,8 +11,6 @@ router.get("/", isLoggedInAPI, isAdmin, projectController.getAllProjects);
 
 router.get("/:projectId", isLoggedInAPI, projectController.getProjectById);
 
-router.put("/:projectId", isLoggedInAPI, isAdmin, projectController.updateProject);
-
 router.delete("/:projectId", isLoggedInAPI, isAdmin, projectController.deleteProject);
 
 export default router;

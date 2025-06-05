@@ -1,9 +1,8 @@
 import Project from "../models/project.js";
 import User from "../models/user.js";
 import axios from "axios";
-import { NotFoundError, ForbiddenError, UserNotFound, ProjectAlreadyExists} from "../utils/errors.js";
+import { NotFoundError, ForbiddenError, UserNotFound, ProjectAlreadyExists, ProjectNotFound} from "../utils/errors.js";
 
-//clickup
 async function createProject(req, res, next) {
   try {
     const { title, description, url, email} = req.body;
@@ -94,7 +93,7 @@ async function createProject(req, res, next) {
       description,
       url,
       users: foundUsers.length > 0 ? foundUsers : undefined,
-      folderId,
+      spaceId,
       clickupLists: createdLists
     });
 
@@ -110,8 +109,7 @@ async function createProject(req, res, next) {
   }
 };
 
-//clickup
-const getAllProjects = async (req, res, next) => {
+async function getAllProjects(req, res, next) {
   try {
     let projects = [];
 
@@ -134,12 +132,12 @@ const getAllProjects = async (req, res, next) => {
             }
           }
         );
-      ///fasafssfafsafasfas 
-      const spaces = SpaceResponse.data.spaces;
+
+        const spaces = SpaceResponse.data.spaces;
 
       projects = await Promise.all(
         spaces.map(async (folder) => {
-          const mongoProject = await Project.findOne({ folderId: folder.id }).populate("users", "email");
+          const mongoProject = await Project.findOne({ spaceId: folder.id }).populate("users", "email");
           return {
             mongoProject: mongoProject || null,
             clickupFolder: folder
@@ -180,12 +178,12 @@ const getAllProjects = async (req, res, next) => {
 };
 
 //MongoDb en clikcup no hay manera de buscar por id el folder, es esto o sacar todos y buscar por id en el response.data
-const getProjectById = async (req, res, next) => {
+async function getProjectById(req, res, next) {
   try {
     const projectId = req.params.projectId.trim();
 
     const project = await Project.findById(projectId).populate("users", "email");
-    if (!project) throw new NotFoundError("Project not found");
+    if (!project) throw new ProjectNotFound();
 
     const isUserInProject = project.users.some(
       user => user._id.toString() === req.user._id.toString()
@@ -201,46 +199,21 @@ const getProjectById = async (req, res, next) => {
   }
 };
 
-
-
-//clickup
-const updateProject = async (req, res, next) => {
-  try {
-    const projectId = req.params.projectId.trim();
-    const { title, description, url, user } = req.body;
-
-    const updated = await Project.findByIdAndUpdate(
-      projectId,
-      { title, url, description, user },
-      { new: true }
-    );
-
-    if (!updated) throw new NotFoundError("Project not found");
-
-    await axios.put(`https://api.clickup.com/api/v2/folder/${updated.folderId}`, 
-      { name: title, content: description }, 
-      { headers: { Authorization: process.env.CLICKUP_API_TOKEN } }
-    );
-
-    res.json({ message: "Project updated", project: updated });
-  } catch (error) {
-    next(error);
-  }
-};
-
-//clickup
-const deleteProject = async (req, res, next) => {
+async function deleteProject(req, res, next) {
   try {
     const projectId = req.params.projectId.trim();
 
-    const deleted = await Project.findByIdAndDelete(projectId);
-    if (!deleted) throw new NotFoundError("Project not found");
+    const project = await Project.findById(projectId);
 
-    await axios.delete(`https://api.clickup.com/api/v2/folder/${deleted.folderId}`, {
+    if (!project) throw new ProjectNotFound();
+
+    await axios.delete(`https://api.clickup.com/api/v2/space/${project.spaceId}`, {
       headers: {
         Authorization: process.env.CLICKUP_API_TOKEN
       }
     });
+
+    await Project.findByIdAndDelete(projectId);
 
     res.json({ message: "Project deleted" });
   } catch (error) {
@@ -252,6 +225,5 @@ export default {
   createProject,
   getAllProjects,
   getProjectById,
-  updateProject,
   deleteProject
 };
