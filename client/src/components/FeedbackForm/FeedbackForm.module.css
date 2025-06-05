@@ -2,18 +2,33 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  max-width: 600px;
-  margin: 2rem auto;
+  width:100%;
   padding: 1rem;
-  background: #222;
+  background: #0F0F0F;
   color: white;
   border-radius: 8px;
+  grid-row: 2;
+  grid-column: 3 / 6;
+  margin-top: 1.5em;
+  padding-left: 2em;
+  padding-right: 3.2em;
+  font-size:24px;
+  font-weight:700;
+}
+
+.formInput{
+  border-radius: 25px;
+  border-width: 3px;
+  border-color: white;
+  margin-top:1.5em;
+  margin-bottom:2em;
 }
 
 label {
   display: flex;
   flex-direction: column;
-  font-size: 0.95rem;
+  font-size: 20px;
+  /* preguntar */
 }
 
 input,
@@ -40,4 +55,25 @@ button {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.twoColumns{
+  display:flex;
+}
+
+.halfWdith{
+  width:50%;
+}
+
+.bigInput{
+  min-height:200px;
+}
+
+select{
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: url('../../assets/svg/chevron-down.svg') no-repeat right center;
+  background-position: calc(100% + 1em) 45%;
+  padding-right: 2em;
 }

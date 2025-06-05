@@ -7,13 +7,12 @@ import { NotFoundError, ForbiddenError, UserNotFound, ProjectAlreadyExists} from
 const createProject = async (req, res, next) => {
   try {
     const { title, description, url, email } = req.body;
-
     let foundUsers = [];
+
     if (email) {
       const emails = email.map(e => e.trim());
       const users = await User.find({ email: { $in: emails } });
-      console.log("These are the emails", emails);
-      console.log("These are the users", users);
+
       if (users.length !== emails.length) {
         const foundEmails = users.map(u => u.email);
         const notFoundEmails = emails.filter(e => !foundEmails.includes(e));
@@ -21,16 +20,16 @@ const createProject = async (req, res, next) => {
       }
 
       foundUsers = users.map(u => u._id);
+      console.log(foundUsers);
     }
 
     const existingProject = await Project.findOne({ title });
     if (existingProject) throw new ProjectAlreadyExists();
 
     const responseFolder = await axios.post(
-      `https://api.clickup.com/api/v2/space/${process.env.CLICKUP_SPACE_ID}/folder`,
+      `https://api.clickup.com/api/v2/space/${process.env.CLICK_PROJECTSPACE_ID}/folder`,
       {
         name: title,
-        content: description
       },
       {
         headers: {
@@ -87,9 +86,10 @@ const createProject = async (req, res, next) => {
 const getAllProjects = async (req, res, next) => {
   try {
     let projects = [];
+
     if (req.user.role === "admin") {
       const clickupResponse = await axios.get(
-        `https://api.clickup.com/api/v2/space/${process.env.CLICKUP_SPACE_ID}/folder`,
+        `https://api.clickup.com/api/v2/space/${process.env.CLICK_PROJECTSPACE_ID}/folder`,
         {
           headers: {
             Authorization: process.env.CLICKUP_API_TOKEN,
@@ -103,43 +103,21 @@ const getAllProjects = async (req, res, next) => {
         folders.map(async (folder) => {
           const mongoProject = await Project.findOne({ folderId: folder.id }).populate("users", "email");
           return {
-            mongoProject: mongoProject || null,
-            clickupFolder: folder
+            Projects: mongoProject || null
           };
         })
       );
     } else {
-      const userProjects = await Project.find({ users: req.user._id }).populate("users", "email");
-
-      if (!userProjects || userProjects.length === 0) {
-        throw new NotFoundError("You have no projects");
-      }
-
-      projects = await Promise.all(
-        userProjects.map(async (project) => {
-          const clickupFolderResponse = await axios.get(
-            `https://api.clickup.com/api/v2/folder/${project.folderId}`,
-            {
-              headers: {
-                Authorization: process.env.CLICKUP_API_TOKEN,
-                "Content-Type": "application/json"
-              }
-            }
-          );
-
-          return {
-            mongoProject: project,
-            clickupFolder: clickupFolderResponse.data
-          };
-        })
-      );
+      projects = await Project.find({ user: req.user._id }).populate("users", "email");
+      if (!projects || projects.length === 0) throw new NotFoundError("You have no projects");
+      //clickup llamada id
     }
-
     res.json(projects);
   } catch (error) {
     next(error);
   }
 };
+
 //MongoDb en clikcup no hay manera de buscar por id el folder, es esto o sacar todos y buscar por id en el response.data
 const getProjectById = async (req, res, next) => {
   try {
