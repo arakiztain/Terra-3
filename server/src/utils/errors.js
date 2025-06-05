@@ -1,10 +1,10 @@
 /**
  * Project
  */
-class RestaurantNotFound extends Error {
-  constructor(message = "Restaurante no encontrado") {
+class ProjectNotFound extends Error {
+  constructor(message = "Project not found") {
     super(message);
-    this.name = "RestaurantNotFound";
+    this.name = "ProjectNotFound";
     this.statusCode = 404;
   }
 }
@@ -297,7 +297,7 @@ class ForbiddenError extends Error {
 
 
 export {
-    RestaurantNotFound ,
+    ProjectNotFound,
     InvalidRestaurantId,
     InvalidRestaurantData,
     ProjectAlreadyExists,

@@ -6,11 +6,8 @@ import {
 } from "../utils/errors.js";
 
 function isLoggedInAPI(req, res, next) {
-  if (process.env.NODE_ENV === 'development') {
-    return next();
-  }
   const authorization = req.headers.authorization;
-  // console.log("authorization", authorization);
+  console.log("authorization", authorization);
 
   if (!authorization || !authorization.startsWith("Bearer ")) {
     return next(new UnauthorizedError("Token no proporcionado"));
