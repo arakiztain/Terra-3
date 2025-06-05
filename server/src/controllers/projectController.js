@@ -4,16 +4,15 @@ import axios from "axios";
 import { NotFoundError, ForbiddenError, UserNotFound, ProjectAlreadyExists} from "../utils/errors.js";
 
 //clickup
-const createProject = async (req, res, next) => {
+async function createProject(req, res, next) {
   try {
-    const { title, description, url, email } = req.body;
+    const { title, description, url, email} = req.body;
 
     let foundUsers = [];
     if (email) {
       const emails = email.map(e => e.trim());
       const users = await User.find({ email: { $in: emails } });
-      console.log("These are the emails", emails);
-      console.log("These are the users", users);
+
       if (users.length !== emails.length) {
         const foundEmails = users.map(u => u.email);
         const notFoundEmails = emails.filter(e => !foundEmails.includes(e));
@@ -26,12 +25,23 @@ const createProject = async (req, res, next) => {
     const existingProject = await Project.findOne({ title });
     if (existingProject) throw new ProjectAlreadyExists();
 
-    const responseFolder = await axios.post(
-      `https://api.clickup.com/api/v2/space/${process.env.CLICKUP_SPACE_ID}/folder`,
-      {
-        name: title,
-        content: description
-      },
+    const responseWorkSpace = await axios.get('https://api.clickup.com/api/v2/team', {
+      headers: {
+        Authorization: process.env.CLICKUP_API_TOKEN,
+      }
+    });
+    //Buscar workspace por nombre (?)
+    const workspaceName = "Terra Ripple's Workspace";
+    const workSpaceId = responseWorkSpace.data.teams.find(team => team.name === workspaceName).id;
+
+    //CreateSpace (project)
+    
+    const responseSpace = await axios.post(
+    `https://api.clickup.com/api/v2/team/${workSpaceId}/space`,
+    {
+      name: title/* ,
+      content: description */
+    },
       {
         headers: {
           Authorization: process.env.CLICKUP_API_TOKEN,
@@ -39,12 +49,28 @@ const createProject = async (req, res, next) => {
         }
       }
     );
-
-    const folderId = responseFolder.data.id;
+    
+    const spaceId = responseSpace.data.id;
 
     const listNames = ["copy revision", "design issues", "requested change", "new item"];
     const createdLists = [];
 
+    //Crear FolderId con los equipos de cada proyecto (space)
+    const responseFolder = await axios.post(
+    `https://api.clickup.com/api/v2/space/${spaceId}/folder`,
+    {
+      //name : folderName (equipo)
+      name: "Folder prueba"
+    },
+    {
+      headers: {
+        Authorization: process.env.CLICKUP_API_TOKEN,
+        "Content-Type": "application/json"
+      }
+    }
+  );
+
+    const folderId = responseFolder.data.id;
     for (const name of listNames) {
       const responseList = await axios.post(
         `https://api.clickup.com/api/v2/folder/${folderId}/list`,
@@ -79,7 +105,8 @@ const createProject = async (req, res, next) => {
     });
 
   } catch (error) {
-    next(error);
+      console.error("ClickUp Error:", error.response?.data || error.message);
+  next(error);
   }
 };
 
@@ -87,20 +114,31 @@ const createProject = async (req, res, next) => {
 const getAllProjects = async (req, res, next) => {
   try {
     let projects = [];
-    if (req.user.role === "admin") {
-      const clickupResponse = await axios.get(
-        `https://api.clickup.com/api/v2/space/${process.env.CLICKUP_SPACE_ID}/folder`,
-        {
-          headers: {
-            Authorization: process.env.CLICKUP_API_TOKEN,
-            "Content-Type": "application/json"
-          }
-        }
-      );
 
-      const folders = clickupResponse.data.folders;
+    const responseWorkSpace = await axios.get('https://api.clickup.com/api/v2/team', {
+      headers: {
+        Authorization: process.env.CLICKUP_API_TOKEN,
+      }
+    });
+
+    const workspaceName = "Terra Ripple's Workspace";
+    const workSpaceId = responseWorkSpace.data.teams.find(team => team.name === workspaceName).id;
+
+    if (req.user.role === "admin") {
+      const SpaceResponse = await axios.get(
+      `https://api.clickup.com/api/v2/team/${workSpaceId}/space`,
+          {
+            headers: {
+              Authorization: process.env.CLICKUP_API_TOKEN,
+              "Content-Type": "application/json"
+            }
+          }
+        );
+      ///fasafssfafsafasfas 
+      const spaces = SpaceResponse.data.spaces;
+
       projects = await Promise.all(
-        folders.map(async (folder) => {
+        spaces.map(async (folder) => {
           const mongoProject = await Project.findOne({ folderId: folder.id }).populate("users", "email");
           return {
             mongoProject: mongoProject || null,
@@ -140,6 +178,7 @@ const getAllProjects = async (req, res, next) => {
     next(error);
   }
 };
+
 //MongoDb en clikcup no hay manera de buscar por id el folder, es esto o sacar todos y buscar por id en el response.data
 const getProjectById = async (req, res, next) => {
   try {
