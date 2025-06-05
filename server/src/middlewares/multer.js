@@ -59,7 +59,6 @@ const issueStorage = multer.diskStorage({
     cb(null, dir);
   },
   filename: (req, file, cb) => {
-    const userId = req.user ? String(req.user._id).slice(0, 5) : "anon";
     const projectName = req.projectName || "unknown";
   
     const now = new Date();
@@ -75,7 +74,7 @@ const issueStorage = multer.diskStorage({
     const dateStr = `${shortYear}${month}${day}`;
     
     // combine all, using original file name
-    cb(null, `${userId}-${projectName}-${dateStr}-${originalName}${extension}`);
+    cb(null, `${projectName}-${dateStr}-${originalName}${extension}`);
   }
 });
 
