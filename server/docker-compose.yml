@@ -25,10 +25,12 @@ services:
       - terraRipple_network
     volumes:
       - mongo_data:/data/db
-  
+
+
 volumes:
   node_modules:
   mongo_data:
+
 
 networks:
   terraRipple_network:
