@@ -1,45 +1,46 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom'
-import Title from './components/Title/Title';
-import Login from './pages/Login/Login';
-import Dashboard from './pages/Dashboard/Dashboard';
-import Admin from './pages/Admin/Admin';
-import Feedback from './pages/Feedback/Feedback';
-import './global.css';
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import Title from "./components/Title/Title";
+import Login from "./pages/Login/Login";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import Admin from "./pages/Admin/Admin";
+import Feedback from "./pages/Feedback/Feedback";
+import "./global.css";
 
 const router = createBrowserRouter([
-{
-  path: "/",
-  element: (
-    <>
-      <Title />
-      <Outlet />
-    </>
-  ),
-  children: [
-    {
-      index: true,
-      element: <Login />,
-    },
-    {
-      path:"admin",
-      element:<Admin/>
-    },
-    {
-      path:"dashboard",
-      element:<Dashboard/>
-    },
-    {
-      path:"projects/:id",
-      element: <Feedback/>
-    }
-  ],
-},
+  {
+    path: "/",
+    element: (
+        <AuthProvider>
+          <Title />
+          <Outlet />
+        </AuthProvider>
+    ),
+    children: [
+      {
+        index: true,
+        element: <Login />,
+      },
+      {
+        path: "admin",
+        element: <Admin />,
+      },
+      {
+        path: "dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "projects/:id",
+        element: <Feedback />,
+      },
+    ],
+  },
 ]);
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
     <RouterProvider router={router} />
-  </StrictMode>,
-)
+  </StrictMode>
+);

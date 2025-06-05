@@ -62,7 +62,7 @@ async function reportIssue(req, res) {
     priority: priority || 3, // values from 1 (Urgent) to 4 (Low)
     request_type: request_type
   };
-
+  
   try {
     const project = await projectModel.findById(projectId);
     if (!project) {
@@ -70,6 +70,7 @@ async function reportIssue(req, res) {
     }
     const listId = project.clickupLists.find(list => list.name === request_type.toLowerCase()).listId;
     taskData.list_id = listId;
+
     const response = await axios.post(
       `https://api.clickup.com/api/v2/list/${listId}/task`,
       taskData,
