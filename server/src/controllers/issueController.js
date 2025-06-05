@@ -1,25 +1,51 @@
 import projectModel from "../models/project.js";
 import axios from "axios";
 import dotenv from "dotenv";
+import { ProjectNotFound } from "../utils/errors.js";
 
 dotenv.config();
 
 async function getIssues(req, res) {
   try {
-    const response = await axios.get(
-      `https://api.clickup.com/api/v2/list/${process.env.CLICKUP_LIST_ID}/task?page=0`,
+    const projectId = req.params.projectId.trim();
+    const project = await projectModel.findById(projectId);
+    const folderId = project.folderId;
+
+    const listsResponse = await axios.get(
+      `https://api.clickup.com/api/v2/folder/${folderId}/list`,
       {
         headers: {
           Authorization: process.env.CLICKUP_API_TOKEN,
         },
       }
     );
-    return res.json(response.data.tasks);
+
+    const lists = listsResponse.data.lists;
+
+    const allTasks = [];
+
+    for (const list of lists) {
+      const tasksResponse = await axios.get(
+        `https://api.clickup.com/api/v2/list/${list.id}/task?page=0`,
+        {
+          headers: {
+            Authorization: process.env.CLICKUP_API_TOKEN,
+          },
+        }
+      );
+
+      allTasks.push(...tasksResponse.data.tasks);
+    }
+
+    return res.json(allTasks);
   } catch (error) {
-    console.error('Error fetching tasks:', error.response?.data || error.message);
-    throw error;
+    console.error("❌ Error fetching tasks from folder:", error.response?.data || error.message);
+    return res.status(500).json({
+      error: "Could not fetch tasks from folder",
+      details: error.response?.data || error.message,
+    });
   }
-};
+}
 
 async function reportIssue(req, res) {
   const projectId = req.params.projectId.trim();
@@ -40,7 +66,7 @@ async function reportIssue(req, res) {
   try {
     const project = await projectModel.findById(projectId);
     if (!project) {
-      return res.status(404).json({ error: "Project not found" });
+      return next(new ProjectNotFound())
     }
     const listId = project.clickupLists.find(list => list.name === request_type.toLowerCase()).listId;
     taskData.list_id = listId;
