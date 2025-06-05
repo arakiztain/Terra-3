@@ -2,8 +2,6 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import axios from "axios";
-import Project from "../models/project.js";
-import Issue from "../models/issue.js";
 
 // Simplified middleware that doesn't depend on MongoDB
 export async function prepareProjectName(req, res, next) {
@@ -51,7 +49,6 @@ export async function prepareProjectName(req, res, next) {
 }
 
 // Multer configuration for issue screenshots
-// Multer configuration for issue screenshots
 const issueStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     // Create directory if it doesn't exist
@@ -82,36 +79,6 @@ const issueStorage = multer.diskStorage({
   }
 });
 
-// Multer configuration for project images
-const projectStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    // Create directory if it doesn't exist
-    const dir = "public/images/projects";
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    const userId = req.user ? String(req.user._id).slice(0, 5) : "anon";
-    
-    const now = new Date();
-    const shortYear = String(now.getFullYear()).slice(2);
-    const month = ("0" + (now.getMonth() + 1)).slice(-2);
-    const day = ("0" + now.getDate()).slice(-2);
-    
-    // get original file name without extension
-    const originalName = path.basename(file.originalname, path.extname(file.originalname));
-    const extension = path.extname(file.originalname);
-  
-    // YYMMDD format
-    const dateStr = `${shortYear}${month}${day}`;
-    
-    // combine all, using original file name
-    cb(null, `${userId}-project-${dateStr}-${originalName}${extension}`);
-  }
-});
-
 // Function to filter by file type
 const fileFilter = (req, file, cb) => {
   // accept images only
@@ -124,14 +91,6 @@ const fileFilter = (req, file, cb) => {
 
 export const uploadIssueScreenshot = multer({ 
   storage: issueStorage,
-  fileFilter: fileFilter,
-  limits: {
-    fileSize: 5 * 1024 * 1024 // limited to 5mb
-  }
-});
-
-export const uploadProjectImage = multer({ 
-  storage: projectStorage,
   fileFilter: fileFilter,
   limits: {
     fileSize: 5 * 1024 * 1024 // limited to 5mb
