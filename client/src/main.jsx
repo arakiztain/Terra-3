@@ -9,6 +9,7 @@ import Admin from './pages/Admin/Admin';
 import Feedback from './pages/Feedback/Feedback';
 import Guide from './pages/Guide/Guide'
 import Faq from './pages/Faq/Faq';
+import IssueLogged from './pages/IssueLogged/IssueLogged';
 import './global.css';
 
 const router = createBrowserRouter([
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
     {
       path: "faq",
       element:<Faq/>
+    },
+    {
+      path: "issue-logged",
+      element:<IssueLogged/>
     }
   ],
 },
