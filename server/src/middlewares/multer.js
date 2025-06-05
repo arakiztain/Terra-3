@@ -5,16 +5,16 @@ import axios from "axios";
 import Project from "../models/project.js";
 import Issue from "../models/issue.js";
 
-// Middleware simplificado que no depende de MongoDB
+// Simplified middleware that doesn't depend on MongoDB
 export async function prepareProjectName(req, res, next) {
   try {
     const taskId = req.params.issueId || req.params.id;
     
     if (!taskId) {
-      return res.status(400).json({ error: "ID de tarea no proporcionado" });
+      return res.status(400).json({ error: "Task ID not provided" });
     }
     
-    // Obtener información de la tarea directamente de ClickUp
+    // Get task information directly from ClickUp
     try {
       const response = await axios.get(`https://api.clickup.com/api/v2/task/${taskId}`, {
         headers: {
@@ -22,11 +22,11 @@ export async function prepareProjectName(req, res, next) {
         }
       });
       
-      // Extraer el nombre del proyecto/lista de ClickUp
+      // Extract project/list name from ClickUp
       const taskData = response.data;
       let projectName = "clickup_task";
       
-      // Si la tarea tiene información sobre su lista o carpeta, usarla para el nombre
+      // If the task has information about its list or folder, use it for the name
       if (taskData.list && taskData.list.name) {
         projectName = taskData.list.name.replace(/\s+/g, "_").toLowerCase();
       } else if (taskData.folder && taskData.folder.name) {
@@ -37,23 +37,24 @@ export async function prepareProjectName(req, res, next) {
       next();
       
     } catch (clickupError) {
-      // Si no se puede obtener la información de la tarea, usar un nombre genérico
-      console.error("Error obteniendo información de la tarea:", clickupError.message);
+      // If task information cannot be obtained, use a generic name
+      console.error("Error getting task information:", clickupError.message);
       req.projectName = `task_${taskId}`;
       next();
     }
     
   } catch (error) {
-    console.error("Error en prepareProjectName:", error);
+    console.error("Error in prepareProjectName:", error);
     req.projectName = "unknown_task";
-    next(); // Continúa de todos modos con un nombre genérico
+    next(); // Continue anyway with a generic name
   }
 }
 
-// Configuración Multer para capturas de pantalla de issues
+// Multer configuration for issue screenshots
+// Multer configuration for issue screenshots
 const issueStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // Crear directorio si no existe
+    // Create directory if it doesn't exist
     const dir = "public/images/issues";
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
@@ -68,19 +69,23 @@ const issueStorage = multer.diskStorage({
     const shortYear = String(now.getFullYear()).slice(2);
     const month = ("0" + (now.getMonth() + 1)).slice(-2);
     const day = ("0" + now.getDate()).slice(-2);
-    const time = now.toTimeString().slice(0, 8).replace(/:/g, "");
+    
+    // get original file name without extension
+    const originalName = path.basename(file.originalname, path.extname(file.originalname));
     const extension = path.extname(file.originalname);
   
-    const formattedDate = `${shortYear}${month}${day}${time}`;
-  
-    cb(null, `${userId}-${projectName}-${formattedDate}${extension}`);
+    // YYMMDD format
+    const dateStr = `${shortYear}${month}${day}`;
+    
+    // combine all, using original file name
+    cb(null, `${userId}-${projectName}-${dateStr}-${originalName}${extension}`);
   }
 });
 
-// Configuración Multer para imágenes de proyectos
+// Multer configuration for project images
 const projectStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // Crear directorio si no existe
+    // Create directory if it doesn't exist
     const dir = "public/images/projects";
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
@@ -89,24 +94,31 @@ const projectStorage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const userId = req.user ? String(req.user._id).slice(0, 5) : "anon";
+    
     const now = new Date();
     const shortYear = String(now.getFullYear()).slice(2);
     const month = ("0" + (now.getMonth() + 1)).slice(-2);
     const day = ("0" + now.getDate()).slice(-2);
-    const time = now.toTimeString().slice(0, 8).replace(/:/g, "");
+    
+    // get original file name without extension
+    const originalName = path.basename(file.originalname, path.extname(file.originalname));
     const extension = path.extname(file.originalname);
-    const formattedDate = `${shortYear}${month}${day}${time}`;
-    cb(null, `${userId}-project-${formattedDate}${extension}`);
+  
+    // YYMMDD format
+    const dateStr = `${shortYear}${month}${day}`;
+    
+    // combine all, using original file name
+    cb(null, `${userId}-project-${dateStr}-${originalName}${extension}`);
   }
 });
 
-// Función para filtrar por tipo de archivo
+// Function to filter by file type
 const fileFilter = (req, file, cb) => {
-  // Aceptar solo imágenes
+  // accept images only
   if (file.mimetype.startsWith('image/')) {
     cb(null, true);
   } else {
-    cb(new Error('Solo se permiten archivos de imagen'), false);
+    cb(new Error('Only image files are allowed'), false);
   }
 };
 
@@ -114,7 +126,7 @@ export const uploadIssueScreenshot = multer({
   storage: issueStorage,
   fileFilter: fileFilter,
   limits: {
-    fileSize: 5 * 1024 * 1024 // Limitar a 5MB
+    fileSize: 5 * 1024 * 1024 // limited to 5mb
   }
 });
 
@@ -122,6 +134,6 @@ export const uploadProjectImage = multer({
   storage: projectStorage,
   fileFilter: fileFilter,
   limits: {
-    fileSize: 5 * 1024 * 1024 // Limitar a 5MB
+    fileSize: 5 * 1024 * 1024 // limited to 5mb
   }
 });

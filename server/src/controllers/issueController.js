@@ -111,80 +111,105 @@ async function deleteIssue(req, res) {
 
 async function uploadScreenshot(req, res) {
   try {
-    if (!req.file) {
-      return res.status(400).json({ error: "No se ha subido ninguna imagen" });
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: "No images have been uploaded" });
     }
     
-    // Obtener el ID de la tarea de ClickUp directamente desde los parámetros
+    // Get the ClickUp task ID directly from parameters
     const clickupTaskId = req.params.issueId || req.params.id;
     
     if (!clickupTaskId) {
-      return res.status(400).json({ error: "ID de tarea de ClickUp no proporcionado" });
+      return res.status(400).json({ error: "ClickUp task ID not provided" });
     }
     
-    // Verificar si la tarea existe en ClickUp
+    // Verify if the task exists in ClickUp
     try {
-      // Verificación opcional: comprobar si la tarea existe en ClickUp
       await axios.get(`https://api.clickup.com/api/v2/task/${clickupTaskId}`, {
         headers: {
           Authorization: process.env.CLICKUP_API_TOKEN
         }
       });
-      
-      // Si llegamos aquí, la tarea existe en ClickUp
     } catch (verifyError) {
-      console.error("Error verificando tarea en ClickUp:", verifyError.message);
+      console.error("Error verifying task in ClickUp:", verifyError.message);
       return res.status(404).json({ 
-        error: "No se pudo verificar la tarea en ClickUp",
+        error: "Could not verify task in ClickUp",
         details: verifyError.response?.data || verifyError.message
       });
     }
     
-    // Subir la imagen a ClickUp
-    const filePath = req.file.path;
-    const form = new FormData();
-    form.append('attachment', fs.createReadStream(filePath));
+    // Array to store ClickUp responses
+    const uploadResults = [];
+    const errors = [];
+    const filesToDelete = []; // Array to keep track of files to delete later
     
-    try {
-      const clickupResponse = await axios.post(
-        `https://api.clickup.com/api/v2/task/${clickupTaskId}/attachment`,
-        form,
-        {
-          headers: {
-            Authorization: process.env.CLICKUP_API_TOKEN,
-            ...form.getHeaders()
+    // Upload multiple images to ClickUp, one by one
+    for (const file of req.files) {
+      const filePath = file.path;
+      
+      // Store file path to delete it later
+      filesToDelete.push(filePath);
+      
+      const form = new FormData();
+      form.append('attachment', fs.createReadStream(filePath));
+      
+      try {
+        const clickupResponse = await axios.post(
+          `https://api.clickup.com/api/v2/task/${clickupTaskId}/attachment`,
+          form,
+          {
+            headers: {
+              Authorization: process.env.CLICKUP_API_TOKEN,
+              ...form.getHeaders()
+            }
           }
-        }
-      );
-      
-      console.log("✅ Imagen subida a ClickUp:", clickupResponse.data);
-      
-      res.status(200).json({
-        message: "Captura de pantalla subida correctamente a ClickUp",
-        filename: req.file.filename,
-        clickupAttachment: clickupResponse.data
-      });
-      
-    } catch (clickupError) {
-      console.error("Error al subir imagen a ClickUp:", clickupError.response?.data || clickupError.message);
-      
-      return res.status(500).json({
-        error: "Error al subir imagen a ClickUp",
-        details: clickupError.response?.data || clickupError.message
-      });
-    } finally {
-      // Opcional: Si no quieres guardar la imagen localmente después de subirla a ClickUp,
-      // puedes eliminarla del sistema de archivos
-      if (fs.existsSync(req.file.path)) {
-        fs.unlink(req.file.path, (err) => {
-          if (err) console.error("Error eliminando archivo temporal:", err);
+        );
+        
+        console.log(`✅ Image uploaded to ClickUp: ${file.filename}`);
+        uploadResults.push({
+          filename: file.filename,
+          clickupAttachment: clickupResponse.data
+        });
+        
+      } catch (clickupError) {
+        console.error("Error uploading image to ClickUp:", clickupError.response?.data || clickupError.message);
+        errors.push({
+          filename: file.filename,
+          error: clickupError.response?.data || clickupError.message
         });
       }
     }
     
+    // Delete all temporary files after processing all uploads
+    filesToDelete.forEach(filePath => {
+      if (fs.existsSync(filePath)) {
+        fs.unlink(filePath, (err) => {
+          if (err) console.error(`Error deleting temporary file ${filePath}:`, err);
+        });
+      }
+    });
+    
+    // Determine response message based on results
+    if (uploadResults.length > 0 && errors.length === 0) {
+      res.status(200).json({
+        message: `${uploadResults.length} screenshots successfully uploaded to ClickUp`,
+        uploads: uploadResults
+      });
+    } else if (uploadResults.length > 0 && errors.length > 0) {
+      res.status(207).json({
+        message: `${uploadResults.length} screenshots uploaded, but there were ${errors.length} errors`,
+        uploads: uploadResults,
+        errors
+      });
+    } else {
+      res.status(500).json({
+        error: "Could not upload any images to ClickUp",
+        errors
+      });
+    }
+    
   } catch (error) {
-    console.error("Error general al subir captura de pantalla:", error);
-    res.status(500).json({ error: "Error al subir captura de pantalla" });
+    console.error("General error uploading screenshots:", error);
+    res.status(500).json({ error: "Error uploading screenshots" });
   }
 }
 
