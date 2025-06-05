@@ -60,7 +60,7 @@ export default [
       'plugin-react/no-render-return-value': 'error',
       'plugin-react/no-string-refs': 'error',
       'plugin-react/no-unescaped-entities': 'error',
-      'plugin-react/no-unknown-property': ['warn', {ignore: ['class']}],
+      'plugin-react/no-unknown-property': 'warn',
       'plugin-react/no-unsafe': 'error',
       'plugin-react/require-render-return': 'error',
       'react-refresh/only-export-components': [
