@@ -20,14 +20,16 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-
 app.use(cookieParser());
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
-app.use("/",router);
 
+// multer
+app.use('/public', express.static('public'));
+
+app.use("/",router);
 
 app.listen(APP_PORT,()=>{
     console.log(`Backend conectado al puerto ${APP_PORT}`);
