@@ -74,6 +74,7 @@ const Login = () => {
         <h1 className="login__again">again!</h1>
       </div>
 
+      {/* Tour */}
       <TourLogin />
     </div>
   );

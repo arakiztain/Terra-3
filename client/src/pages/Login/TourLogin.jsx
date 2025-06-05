@@ -1,6 +1,7 @@
 import Joyride from 'react-joyride';
 import { useState, useRef } from "react";
 
+//pasos del tour para el componente Login
 const steps = [
   {
     target: "body",
@@ -31,13 +32,13 @@ const steps = [
   },
 ];
 
+//Componente que hace el tour en Login
 function TourLogin() {
 
   const [run, setRun] = useState(true);
 
   const handleJoyrideCallback = (data) => {
     const { action, type } = data;
-    console.log("handleJoyrideCallback:data:",data)
     if (action === "close" || action === "tooltip-close") {
       setRun(false);
     }
@@ -49,7 +50,7 @@ function TourLogin() {
   const joyrideRef = useRef(null);
 
   const startTour = () => {
-    // Resetea el tour (opcional)
+    // Resetea el tour 
     joyrideRef.current?.reset();
     // Inicia el tour cambiando run a true
     setRun(false);
@@ -62,14 +63,16 @@ function TourLogin() {
       <button onClick={startTour} className="tour__button">
         Run Tour
       </button>
+
+      {/* Componente React de Joyride*/}
       <Joyride
         steps={steps}
         continuous={true}
         showProgress={true}
-        disableBeacon={true}
-        spotlightPadding={0}
-        run={run}
-        callback={handleJoyrideCallback}
+        disableBeacon={true} // Oculta el circulo de click 
+        spotlightPadding={0} // Acerca el tooltip al elemento 
+        run={run} // Activa el tour segun la variable de estado run
+        callback={handleJoyrideCallback} // Maneja los eventos del tour
       />
     </div>
   );
