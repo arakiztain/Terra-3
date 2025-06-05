@@ -11,7 +11,7 @@
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  color:#0F0F0F;
+  color:#FFFFFF;
 }
 
 .cards {
@@ -49,4 +49,16 @@
   text-align: center;
   color: #666;
   font-style: italic;
+}
+
+.fullScreenCover{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+  background-color:rgba(100,100,100,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

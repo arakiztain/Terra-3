@@ -40,4 +40,10 @@ const startServer = async () => {
   }
 };
 
+// multer
+app.use('/public', express.static('public'));
+
+app.use("/",router);
+
+
 startServer();

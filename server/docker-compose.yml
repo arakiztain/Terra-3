@@ -4,6 +4,9 @@ services:
     container_name: ${APP_HOST}
     build: .
     restart: unless-stopped
+    environment:
+      CHOKIDAR_USEPOLLING: true
+      CHOKIDAR_INTERVAL: 1000
     ports:
       - ${APP_PORT}:3004
     volumes:
@@ -25,7 +28,6 @@ services:
       - terraRipple_network
     volumes:
       - mongo_data:/data/db
-
 
 volumes:
   node_modules:

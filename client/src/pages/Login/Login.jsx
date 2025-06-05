@@ -1,16 +1,24 @@
 import styles from "./Login.module.css";
-import { useState } from "react";
-import loginFetch from "../../utils/fetchServer";
+import { useState, useContext } from "react";
 import icon4 from "../../assets/_Terraforms/Individual/SVG/Melos-Blue.svg";
 import icon5 from "../../assets/_Terraforms/Individual/SVG/Punky-Lime.svg";
 import icon6 from "../../assets/_Terraforms/Individual/SVG/Boba-Orange.svg";
+import { AuthContext } from "../../context/AuthContext.jsx";
 
 const Login = () =>{
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const handleSubmit = async (e) =>{
+    const [userData, setUserData] = useState({
+      email: "",
+      password: "",
+    });
+        const { onLogin } = useContext(AuthContext);
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setUserData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        await loginFetch({email: email, password: password});
+          await onLogin(userData);
     }
 
     return(
@@ -19,12 +27,11 @@ const Login = () =>{
                 <div className={styles.formWrapper}>
                     <form onSubmit={handleSubmit} className={styles.form}>
                         <div className={styles.field}>
-                            <input className={styles.input} placeholder="" type="email" name="email" required />
+                            <input className={styles.input} onChange={(e) => handleChange(e)} value={userData.email} placeholder="" type="email" name="email" required />
                             <label className={styles.label}>Email</label>
                         </div>
                         <div className={styles.field}>
-                            <input className={styles.input} placeholder="" type="password" name="password" required />
-
+                            <input className={styles.input} onChange={(e) => handleChange(e)} value={userData.password} placeholder="" type="password" name="password" required />
                             <label className={styles.label}>Password</label>
                         </div>
                         <button className={styles.formButton} type="submit">Log in!</button>
@@ -41,7 +48,7 @@ const Login = () =>{
                 <h1 className={styles.again}>again!</h1>
             </div>
         </div>
-    )
+    );
 }
 
 export default Login;
