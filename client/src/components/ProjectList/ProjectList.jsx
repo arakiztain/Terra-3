@@ -2,14 +2,16 @@ import { useState } from "react";
 import styles from "./ProjectList.module.css";
 const ProjectList = ({ projectList, onEditProject }) => {
   const [search, setSearch] = useState("");
-  const filtered = projectList.filter(
-    ({ title, url, description, users }) =>
+  const filtered = projectList
+    .filter(project => project != null)
+    .filter(({ title, url, description, users }) =>
       title.toLowerCase().includes(search.toLowerCase()) ||
       url.toLowerCase().includes(search.toLowerCase()) ||
       description.toLowerCase().includes(search.toLowerCase()) ||
       users.some((r) => r.email.toLowerCase().includes(search.toLowerCase()))
-  );
-
+    );
+  console.log(filtered);
+  console.log(filtered);
   return (<>
     <div className={styles.container}>
       <input
