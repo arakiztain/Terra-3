@@ -13,12 +13,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      
-        <AuthProvider>
-          <Title />
-          <Outlet />
-        </AuthProvider>
-      
+      <AuthProvider>
+        <Title />
+        <Outlet />
+      </AuthProvider>
     ),
     children: [
       {
@@ -36,7 +34,7 @@ const router = createBrowserRouter([
       {
         path: "projects/:id",
         element: <Feedback />,
-      },
+      }
     ],
   },
 ]);
