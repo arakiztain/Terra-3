@@ -1,15 +1,12 @@
 import { createContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-// import { saveToken, removeToken } from "../utils/localStorage";
 import fetchServer from "../utils/fetchServer.js";
 
-// Envuelve la app con los datos del usuario logeado
 const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
     const [userData, setUserData] = useState(null);
     const navigate = useNavigate();
-
 
     useEffect(()=>{
         handleGetUserInfo();
@@ -22,14 +19,13 @@ const AuthProvider = ({ children }) => {
         }
     }
 
-    const handleLogin = async (email, password) => {
+    const handleLogin = async ({email, password}) => {
         const result = await fetchServer.loginFetch({ email, password });
         if (result.error) {
-            // removeToken();
             return result.error;
         } else {
+            localStorage.setItem("token", result.token);
             setUserData(result.user);
-            // saveToken(result.token);
             if (result.user.role === "admin") {
                 navigate("/admin")
             } else {
@@ -46,7 +42,6 @@ const AuthProvider = ({ children }) => {
         navigate("/", { replace: true } ); // replace impide que se pueda volver a la pagina de login o de logout
     }; 
 
-    
     return (
         <AuthContext.Provider value={{ userData: userData, setUserData, onLogin: handleLogin, onLogout: handleLogout }}>
             {children}

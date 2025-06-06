@@ -50,55 +50,9 @@ const Login = () => {
           <h1 className={styles.hello}>Hello</h1>
           <h1 className={styles.again}>again!</h1>
       </div>
-
-      {/* Tour */}
       <TourLogin />
     </div>
   );
 };
 
 export default Login;
-
-/* HTML PARA LOGIN.CSS STANDARD
-
-<div className="login">
-<div className="login__form-grid">
-  <div className="login__form-wrapper">
-    <form onSubmit={handleSubmit} className="login__form">
-      <div className="login__field">
-        <input
-          className="login__input-email"
-          placeholder=""
-          type="email"
-          name="email"
-          onChange={handleUserEmail}
-          required
-        />
-        <label className="login__label">Email</label>
-      </div>
-      <div className="login__field">
-        <input
-          className="login__input-password"
-          placeholder=""
-          type="password"
-          name="password"
-          onchange={handleUserPassword}
-          required
-        />
-        <label className="login__label">Password</label>
-      </div>
-      <button className="login__button" type="submit">
-        Log in!
-      </button>
-    </form>
-  </div>
-  <div className="login__terraform">
-    <img src={icon4} className="icon" />
-    <img src={icon5} className="icon" />
-    <img src={icon6} className="icon" />
-  </div>
-</div>
-<div className="login__lettering">
-  <h1 className="login__hello">Hello</h1>
-  <h1 className="login__again">again!</h1>
-</div> */

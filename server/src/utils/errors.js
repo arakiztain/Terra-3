@@ -1,10 +1,10 @@
 /**
- * Restaurant
+ * Project
  */
-class RestaurantNotFound extends Error {
-  constructor(message = "Restaurante no encontrado") {
+class ProjectNotFound extends Error {
+  constructor(message = "Project not found") {
     super(message);
-    this.name = "RestaurantNotFound";
+    this.name = "ProjectNotFound";
     this.statusCode = 404;
   }
 }
@@ -24,10 +24,10 @@ class InvalidRestaurantData extends Error {
   }
 }
 
-class RestaurantAlreadyExists extends Error {
+class ProjectAlreadyExists extends Error {
   constructor() {
-    super("Ya existe un restaurante con ese nombre en esa ubicación");
-    this.name = "RestaurantAlreadyExists";
+    super("A project with that title already exists");
+    this.name = "ProjectAlreadyExists";
     this.statusCode = 409;
   }
 }
@@ -297,10 +297,10 @@ class ForbiddenError extends Error {
 
 
 export {
-    RestaurantNotFound ,
+    ProjectNotFound,
     InvalidRestaurantId,
     InvalidRestaurantData,
-    RestaurantAlreadyExists,
+    ProjectAlreadyExists,
     NoFavoritesFound,
     RestaurantIdNotProvided,
     ValidationError,

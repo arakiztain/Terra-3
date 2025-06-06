@@ -26,8 +26,7 @@ const login = async (req, res, next) => {
     } */
     if (!user) throw new EmailNotFound();
 
-    const isMatch = bcryptjs.compare(password, user.password);
-    console.log(password, user.password);
+    const isMatch = await bcryptjs.compare(password, user.password);
     if (!isMatch) throw new IncorrectPassword();
 
     const token = jwt.sign(
@@ -38,13 +37,6 @@ const login = async (req, res, next) => {
       process.env.JWT_SECRET,
       { expiresIn: "24h" }
     );
-    const user_pruba = {
-      id: user._id,
-      username: user.username,
-      email: user.email,
-      role: user.role,
-    };
-    console.log("user", user_pruba);
     res.json({
       token,
       user: {
@@ -59,15 +51,13 @@ const login = async (req, res, next) => {
   }
 };
 
-//ASKR: Nosotros crearemos usuarios?
 const register = async (req, res, next) => {
   try {
-    const { email, password ,  role  } = req.body;
-    console.log("req.body", req.body);
+    const { email, password, role} = req.body;
 
     if (!email) throw new UserEmailNotProvided();
     if (!password) throw new UserPasswordNotProvided();
-
+    
     const existingEmail = await userModel.findOne({ email });
     if (existingEmail) throw new UserEmailAlreadyExists();
 
@@ -75,8 +65,8 @@ const register = async (req, res, next) => {
 
     const newUser = new userModel({
       email,
-      password: hashedPassword  ,
-      role 
+      password: hashedPassword,
+      role
     });
 
     await newUser.save();
@@ -108,8 +98,10 @@ const register = async (req, res, next) => {
   }
 };
 
-async function getUserInfo(req, res) {
+async function getUserInfo(req, res, next) {
   try {
+    console.log("requser");
+    console.log(req.user);
     const id = req.user._id;
     const user = await userModel.findById(id).select("-password");
     if (!user) {
@@ -121,7 +113,7 @@ async function getUserInfo(req, res) {
         username: user.username,
         email: user.email,
         role: user.role,
-        activationToken: user.activationToken, //ASKR: Preguntar si incluir token?
+        activationToken: user.activationToken,
       },
     });
   } catch (error) {

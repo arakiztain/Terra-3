@@ -55,15 +55,11 @@ function TourLogin() {
 
   const startTour = () => {
     // Resetea el tour
-    console.log("TourLogin:startTour:run:", run); 
-    console.log("TourLogin:current:", joyrideRef.current);
-    // Inicia el tour cambiando run a true
     setRun(false);
-    console.log("TourLogin:setRun(false):", run);
+    // Forzar al tour a empezar desde el primer tooltip
     setTourKey((prevKey) => prevKey + 1);
-
+    // Iniciar el tour
     setTimeout(() => setRun(true), 300);
-    console.log("TourLogin:setRun(true):", run);
   };
 
   return (
