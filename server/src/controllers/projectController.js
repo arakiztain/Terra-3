@@ -199,6 +199,43 @@ async function getProjectById(req, res, next) {
   }
 };
 
+async function assignProject(req, res, next) {
+  try {
+    const projectId = req.params.projectId.trim();
+    const { email} = req.body;
+    console.log(email);
+    let foundUsers = [];
+    if (email) {
+      const emails = email.map(e => e.trim());
+      const users = await User.find({ email: { $in: emails } });
+
+      if (users.length !== emails.length) {
+        const foundEmails = users.map(u => u.email);
+        const notFoundEmails = emails.filter(e => !foundEmails.includes(e));
+        throw new UserNotFound(`The following emails were not found: ${notFoundEmails.join(', ')}`);
+      }
+
+      foundUsers = users.map(u => u._id);
+    }
+    console.log(foundUsers);
+
+/*     const project = await Project.findById(projectId).populate("users", "email");
+    if (!project) throw new ProjectNotFound();
+
+    const isUserInProject = project.users.some(
+      user => user._id.toString() === req.user._id.toString()
+    );
+
+    if (req.user.role !== "admin" && !isUserInProject) {
+      throw new ForbiddenError("You don't have permission to access this project");
+    }
+
+    res.json(project); */
+  } catch (error) {
+    next(error);
+  }
+};
+
 async function deleteProject(req, res, next) {
   try {
     const projectId = req.params.projectId.trim();
@@ -225,5 +262,6 @@ export default {
   createProject,
   getAllProjects,
   getProjectById,
+  assignProject,
   deleteProject
 };
