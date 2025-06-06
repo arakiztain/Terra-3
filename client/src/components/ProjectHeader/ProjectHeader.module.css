@@ -25,6 +25,11 @@
     background-color:#0F0F0F;
 }
 
+
+.projectLinkButton:hover{
+    border-color: #49ff86;
+
+}
 .issueButton:hover{
     background-color:#F78BD8;
     color:#0F0F0F;
