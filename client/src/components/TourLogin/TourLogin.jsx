@@ -35,7 +35,7 @@ const steps = [
 //Componente que hace el tour en Login
 function TourLogin() {
 
-  const [run, setRun] = useState(true);
+  const [run, setRun] = useState(false);
 
   const handleJoyrideCallback = (data) => {
     const { action, type } = data;
