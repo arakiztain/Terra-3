@@ -4,7 +4,7 @@ import icon4 from "../../assets/_Terraforms/Individual/SVG/Melos-Blue.svg";
 import icon5 from "../../assets/_Terraforms/Individual/SVG/Punky-Lime.svg";
 import icon6 from "../../assets/_Terraforms/Individual/SVG/Boba-Orange.svg";
 import { AuthContext } from "../../context/AuthContext";
-import TourLogin from "./TourLogin";
+import TourLogin from "../../components/TourLogin/TourLogin";
 
 const Login = () => {
   const [userData, setUserData] = useState({
@@ -53,7 +53,7 @@ const Login = () => {
                 placeholder=""
                 type="password"
                 name="password"
-                onchange={handleUserPassword}
+                onChange={handleUserPassword}
                 required
               />
               <label className="login__label">Password</label>
