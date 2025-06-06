@@ -65,7 +65,7 @@ async function reportIssue(req, res) {
     description,
     tags: tags || [],
     priority: priority || 3, // values from 1 (Urgent) to 4 (Low)
-    request_type: request_type
+    request_type
   };
 
   try {
