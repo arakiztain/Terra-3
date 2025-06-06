@@ -1,0 +1,18 @@
+[{
+  "_id": {
+    "$oid": "683ec235d45d5295516ab384"
+  },
+  "email": "admin@example.com",
+  "password": "$2a$12$BggxYvqPX7FlpfLk5HqtduVqv1Kce1uujXKs9WOjoRnoGwGvlop9m",
+  "role": "admin",
+  "activationToken": "optional_activation_token"
+},
+{
+  "_id": {
+    "$oid": "683ec2b8d45d5295516ab385"
+  },
+  "email": "user@example.com",
+  "password": "$2a$12$fGc50b0dWszrt7Ulh3P6fObNUHMUv.ANP67XWlSdWDHpjzzAKbByy",
+  "role": "user",
+  "activationToken": "optional_activation_token"
+}]

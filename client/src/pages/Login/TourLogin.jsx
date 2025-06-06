@@ -5,7 +5,11 @@ import styles from "./Login.module.css";
 const steps = [
   {
     target: "body",
-    content: "Welcome to the login page",
+    content: (
+      <div style={{ fontSize: "1rem", color: "black" }}>
+        Welcome to the login page
+      </div>
+    ),
     disableBeacon: true,
     placement: "center", // Centra el tooltip en la pantalla
     styles: {
@@ -17,17 +21,29 @@ const steps = [
   {
     // title: "",
     target: "#login__input-email",
-    content: "Here you can write your email",
+    content: (
+      <div style={{ fontSize: "1rem", color: "black" }}>
+        Here you can write your email
+      </div>
+    ),
     disableBeacon: true,
   },
   {
     target: "#login__input-password",
-    content: "Here you can write your password",
+    content: (
+      <div style={{ fontSize: "1rem", color: "black" }}>
+        Here you can write your password
+      </div>
+    ),
     disableBeacon: true,
   },
   {
     target: "#login__button",
-    content: "And click here to log in",
+    content: (
+      <div style={{ fontSize: "1rem", color: "black" }}>
+        And click here to log in
+      </div>
+    ),
     disableBeacon: true,
   },
 ];

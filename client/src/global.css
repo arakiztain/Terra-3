@@ -8,10 +8,9 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-
+    color:white;
 }
 
 body{
-    color:white;
     background-color:#0F0F0F;
 }
