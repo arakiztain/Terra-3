@@ -5,14 +5,14 @@
   align-items: center;
 }
 
-.form {
+.fullScreenCover{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+  background-color:rgba(100,100,100,0.5);
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  width: 300px;
-}
-
-.input{
-    color:black;
-    
+  justify-content: center;
+  align-items: center;
 }
