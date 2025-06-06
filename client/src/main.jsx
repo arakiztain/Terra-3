@@ -2,6 +2,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom'
+import { AuthProvider } from './context/AuthContext';
 import Title from './components/Title/Title';
 import Login from './pages/Login/Login';
 import Dashboard from './pages/Dashboard/Dashboard';
@@ -9,6 +10,7 @@ import Admin from './pages/Admin/Admin';
 import Feedback from './pages/Feedback/Feedback';
 import Guide from './pages/Guide/Guide'
 import Faq from './pages/Faq/Faq';
+import IssueLogged from './pages/IssueLogged/IssueLogged';
 import './global.css';
 
 const router = createBrowserRouter([
@@ -16,8 +18,10 @@ const router = createBrowserRouter([
   path: "/",
   element: (
     <>
-      <Title />
-      <Outlet />
+      <AuthProvider>
+        <Title />
+        <Outlet />
+      </AuthProvider>
     </>
   ),
   children: [
@@ -44,6 +48,10 @@ const router = createBrowserRouter([
     {
       path: "faq",
       element:<Faq/>
+    },
+    {
+      path: "issue-logged",
+      element:<IssueLogged/>
     }
   ],
 },

@@ -1,0 +1,62 @@
+.container {
+    min-height: 100vh;
+    background: #151515;
+    color: #fff;
+    font-family: 'Inter', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: space-between;
+    align-items: flex-start;
+    /* padding: 48px 40px 0 40px; */
+    height: calc(100vh - 70px);
+  }
+  
+  .leftSection {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    align-items: flex-start;
+    margin-top: auto;
+    margin-bottom: 50px;
+    margin-left: 50px;
+    align-self: flex-start;
+  }
+  
+  .issueLogged {
+    font-size: 5rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.1;
+  }
+  
+  .icons {
+    display: flex;
+    gap: 0px;
+  }
+  .icons img {
+    height: 84px;
+    width: 84px;
+  }
+  
+  .rightSection {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .message {
+    font-size: 1.5rem;
+    line-height: 1.7;
+    max-width: 520px;
+    margin-left: 80px;
+    padding-top: 170px;
+  }
