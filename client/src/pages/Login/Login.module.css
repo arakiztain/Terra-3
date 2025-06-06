@@ -1,4 +1,4 @@
-/*.fullscreen{
+.fullscreen{
   background-color:#0F0F0F;
   height: 100vh;
   width: 100vw;
@@ -7,11 +7,11 @@
   grid-template-rows: 1fr 2fr;
 }
 
-/* Should be 3/5ths of the screen*//*
+/* Should be 3/5ths of the screen*/
 .lettering{
   width:100%;
   font-size:12rem;
-  /* overflow:hidden; *//*
+  /* overflow:hidden; */
   display:grid;
   align-items: end;
   grid-auto-rows: min-content;
@@ -135,7 +135,27 @@
   color: #FFFFFF;
 }
 
-/* Bloque principal */
+/* Button Tour */
+.tour__button {
+  padding: 10px 20px;
+  width: 100px;
+  height: 50px;
+  z-index: 10;
+  margin: 10px 0;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  border-radius: 0px 20px 20px 20px;
+  background-color:white;
+  color:black;
+}
+
+.tour__button:hover {
+  cursor:pointer
+}
+
+
+/* Bloque principal *//*
 .login {
   background-color: #0F0F0F;
   height: 100vh;
@@ -145,7 +165,7 @@
   grid-template-rows: 1fr 2fr;
 }
 
-/* Elemento: lettering */
+/* Elemento: lettering *//*
 .login__lettering {
   width: 100%;
   font-size: 12rem;
@@ -271,23 +291,5 @@
   left: 0.5rem;
   font-size: 1rem;
   color: #FFFFFF;
-}
+}*/
 
-/* Button Tour */
-.tour__button {
-  padding: 10px 20px;
-  width: 100px;
-  height: 50px;
-  z-index: 10;
-  margin: 10px 0;
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  border-radius: 0px 20px 20px 20px;
-  background-color:white;
-  color:black;
-}
-
-.tour__button:hover {
-  cursor:pointer
-}

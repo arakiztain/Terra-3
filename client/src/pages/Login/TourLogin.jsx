@@ -1,6 +1,6 @@
-import Joyride from 'react-joyride';
+import Joyride from "react-joyride";
 import { useState, useRef } from "react";
-
+import styles from "./Login.module.css";
 //pasos del tour para el componente Login
 const steps = [
   {
@@ -16,17 +16,17 @@ const steps = [
   },
   {
     // title: "",
-    target: ".login__input-email",
+    target: "#login__input-email",
     content: "Here you can write your email",
     disableBeacon: true,
   },
   {
-    target: ".login__input-password",
+    target: "#login__input-password",
     content: "Here you can write your password",
     disableBeacon: true,
   },
   {
-    target: ".login__button",
+    target: "#login__button",
     content: "And click here to log in",
     disableBeacon: true,
   },
@@ -34,48 +34,58 @@ const steps = [
 
 //Componente que hace el tour en Login
 function TourLogin() {
-
   const [run, setRun] = useState(true);
+  const [tourKey, setTourKey] = useState(0); // key para que empiece desde el primer tooltip siempre que inicia el tour
 
   const handleJoyrideCallback = (data) => {
     const { action, type } = data;
-    if (action === "close" || action === "tooltip-close") {
+    console.log("TourLogin:handleJoyrideCallback:action:", action);
+    if (
+      action === "close" ||
+      action === "tooltip-close" ||
+      action === "finished" ||
+      action === "skip"
+    ) {
       setRun(false);
-    }
-    if (action === "finished" || action === "skip") {
-      setRun(false);
+      console.log("TourLogin:current:", joyrideRef.current);
     }
   };
-  
+
   const joyrideRef = useRef(null);
 
   const startTour = () => {
-    // Resetea el tour 
-    joyrideRef.current?.reset();
+    // Resetea el tour
+    console.log("TourLogin:startTour:run:", run); 
+    console.log("TourLogin:current:", joyrideRef.current);
     // Inicia el tour cambiando run a true
     setRun(false);
-    setTimeout(() => setRun(true), 100);
+    console.log("TourLogin:setRun(false):", run);
+    setTourKey((prevKey) => prevKey + 1);
+
+    setTimeout(() => setRun(true), 300);
+    console.log("TourLogin:setRun(true):", run);
   };
 
   return (
     <div>
       {/* Botón que activa el tour */}
-      <button onClick={startTour} className="tour__button">
-        Run Tour
+      <button onClick={startTour} className={styles.tour__button}>
+        Run Tour!
       </button>
 
       {/* Componente React de Joyride*/}
       <Joyride
+        key={tourKey}
         steps={steps}
         continuous={true}
-        showProgress={true}
-        disableBeacon={true} // Oculta el circulo de click 
-        spotlightPadding={0} // Acerca el tooltip al elemento 
+        showProgress={true} // Muestra pagina/paginas en boton next
+        disableBeacon={true} // Oculta el circulo de click
+        spotlightPadding={0} // Acerca el tooltip al elemento
         run={run} // Activa el tour segun la variable de estado run
         callback={handleJoyrideCallback} // Maneja los eventos del tour
       />
     </div>
   );
-};
+}
 
 export default TourLogin;

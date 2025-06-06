@@ -28,9 +28,9 @@ const FeedbackForm = () => {
 
     return(
         <form className={styles.form}>
-        <label>
+        <label className={styles.label}>
             Request type:
-            <select name="requestType" required>
+            <select className={styles.select} name="requestType" required>
             <option value="">Select...</option>
             <option value="Copy revision">Copy revision</option>
             <option value="Design Issues">Design Issues</option>
@@ -38,33 +38,33 @@ const FeedbackForm = () => {
             </select>
         </label>
 
-        <label>
+        <label className={styles.label}>
             Status:
-            <select name="status" required>
+            <select className={styles.select} name="status" required>
             <option value="">Select...</option>
             <option value="complete">Complete</option>
             <option value="incomplete">Incomplete</option>
             </select>
         </label>
 
-        <label>
+        <label className={styles.label}>
             Request#:
-            <input type="text" inputMode="numeric" pattern="[0-9]*" name="requestNumber" required />
+            <input className={styles.input} type="text" inputMode="numeric" pattern="[0-9]*" name="requestNumber" required />
         </label>
 
-        <label>
+        <label className={styles.label}>
             Input date:
-            <input type="date" name="inputDate" required />
+            <input className={styles.input} type="date" name="inputDate" required />
         </label>
 
-        <label>
+        <label className={styles.label}>
             Requester:
-            <input type="text" name="requester" required />
+            <input className={styles.input} type="text" name="requester" required />
         </label>
 
-        <label>
+        <label className={styles.label}>
             Device:
-            <select name="device" value={getDeviceTypeWithFallback()} required>
+            <select className={styles.select} name="device" value={getDeviceTypeWithFallback()} required>
                 <option value="">Select...</option>
                 <option value="desktop">Desktop</option>
                 <option value="mobile">Mobile</option>
@@ -72,9 +72,9 @@ const FeedbackForm = () => {
             </select>
         </label>
 
-        <label>
+        <label className={styles.label}>
             Browser:
-            <select
+            <select className={styles.select}
             name="browser"
             required
             value={browser}
@@ -89,9 +89,9 @@ const FeedbackForm = () => {
         </label>
 
         {browser === "Other" && (
-            <label>
+            <label className={styles.label}>
             Specify browser:
-            <input
+                <input className={styles.input}
                 type="text"
                 name="otherBrowser"
                 value={otherBrowser}
@@ -101,27 +101,27 @@ const FeedbackForm = () => {
             </label>
         )}
 
-        <label>
+        <label className={styles.label}>
             Request:
-            <textarea name="request" rows="4" required />
+            <textarea className={styles.textarea} name="request" rows="4" required />
         </label>
 
-        <label>
+        <label className={styles.label}>
             Url:
-            <input type="url" name="page" required />
+            <input className={styles.input} type="url" name="page" required />
         </label>
 
-        <label>
+        <label className={styles.label}>
             Screenshot:
-            <input type="file" name="screenshot" accept="image/*"/>
+            <input className={styles.input} type="file" name="screenshot" accept="image/*"/>
         </label>
 
-        <label>
+        <label className={styles.label}>
             Terra comments:
-            <textarea name="terraComments" rows="3" />
+            <textarea className={styles.textarea} name="terraComments" rows="3" />
         </label>
 
-        <button type="submit">Submit</button>
+        <button className={styles.button} type="submit">Submit</button>
         </form>
     )
 }
