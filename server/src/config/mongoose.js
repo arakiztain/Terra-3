@@ -11,9 +11,11 @@ const DB_NAME = process.env.DB_NAME;
 
 export const connectDB = async () => {
     try {
-        await mongoose.connect(`mongodb://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?authSource=admin`);
-        console.log("Connected to MongoDB");
-    }catch (error) {
-        console.error(error);
+        await mongoose.connect(
+            `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?authSource=admin`
+        );
+        console.log("✅ Conectado a MongoDB principal");
+    } catch (error) {
+        console.error("❌ Error al conectar a MongoDB:", error);
     }
-}
+};

@@ -28,11 +28,10 @@ services:
       - terraRipple_network
     volumes:
       - mongo_data:/data/db
-      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+
 volumes:
   node_modules:
   mongo_data:
 
 networks:
   terraRipple_network:
-    

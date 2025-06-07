@@ -1,0 +1,64 @@
+.container {
+  padding: 40px;
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  margin-top: 50px;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 30px;
+  color: white;
+}
+
+/* Estilos para el acordeón */
+.accordion {
+  border-top: 1px solid #444;
+  margin-top: 1rem;
+}
+
+.item {
+  border-bottom: 1px solid #444;
+}
+
+.itemBtn {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+  padding: 1rem;
+  font-size: 1rem;
+  text-align: left;
+  /* color: #F78BD8; */
+  background-color: transparent;
+  border: none;
+}
+
+.itemBtn:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.itemBtnExpanded {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.itemContent {
+  transition: height 0.25s cubic-bezier(0, 0, 0, 1);
+}
+
+.itemPanel {
+  padding: 1rem;
+  color: #ccc;
+}
+
+.chevron {
+  margin-left: auto;
+  transition: transform 0.25s cubic-bezier(0, 0, 0, 1);
+  filter: invert(1); /* Para que el icono se vea en blanco */
+}
+
+.itemBtnExpanded .chevron {
+  transform: rotate(180deg);
+}

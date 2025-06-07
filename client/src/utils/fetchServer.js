@@ -1,19 +1,5 @@
 const serverUrl = "http://localhost:3004";
 
-async function getUserInfo() {
-  try {
-    const response = await fetch(`${serverUrl}/user-info`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error:", error);
-    throw error;
-  }
-}
-
 const loginFetch = async ({ email, password }) => {
   try {
     const response = await fetch(`${serverUrl}/login`, {
@@ -48,9 +34,34 @@ const createProject = async ({ title, url, description, reviewerEmails:email }) 
     .then(data => console.log(data))
     .catch(error => console.error('Error:', error));
 }
+const resetFetch = ({ email }) => {
+    fetch(`${serverUrl}/reset-password`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email
+        })
+    })    
+}
+
+const setPassword = ({ password, token }) => {
+    fetch(`${serverUrl}/set-password`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            password,
+            token
+        })
+    })
+}
 
 const getProjects = async () => {
   const token = localStorage.getItem("token");
+  console.log("Does");
   try {
     const response = await fetch(`${serverUrl}/project`, {
       method: "GET",
@@ -61,7 +72,8 @@ const getProjects = async () => {
     });
     const data = await response.json();
     console.log(data);
-    return data;
+    const projects = data.map( element => element.mongoProject);
+    return projects;
   } catch (error) {
     console.error("Error:", error);
     throw error;
@@ -109,7 +121,8 @@ export default {
   loginFetch,
   createProject,
   getProjects,
-  getUserInfo,
   getIssues,
-  setIssue  
+  setIssue,
+  setPassword,
+  resetFetch
 }

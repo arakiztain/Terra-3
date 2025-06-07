@@ -3,52 +3,77 @@ import { useState, useContext } from "react";
 import icon4 from "../../assets/_Terraforms/Individual/SVG/Melos-Blue.svg";
 import icon5 from "../../assets/_Terraforms/Individual/SVG/Punky-Lime.svg";
 import icon6 from "../../assets/_Terraforms/Individual/SVG/Boba-Orange.svg";
-import { AuthContext } from "../../context/AuthContext.jsx";
+import { AuthContext } from "../../context/AuthContext";
+import TourLogin from "../../components/TourLogin/TourLogin";
 
-const Login = () =>{
-    const [userData, setUserData] = useState({
-      email: "",
-      password: "",
-    });
-        const { onLogin } = useContext(AuthContext);
-    const handleChange = (event) => {
-        const { name, value } = event.target;
-        setUserData(prev => ({ ...prev, [name]: value }));
-    };
+const Login = () => {
+  const [userData, setUserData] = useState({
+    email: "",
+    password: "",
+  });
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-          await onLogin(userData);
-    }
+  const { onLogin } = useContext(AuthContext);
 
-    return(
-        <div className={styles.fullscreen}>
-            <div className={styles.formGrid}>
-                <div className={styles.formWrapper}>
-                    <form onSubmit={handleSubmit} className={styles.form}>
-                        <div className={styles.field}>
-                            <input className={styles.input} onChange={(e) => handleChange(e)} value={userData.email} placeholder="" type="email" name="email" required />
-                            <label className={styles.label}>Email</label>
-                        </div>
-                        <div className={styles.field}>
-                            <input className={styles.input} onChange={(e) => handleChange(e)} value={userData.password} placeholder="" type="password" name="password" required />
-                            <label className={styles.label}>Password</label>
-                        </div>
-                        <button className={styles.formButton} type="submit">Log in!</button>
-                    </form>
-                </div>
-            <div className={styles.terraformBottom}>
-                <img src={icon4} className="icon" />
-                <img src={icon5} className="icon" />
-                <img src={icon6} className="icon" />
+  const handleUserPassword = (event) => {
+    setUserData({ ...userData, password: event.target.value });
+  };
+
+  const handleUserEmail = (event) => {
+    setUserData({ ...userData, email: event.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await onLogin(userData.email, userData.password);
+  };
+
+  return (
+    <div className={styles.fullscreen}>
+      <div className={styles.formGrid}>
+        <div className={styles.formWrapper}>
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={styles.field}>
+              <input
+                className={styles.input}
+                placeholder=" "
+                type="email"
+                name="email"
+                value={userData.email}
+                onChange={handleUserEmail}
+                required
+              />
+              <label className={styles.label}>Email</label>
             </div>
+            <div className={styles.field}>
+              <input
+                className={styles.input}
+                placeholder=" "
+                type="password"
+                name="password"
+                value={userData.password}
+                onChange={handleUserPassword}
+                required
+              />
+              <label className={styles.label}>Password</label>
             </div>
-            <div className={styles.lettering}>
-                <h1 className={styles.hello}>Hello</h1>
-                <h1 className={styles.again}>again!</h1>
-            </div>
+            <button className={styles.formButton} type="submit">
+              Log in!
+            </button>
+          </form>
         </div>
-    );
-}
+        <div className={styles.terraformBottom}>
+          <img src={icon4} alt="" />
+          <img src={icon5} alt="" />
+          <img src={icon6} alt="" />
+        </div>
+      </div>
+      <div className={styles.lettering}>
+        <h1 className={styles.hello}>Hello</h1>
+        <h1 className={styles.again}>again!</h1>
+      </div>
+      {/* <TourLogin /> */}
+    </div>
+  );
+};
 
 export default Login;
