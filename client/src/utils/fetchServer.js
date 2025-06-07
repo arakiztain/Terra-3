@@ -34,7 +34,35 @@ const createProject = async ({ title, url, description, reviewerEmails:email }) 
     .then(data => console.log(data))
     .catch(error => console.error('Error:', error));
 }
+const resetFetch = ({ email }) => {
+    fetch(`${serverUrl}/reset-password`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email
+        })
+    })    
+}
 
+const setPassword = ({ password, token }) => {
+    fetch(`${serverUrl}/set-password`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            password,
+            token
+        })
+    })
+}
+export default {
+    loginFetch,
+    resetFetch,
+    setPassword
+}
 const getProjects = async () => {
   const token = localStorage.getItem("token");
   try {

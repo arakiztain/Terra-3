@@ -7,6 +7,8 @@ const router = Router();
 router.post("/login",authController.login);
 router.post("/register",authController.register);
 //router.get("/logout",isLoggedInAPI,authController.logout);
+router.post("/reset-password",authController.resetPassword);
+router.post("/set-password",authController.setPassword);
 router.get("/user-info", isLoggedInAPI, authController.getUserInfo);
 router.post('/test-email', authController.sendEmail);
 

@@ -8,6 +8,8 @@ import Login from './pages/Login/Login';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Admin from './pages/Admin/Admin';
 import Feedback from './pages/Feedback/Feedback';
+import PasswordReset from './pages/PasswordReset/PasswordReset';
+import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import Guide from './pages/Guide/Guide'
 import Faq from './pages/Faq/Faq';
 import IssueLogged from './pages/IssueLogged/IssueLogged';
@@ -42,6 +44,12 @@ const router = createBrowserRouter([
       element: <Feedback/>
     },
     {
+      path:"passwordReset/:token",
+      element: <PasswordReset/>
+    },
+    {
+      path:"forgotPassword",
+      element: <ForgotPassword/>
       path: "guide",
       element:<Guide/>
     },
