@@ -44,12 +44,14 @@ const router = createBrowserRouter([
       element: <Feedback/>
     },
     {
-      path:"passwordReset/:token",
+      path:"user/setpass/:token",
       element: <PasswordReset/>
     },
     {
       path:"forgotPassword",
       element: <ForgotPassword/>
+    },
+    {
       path: "guide",
       element:<Guide/>
     },

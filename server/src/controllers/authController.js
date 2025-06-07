@@ -151,10 +151,12 @@ const resetPassword = async (req, res, next) => {
 
 const setPassword = async (req, res, next) => {
   const { token, password } = req.body;
+  console.log("This the token", token);
+  console.log("This the last character", token[token.length - 1]);
   try {
     const user = await userModel.findOne({ activationToken:token });
     if (!user) throw new TokenNotFound();
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcryptjs.hash(password, 10);
     user.password = hashedPassword;
     user.activationToken = undefined;
     await user.save();

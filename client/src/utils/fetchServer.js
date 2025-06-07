@@ -58,13 +58,10 @@ const setPassword = ({ password, token }) => {
         })
     })
 }
-export default {
-    loginFetch,
-    resetFetch,
-    setPassword
-}
+
 const getProjects = async () => {
   const token = localStorage.getItem("token");
+  console.log("Does");
   try {
     const response = await fetch(`${serverUrl}/project`, {
       method: "GET",
@@ -74,7 +71,9 @@ const getProjects = async () => {
       },
     });
     const data = await response.json();
-    return data;
+    console.log(data);
+    const projects = data.map( element => element.mongoProject);
+    return projects;
   } catch (error) {
     console.error("Error:", error);
     throw error;
@@ -123,5 +122,7 @@ export default {
   createProject,
   getProjects,
   getIssues,
-  setIssue  
+  setIssue,
+  setPassword,
+  resetFetch
 }

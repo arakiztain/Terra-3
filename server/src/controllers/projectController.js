@@ -177,7 +177,6 @@ async function getAllProjects(req, res, next) {
         })
       );
     }
-
     res.json(projects);
   } catch (error) {
     next(error);

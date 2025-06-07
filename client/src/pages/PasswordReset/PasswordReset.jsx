@@ -19,7 +19,7 @@ const PasswordReset = () => {
     return(
         <div className={styles.fullscreen}>
             <form onSubmit={handleSubmit} className={styles.form}>
-                <h3>Reset password form</h3>
+                <h3>Set password form</h3>
                 <label htmlFor="password">Password: </label>
                 <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
                 <label htmlFor="password">Repeat password: </label>

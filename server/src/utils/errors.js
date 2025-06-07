@@ -341,7 +341,7 @@ export {
     UnauthorizedError,
     TokenExpiredError,
     InvalidTokenError,
-    TokenNotFound
+    TokenNotFound,
     NotFoundError,
     ForbiddenError
 }

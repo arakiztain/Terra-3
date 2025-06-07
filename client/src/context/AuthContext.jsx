@@ -13,6 +13,7 @@ const AuthProvider = ({ children }) => {
         console.log("mail and pass", email, password);
         const result = await fetchServer.loginFetch({ email, password });
         if (result.error) {
+            console.log("Y tanto que error");
             return result.error;
         } else {
             localStorage.setItem("token", result.token);

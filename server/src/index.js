@@ -8,7 +8,7 @@ import { connectDB } from "./config/mongoose.js";
 dotenv.config();
 
 const APP_PORT = process.env.APP_PORT || 3003;
-const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
+const CLIENT_URL =  "http://localhost:5173";
 
 const app = express();
 
