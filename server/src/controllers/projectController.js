@@ -1,6 +1,7 @@
 import Project from "../models/project.js";
 import User from "../models/user.js";
 import axios from "axios";
+import userController from "./userController.js";
 import { NotFoundError, ForbiddenError, UserNotFound, ProjectAlreadyExists, ProjectNotFound} from "../utils/errors.js";
 
 async function createProject(req, res, next) {
@@ -11,16 +12,22 @@ async function createProject(req, res, next) {
     if (email) {
       const emails = email.map(e => e.trim());
       const users = await User.find({ email: { $in: emails } });
-
+      console.log("These are the emails", emails);
+      console.log("These are the users", users);
       if (users.length !== emails.length) {
         const foundEmails = users.map(u => u.email);
+        console.log(foundEmails);
         const notFoundEmails = emails.filter(e => !foundEmails.includes(e));
-        throw new UserNotFound(`The following emails were not found: ${notFoundEmails.join(', ')}`);
+        console.log(notFoundEmails);
+        notFoundEmails.forEach(element => {
+          userController.createUserWithEmail(element);
+        });
+        // This should send emails to the unkown users in order to make accounts
+        // throw new UserNotFound(`The following emails were not found: ${notFoundEmails.join(', ')}`);
       }
-
+      console.log("Reaches");
       foundUsers = users.map(u => u._id);
     }
-
     const existingProject = await Project.findOne({ title });
     if (existingProject) throw new ProjectAlreadyExists();
 
@@ -30,7 +37,7 @@ async function createProject(req, res, next) {
       }
     });
     //Buscar workspace por nombre (?)
-    const workspaceName = "Terra Ripple's Workspace";
+    const workspaceName = "Carlos Borja's Workspace";
     const workSpaceId = responseWorkSpace.data.teams.find(team => team.name === workspaceName).id;
 
     //CreateSpace (project)
@@ -119,7 +126,7 @@ async function getAllProjects(req, res, next) {
       }
     });
 
-    const workspaceName = "Terra Ripple's Workspace";
+    const workspaceName = "Carlos Borja's Workspace";
     const workSpaceId = responseWorkSpace.data.teams.find(team => team.name === workspaceName).id;
 
     if (req.user.role === "admin") {

@@ -14,7 +14,7 @@ router.get("/",(req,res)=>{
 
 router.use("/", authRouter);
 router.use("/issue", isLoggedInAPI, issueRouter);
-router.use("/user",  isLoggedInAPI, userRouter);
+router.use("/user", userRouter);
 router.use("/project", isLoggedInAPI, projectRouter);
 
 export default router

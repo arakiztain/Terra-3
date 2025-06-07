@@ -234,7 +234,7 @@ const createUserWithEmail = async ( email ) =>{
     activationToken: token,
   });
   await newUser.save();
-  const activationUrl = `http://localhost:${process.env.APP_PORT}/activate/${token}`;
+  const activationUrl = `http://localhost:${process.env.APP_PORT}/user/activate/${token}`;
   await sendEmail(
     email,
     "Activa tu cuenta en Terra Ripple",
@@ -257,5 +257,6 @@ export default {
   activateUser,
   updateUser,
   deleteUser,
-  updateCurrentUser
+  updateCurrentUser,
+  createUserWithEmail
 };
