@@ -7,7 +7,6 @@ import {
 
 function isLoggedInAPI(req, res, next) {
   const authorization = req.headers.authorization;
-  console.log("authorization", authorization);
 
   if (!authorization || !authorization.startsWith("Bearer ")) {
     return next(new UnauthorizedError("Token no proporcionado"));

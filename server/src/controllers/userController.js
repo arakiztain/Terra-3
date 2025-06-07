@@ -94,24 +94,7 @@ export const createUser = async (req, res) => {
   try {
     const existingUser = await userModel.findOne({ email });
     if (existingUser) return res.status(400).json({ error: "El usuario ya existe" });
-
-    const token = createActivationToken(email);
-
-    const newUser = new userModel({
-      email,
-      isActive: false,
-      activationToken: token,
-    });
-    await newUser.save();
-
-    const activationUrl = `http://localhost:${process.env.APP_PORT}/activate/${token}`;
-    await sendEmail(
-      email,
-      "Activa tu cuenta en Terra Ripple",
-      `<p>Haz clic aquí para activar tu cuenta y establecer tu contraseña:</p>
-       <a href="${activationUrl}">Terra Ripple</a>`
-    );
-
+    await createUserWithEmail(email);
     res.status(201).json({ message: "Usuario creado y correo enviado" });
   } catch (err) {
     console.error(err);
@@ -225,6 +208,48 @@ const updateCurrentUser = async (req, res, next) => {
 	}
   };
 
+async function associateAccounts(email, project) {
+  try{
+    if(!email) throw new UserEmailNotProvided();
+    if(!project) throw new ProjectNameNotProvided();
+    const projectToAssign = await Project.findOne({name: project});
+    if(!projectToAssign) throw new ProjectNotFound();
+
+    let existingEmail = await userModel.findOne({ email });
+    if(!existingEmail){
+      existingEmail = await createUserWithEmail(email);
+    }
+    projectToAssign.users.push(existingEmail._id);
+    await projectToAssign.save();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+const createUserWithEmail = async ( email ) =>{
+  const token = createActivationToken(email);
+  const newUser = new userModel({
+    email,
+    isActive: false,
+    activationToken: token,
+  });
+  await newUser.save();
+  const activationUrl = `http://localhost:${process.env.APP_PORT}/user/activate/${token}`;
+  await sendEmail(
+    email,
+    "Activa tu cuenta en Terra Ripple",
+    `<p>Haz clic aquí para activar tu cuenta y establecer tu contraseña:</p>
+    <a href="${activationUrl}">Terra Ripple</a>`
+  );
+}
+
+/* Obtener listas del folder (proyecto):
+GET /api/v2/folder/{folder_id}/list
+
+Obtener tareas del folder:
+GET /api/v2/folder/{folder_id}/task */
+
+
 export default {
   getUsers,
   getUserById,
@@ -232,5 +257,6 @@ export default {
   activateUser,
   updateUser,
   deleteUser,
-  updateCurrentUser
+  updateCurrentUser,
+  createUserWithEmail
 };
