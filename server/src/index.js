@@ -23,16 +23,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const startServer = async () => {
-  try {
     await connectDB(); // MongoDB
-
-    console.log("✅ Base de datos sincronizada correctamente");
     app.listen(APP_PORT, () => {
-      console.log(`🚀 Backend conectado al puerto ${APP_PORT}`);
+      console.log(`Server running on port ${APP_PORT}`);
     });
-  } catch (error) {
-    console.error("❌ Error iniciando la aplicación:", error);
-  }
 };
 
 // multer

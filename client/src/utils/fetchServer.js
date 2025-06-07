@@ -1,19 +1,5 @@
 const serverUrl = "http://localhost:3004";
 
-async function getUserInfo() {
-  try {
-    const response = await fetch(`${serverUrl}/user-info`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error:", error);
-    throw error;
-  }
-}
-
 const loginFetch = async ({ email, password }) => {
   try {
     const response = await fetch(`${serverUrl}/login`, {
@@ -108,7 +94,6 @@ export default {
   loginFetch,
   createProject,
   getProjects,
-  getUserInfo,
   getIssues,
   setIssue  
 }

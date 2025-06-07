@@ -1,12 +1,10 @@
 import projectModel from "../models/project.js";
 import axios from "axios";
 import dotenv from "dotenv";
-import fs from "fs";
 import path from "path";
+import fs from "fs";
 import FormData from "form-data";
-import Issue from "../models/issue.js";
 import { ProjectNotFound } from "../utils/errors.js";
-
 
 dotenv.config();
 
@@ -52,7 +50,7 @@ async function getIssues(req, res) {
   }
 }
 
-async function reportIssue(req, res) {
+async function reportIssue(req, res, next) {
   const projectId = req.params.projectId.trim();
   const { name, description, priority, tags, request_type } = req.body;
 
@@ -183,7 +181,6 @@ async function uploadScreenshot(req, res) {
     
     // Upload multiple images to ClickUp, one by one
     for (const file of req.files) {
-      const filePath = file.path;
       
       // Store file path to delete it later
       filesToDelete.push(filePath);

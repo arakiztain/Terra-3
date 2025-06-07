@@ -4,7 +4,7 @@ import authRouter from "./authRouter.js";
 import userRouter from "./userRouter.js";
 import issueRouter from "./issueRouter.js";
 import projectRouter from "./projectRouter.js";
-import { isAdmin } from "../middlewares/isAdmin.js";
+// import { isAdmin } from "../middlewares/isAdmin.js";
 
 const router = Router();
 

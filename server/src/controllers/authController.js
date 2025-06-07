@@ -103,7 +103,9 @@ async function getUserInfo(req, res, next) {
     console.log("requser");
     console.log(req.user);
     const id = req.user._id;
+    console.log("This is the id", id);
     const user = await userModel.findById(id).select("-password");
+    console.log("user", user);
     if (!user) {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
