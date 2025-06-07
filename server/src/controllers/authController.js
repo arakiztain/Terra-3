@@ -16,8 +16,6 @@ import { sendEmail } from "../utils/sendEmail.js";
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    console.log("Vars and things");
-    console.log(email, password);
     if (!email) throw new UserEmailNotProvided();
     if (!password) throw new UserPasswordNotProvided();
     
