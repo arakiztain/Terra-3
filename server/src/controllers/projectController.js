@@ -7,24 +7,27 @@ import { NotFoundError, ForbiddenError, UserNotFound, ProjectAlreadyExists, Proj
 async function createProject(req, res, next) {
   try {
     const { title, description, url, email } = req.body;
+    //TODO this email concatenation thing could be cleaner
     let foundUsers = [];
 
     if (email) {
       const emails = email.map(e => e.trim());
       const users = await User.find({ email: { $in: emails } });
-
+      console.log("This is the email");
+      console.log(email);
       if (users.length !== emails.length) {
         const foundEmails = users.map(u => u.email);
-        console.log(foundEmails);
         const notFoundEmails = emails.filter(e => !foundEmails.includes(e));
-        console.log(notFoundEmails);
-        notFoundEmails.forEach(element => {
-          userController.createUserWithEmail(element);
-        });
+        const newUsers = await Promise.all(
+          notFoundEmails.map(email => userController.createUserWithEmail(email))
+        );
+        users.push(...newUsers);
         // This should send emails to the unkown users in order to make accounts
         // throw new UserNotFound(`The following emails were not found: ${notFoundEmails.join(', ')}`);
       }
       foundUsers = users.map(u => u._id);
+      console.log("These are the found users");
+      console.log(foundUsers)
     }
     const existingProject = await Project.findOne({ title });
     if (existingProject) throw new ProjectAlreadyExists();

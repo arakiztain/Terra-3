@@ -243,6 +243,7 @@ const createUserWithEmail = async ( email ) =>{
     `<p>Haz clic aquí para activar tu cuenta y establecer tu contraseña:</p>
     <a href="${activationUrl}">Terra Ripple</a>`
   );
+  return newUser;
 }
 
 /* Obtener listas del folder (proyecto):

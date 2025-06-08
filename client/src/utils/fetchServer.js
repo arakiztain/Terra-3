@@ -16,6 +16,8 @@ const loginFetch = async ({ email, password }) => {
 };
 
 const createProject = async ({ title, url, description, reviewerEmails:email }) => {
+  console.log("Sends this email");
+  console.log(email);
     const token = localStorage.getItem("token");
     fetch(`${serverUrl}/project`, {
         method: 'POST',
