@@ -10,36 +10,23 @@ dotenv.config();
 
 async function getIssues(req, res) {
   try {
+    //It's trying to grab the lists straight out, not folders
     const projectId = req.params.projectId.trim();
     const project = await projectModel.findById(projectId);
-    const folderIds = project.clickupLists.map(list => list.listId);
-    console.log("folderIds", folderIds);
-    const listsResponse = await axios.get(
-      `https://api.clickup.com/api/v2/folder/${folderId}/list`,
-      {
-        headers: {
-          Authorization: process.env.CLICKUP_API_TOKEN,
-        },
-      }
-    );
-
-    const lists = listsResponse.data.lists;
-
+    const listIds = project.clickupLists.map(list => list.listId);
     const allTasks = [];
 
-    for (const list of lists) {
+    for (const listId of listIds) {
       const tasksResponse = await axios.get(
-        `https://api.clickup.com/api/v2/list/${list.id}/task?page=0`,
+        `https://api.clickup.com/api/v2/list/${listId}/task`,
         {
           headers: {
             Authorization: process.env.CLICKUP_API_TOKEN,
           },
         }
       );
-
       allTasks.push(...tasksResponse.data.tasks);
     }
-
     return res.json(allTasks);
   } catch (error) {
     console.error("❌ Error fetching tasks from folder:", error.response?.data || error.message);

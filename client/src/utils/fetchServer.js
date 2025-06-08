@@ -82,10 +82,10 @@ const getProjects = async () => {
   }
 };
 
-const getIssues = async () => {
+const getIssues = async ( id ) => {
     const token = localStorage.getItem("token");
     try{
-        const response = await fetch(`${serverUrl}/issue`, {
+        const response = await fetch(`${serverUrl}/issue/${id}`, {
             method: 'GET',
             headers: { 
               'Content-Type': 'application/json',
@@ -99,10 +99,9 @@ const getIssues = async () => {
         throw error;
     }
 }
-const setIssue = async ( formData, id) =>{
+
+const setIssue = async ( formData, id ) =>{
     const token = localStorage.getItem("token");
-    console.log("Formdata in the fetch");
-    console.log(formData);
     try{
         const response = await fetch(`${serverUrl}/issue/report-issue/${id}`, {
             method: 'POST',

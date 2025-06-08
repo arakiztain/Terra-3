@@ -67,7 +67,7 @@ const FeedbackForm = () => {
 
         const data = {
             name: issueName,
-            request,
+            request_type: request,
             browser: browser === "Other" ? otherBrowser : browser,
             device,
             status,

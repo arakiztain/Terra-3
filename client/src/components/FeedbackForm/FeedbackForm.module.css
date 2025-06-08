@@ -99,6 +99,7 @@ select{
   border-width:3px;
   border-color:white;
   font-weight:700;
+  margin-top:0;
 }
 
 .anotherButton{
@@ -113,4 +114,5 @@ select{
   border-color:#F78BD8;
   font-weight:700;
   margin-left:1em;
+  margin-top:0;
 }
