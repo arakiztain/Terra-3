@@ -5,6 +5,8 @@ import { NotFoundError, ForbiddenError, UserNotFound, ProjectAlreadyExists, Proj
 
 async function createProject(req, res, next) {
   try {
+    console.log("HEADERS:", req.headers);
+    console.log("BODY:", req.body);
     const { title, description, url, email} = req.body;
 
     let foundUsers = [];

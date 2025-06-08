@@ -9,7 +9,7 @@ import Admin from './pages/Admin/Admin';
 import Feedback from './pages/Feedback/Feedback';
 import Guide from './pages/Guide/Guide'
 import Faq from './pages/Faq/Faq';
-import './global.css';
+import './styles/global.css';
 import { AuthProvider } from './context/AuthContext';
 const router = createBrowserRouter([
 {

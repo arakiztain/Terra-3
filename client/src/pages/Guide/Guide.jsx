@@ -4,13 +4,13 @@ import styles from './Guide.module.css';
 const Guide = () => {
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>
+      <h1 className={styles.title_center}>
         DOCUMENTACIÓN DE USO - PÁGINA DE LOGIN DE TERRA RIPPLE
       </h1>
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>OBJETIVO</h2>
-        <p className={styles.text}>
+        <p className={styles.textarea}>
           Describir detalladamente el funcionamiento de la página de login de Terra Ripple para que un asistente conversacional (chatbot) pueda guiar al usuario en su uso.
         </p>
       </section>

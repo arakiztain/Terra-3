@@ -1,5 +1,4 @@
-.dashboard{
-    display:flex;
-    justify-content: center;
-    align-items:center;
+.fullScreen {
+    composes: fullScreen from '../../styles/gstyles.module.css'; 
+    flex-direction: column;
 }

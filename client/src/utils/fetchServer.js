@@ -15,7 +15,9 @@ async function getUserInfo() {
 }
 
 const loginFetch = async ({ email, password }) => {
+  console.log({ email, password });
   try {
+    console.log("serverurl:", serverUrl);
     const response = await fetch(`${serverUrl}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -31,22 +33,35 @@ const loginFetch = async ({ email, password }) => {
 
 const createProject = async ({ title, url, description, reviewerEmails:email }) => {
     const token = localStorage.getItem("token");
-    fetch(`${serverUrl}/project`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-            title,
-            url,
-            description,
-            email
-        })
-    })
+    console.log("recibido en createProject: ",{ title, url, description, email });
+    console.log("token: ",token);
+    console.log("serverUrl: ",serverUrl+"/project");
+    const OPTIONS = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        title,
+        url,
+        description,
+        email,
+      }),
+    };
+    console.log("OPTIONS: ",OPTIONS);
+    try {
+      const response = await fetch(`${serverUrl}/project`, OPTIONS);
+      const data = await response.json();
+      console.log(data);
+      return data; // si quieres devolverlo
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    /*fetch(`${serverUrl}/project`, OPTIONS) <<faltaba await
     .then(response => response.json())
     .then(data => console.log(data))
-    .catch(error => console.error('Error:', error));
+    .catch(error => console.error('Error:', error));*/
 }
 
 const getProjects = async () => {

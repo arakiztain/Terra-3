@@ -1,0 +1,3 @@
+.fullScreen {
+    composes: fullScreen from '../../styles/gstyles.module.css';   
+}
