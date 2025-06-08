@@ -71,9 +71,9 @@ const getProjects = async () => {
       },
     });
     const data = await response.json();
+    console.log("This is the data returned");
     console.log(data);
-    const projects = data.map( element => element.mongoProject);
-    return projects;
+    return data;
   } catch (error) {
     console.error("Error:", error);
     throw error;

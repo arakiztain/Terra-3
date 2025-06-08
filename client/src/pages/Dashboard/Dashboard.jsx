@@ -1,27 +1,31 @@
 import styles from "./Dashboard.module.css";
-import IssueForm from "../../components/IssueForm/IssueForm";
-import IssueCard from "../../components/IssueCard/IssueCard";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import fetchServer from "../../utils/fetchServer";
-const Dashboard = () =>{
-    const [issues, setIssues] = useState([]);
-    //ProjectList load, to render a project choice
-    //Probably will need a spinner or something here.
-    useEffect(()=>{
-        const fetchData = async () =>{
-            setIssues(await fetchServer.getIssues());
-        }
-        fetchData();
-        console.log(issues);
-    },[])
+import { AuthContext } from "../../context/AuthContext";
+import ProjectList from "../../components/ProjectList/ProjectList";
 
-     return (
-        <div className="dashboard">
-            <h2>Dashboard</h2>
-            {issues && issues.length > 0 && issues.map(issue => <IssueCard key={issue._id} issue={issue}/>)}
-            <IssueForm />
+const Dashboard = () =>{
+    const [projects, setProjects] = useState([]);
+    const { userData } = useContext(AuthContext);
+    const user = userData?.user;
+    const token = userData?.token;
+    console.log("These are context values");
+    console.log(user);
+    console.log(token);
+    useEffect(() => {
+        const fetchProjects = async () => {
+            setProjects(await fetchServer.getProjects());
+            console.log("projects value is");
+            console.log(projects);
+        }
+        fetchProjects();
+    }, [])
+
+    return (
+        <div className={styles.wrapper}>
+            <ProjectList projectList={projects} onEditProject={console.log("Nope")} />
         </div>
-  );
+    );
 }
 
 export default Dashboard;

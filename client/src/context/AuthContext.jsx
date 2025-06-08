@@ -13,11 +13,10 @@ const AuthProvider = ({ children }) => {
         console.log("mail and pass", email, password);
         const result = await fetchServer.loginFetch({ email, password });
         if (result.error) {
-            console.log("Y tanto que error");
             return result.error;
         } else {
             localStorage.setItem("token", result.token);
-            setUserData(result.user);
+            setUserData({user: result.user, token: result.token});
             if (result.user.role === "admin") {
                 navigate("/admin")
             } else {
@@ -35,7 +34,7 @@ const AuthProvider = ({ children }) => {
     }; 
 
     return (
-        <AuthContext.Provider value={{ userData: userData, setUserData, onLogin: handleLogin, onLogout: handleLogout }}>
+        <AuthContext.Provider value={{ userData: userData, setUserData, onLogin: handleLogin, onLogout: handleLogout  }}>
             {children}
         </AuthContext.Provider>
     );

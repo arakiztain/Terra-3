@@ -24,9 +24,7 @@ async function createProject(req, res, next) {
         // This should send emails to the unkown users in order to make accounts
         // throw new UserNotFound(`The following emails were not found: ${notFoundEmails.join(', ')}`);
       }
-      console.log("Reaches");
       foundUsers = users.map(u => u._id);
-      console.log(foundUsers);
     }
     const existingProject = await Project.findOne({ title });
     if (existingProject) throw new ProjectAlreadyExists();
@@ -142,16 +140,17 @@ async function getAllProjects(req, res, next) {
 
         const spaces = SpaceResponse.data.spaces;
 
-      projects = await Promise.all(
+    projects = (
+      await Promise.all(
         spaces.map(async (folder) => {
           const mongoProject = await Project.findOne({ spaceId: folder.id }).populate("users", "email");
-          return {
-            Projects: mongoProject || null
-          };
+          return mongoProject ? mongoProject : null;
         })
-      );
+      )
+    ).filter(Boolean);
+    console.log(projects);
     } else {
-      projects = await Project.find({ user: req.user._id }).populate("users", "email");
+      projects = await Project.find({ users: req.user._id }).populate("users", "email");
       if (!projects || projects.length === 0) throw new NotFoundError("You have no projects");
       //clickup llamada id
     }

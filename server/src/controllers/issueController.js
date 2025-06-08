@@ -12,8 +12,8 @@ async function getIssues(req, res) {
   try {
     const projectId = req.params.projectId.trim();
     const project = await projectModel.findById(projectId);
-    const folderId = project.folderId;
-
+    const folderIds = project.clickupLists.map(list => list.listId);
+    console.log("folderIds", folderIds);
     const listsResponse = await axios.get(
       `https://api.clickup.com/api/v2/folder/${folderId}/list`,
       {
