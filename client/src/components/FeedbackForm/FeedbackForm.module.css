@@ -61,9 +61,18 @@ button {
   display:flex;
 }
 
-.halfWdith{
+.halfWidth{
   width:50%;
 }
+
+.halfWidth:first-child {
+  margin-right: 0.5rem;
+}
+
+.halfWidth:last-child {
+  margin-left: 0.5rem;
+}
+
 
 .bigInput{
   min-height:200px;
@@ -76,4 +85,32 @@ select{
   background: url('../../assets/svg/chevron-down.svg') no-repeat right center;
   background-position: calc(100% + 1em) 45%;
   padding-right: 2em;
+}
+
+.submitButton{
+  background-color:white;
+  font-size:1rem;
+  color:#0F0F0F;
+  padding-left:3rem;
+  padding-right:3rem;
+  padding-top:1rem;
+  padding-bottom:1rem;
+  border-radius:25px;
+  border-width:3px;
+  border-color:white;
+  font-weight:700;
+}
+
+.anotherButton{
+  background-color:#0F0F0F;
+  font-size:1.45rem;
+  color:#F78BD8;
+  padding-left:2rem;
+  padding-right:2rem;
+  border-radius:35px;
+  border-width:3px;
+  border-style:solid;
+  border-color:#F78BD8;
+  font-weight:700;
+  margin-left:1em;
 }

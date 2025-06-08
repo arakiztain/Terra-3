@@ -1,19 +1,22 @@
 import styles from "./PasswordReset.module.css";
 import { useState } from "react";
 import { useParams } from 'react-router-dom';
-
+import { useNavigate } from "react-router-dom";
 import fetchServer from "../../utils/fetchServer";
 const PasswordReset = () => {
     const { token } = useParams();
     const [password, setPassword] = useState("");
     const [repeatPassword, setRepeatPassword] = useState("");
+    const navigate = useNavigate();
     const handleSubmit = (e) => {
         e.preventDefault();
         if(password==repeatPassword){
             fetchServer.setPassword({ password, token });
+            navigate("/");
         }else{
             alert("Passwords do not match");
         }
+
     }
 
     return(

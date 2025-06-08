@@ -99,16 +99,17 @@ const getIssues = async () => {
         throw error;
     }
 }
-const setIssue = async ({ formData }) =>{
+const setIssue = async ( formData, id) =>{
     const token = localStorage.getItem("token");
+    console.log("Formdata in the fetch");
+    console.log(formData);
     try{
-        const response = await fetch(`${serverUrl}/issue/report-issue/684077b8ceed6d9c2be69759`, {
+        const response = await fetch(`${serverUrl}/issue/report-issue/${id}`, {
             method: 'POST',
             headers: { 
               'Content-Type': 'application/json',
               "Authorization": `Bearer ${token}`,
              },
-            
             body: JSON.stringify(formData)
         });
         const data = await response.json();
