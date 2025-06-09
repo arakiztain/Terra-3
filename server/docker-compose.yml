@@ -11,7 +11,7 @@ services:
       - ${APP_PORT}:3004
     volumes:
       - .:/app
-     # - node_modules:/app/node_modules
+      - node_modules:/app/node_modules
     networks:
       - terraRipple_network
   mongo:
@@ -33,7 +33,5 @@ volumes:
   node_modules:
   mongo_data:
 
-
 networks:
   terraRipple_network:
-    

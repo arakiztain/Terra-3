@@ -233,14 +233,17 @@ const createUserWithEmail = async ( email ) =>{
     isActive: false,
     activationToken: token,
   });
+  console.log("This was the token generated ");
+  console.log(token);
   await newUser.save();
-  const activationUrl = `http://localhost:${process.env.APP_PORT}/activate/${token}`;
+  const activationUrl = `${process.env.CLIENT_URL}/user/setpass/${token}`;
   await sendEmail(
     email,
     "Activa tu cuenta en Terra Ripple",
     `<p>Haz clic aquí para activar tu cuenta y establecer tu contraseña:</p>
     <a href="${activationUrl}">Terra Ripple</a>`
   );
+  return newUser;
 }
 
 /* Obtener listas del folder (proyecto):
@@ -257,5 +260,6 @@ export default {
   activateUser,
   updateUser,
   deleteUser,
-  updateCurrentUser
+  updateCurrentUser,
+  createUserWithEmail
 };

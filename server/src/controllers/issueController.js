@@ -1,47 +1,32 @@
 import projectModel from "../models/project.js";
 import axios from "axios";
 import dotenv from "dotenv";
-import fs from "fs";
 import path from "path";
+import fs from "fs";
 import FormData from "form-data";
-import Issue from "../models/issue.js";
 import { ProjectNotFound } from "../utils/errors.js";
-
 
 dotenv.config();
 
 async function getIssues(req, res) {
   try {
+    //It's trying to grab the lists straight out, not folders
     const projectId = req.params.projectId.trim();
     const project = await projectModel.findById(projectId);
-    const folderId = project.folderId;
-
-    const listsResponse = await axios.get(
-      `https://api.clickup.com/api/v2/folder/${folderId}/list`,
-      {
-        headers: {
-          Authorization: process.env.CLICKUP_API_TOKEN,
-        },
-      }
-    );
-
-    const lists = listsResponse.data.lists;
-
+    const listIds = project.clickupLists.map(list => list.listId);
     const allTasks = [];
 
-    for (const list of lists) {
+    for (const listId of listIds) {
       const tasksResponse = await axios.get(
-        `https://api.clickup.com/api/v2/list/${list.id}/task?page=0`,
+        `https://api.clickup.com/api/v2/list/${listId}/task`,
         {
           headers: {
             Authorization: process.env.CLICKUP_API_TOKEN,
           },
         }
       );
-
       allTasks.push(...tasksResponse.data.tasks);
     }
-
     return res.json(allTasks);
   } catch (error) {
     console.error("❌ Error fetching tasks from folder:", error.response?.data || error.message);
@@ -52,10 +37,11 @@ async function getIssues(req, res) {
   }
 }
 
-async function reportIssue(req, res) {
+async function reportIssue(req, res, next) {
   const projectId = req.params.projectId.trim();
   const { name, description, priority, tags, request_type } = req.body;
-
+  console.log("This is req body");
+  console.log(req.body);
   if (!name || !description) {
     return res.status(400).json({ error: "Missing required fields: name or description" });
   }
@@ -65,7 +51,7 @@ async function reportIssue(req, res) {
     description,
     tags: tags || [],
     priority: priority || 3, // values from 1 (Urgent) to 4 (Low)
-    request_type: request_type
+    request_type
   };
 
   try {
@@ -183,7 +169,6 @@ async function uploadScreenshot(req, res) {
     
     // Upload multiple images to ClickUp, one by one
     for (const file of req.files) {
-      const filePath = file.path;
       
       // Store file path to delete it later
       filesToDelete.push(filePath);

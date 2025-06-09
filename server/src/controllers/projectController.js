@@ -1,37 +1,54 @@
 import Project from "../models/project.js";
 import User from "../models/user.js";
 import axios from "axios";
-import { NotFoundError, ForbiddenError, UserNotFound, ProjectAlreadyExists} from "../utils/errors.js";
+import userController from "./userController.js";
+import { NotFoundError, ForbiddenError, UserNotFound, ProjectAlreadyExists, ProjectNotFound} from "../utils/errors.js";
 
-//clickup
-const createProject = async (req, res, next) => {
+async function createProject(req, res, next) {
   try {
     const { title, description, url, email } = req.body;
-
+    //TODO this email concatenation thing could be cleaner
     let foundUsers = [];
+
     if (email) {
       const emails = email.map(e => e.trim());
       const users = await User.find({ email: { $in: emails } });
-      console.log("These are the emails", emails);
-      console.log("These are the users", users);
+      console.log("This is the email");
+      console.log(email);
       if (users.length !== emails.length) {
         const foundEmails = users.map(u => u.email);
         const notFoundEmails = emails.filter(e => !foundEmails.includes(e));
-        throw new UserNotFound(`The following emails were not found: ${notFoundEmails.join(', ')}`);
+        const newUsers = await Promise.all(
+          notFoundEmails.map(email => userController.createUserWithEmail(email))
+        );
+        users.push(...newUsers);
+        // This should send emails to the unkown users in order to make accounts
+        // throw new UserNotFound(`The following emails were not found: ${notFoundEmails.join(', ')}`);
       }
-
       foundUsers = users.map(u => u._id);
+      console.log("These are the found users");
+      console.log(foundUsers)
     }
-
     const existingProject = await Project.findOne({ title });
     if (existingProject) throw new ProjectAlreadyExists();
 
-    const responseFolder = await axios.post(
-      `https://api.clickup.com/api/v2/space/${process.env.CLICKUP_SPACE_ID}/folder`,
-      {
-        name: title,
-        content: description
-      },
+    const responseWorkSpace = await axios.get('https://api.clickup.com/api/v2/team', {
+      headers: {
+        Authorization: process.env.CLICKUP_API_TOKEN,
+      }
+    });
+    //Buscar workspace por nombre (?)
+    const workspaceName = "Carlos Borja's Workspace";
+    const workSpaceId = responseWorkSpace.data.teams.find(team => team.name === workspaceName).id;
+
+    //CreateSpace (project)
+    
+    const responseSpace = await axios.post(
+    `https://api.clickup.com/api/v2/team/${workSpaceId}/space`,
+    {
+      name: title/* ,
+      content: description */
+    },
       {
         headers: {
           Authorization: process.env.CLICKUP_API_TOKEN,
@@ -39,12 +56,28 @@ const createProject = async (req, res, next) => {
         }
       }
     );
-
-    const folderId = responseFolder.data.id;
+    
+    const spaceId = responseSpace.data.id;
 
     const listNames = ["copy revision", "design issues", "requested change", "new item"];
     const createdLists = [];
 
+    //Crear FolderId con los equipos de cada proyecto (space)
+    const responseFolder = await axios.post(
+    `https://api.clickup.com/api/v2/space/${spaceId}/folder`,
+    {
+      //name : folderName (equipo)
+      name: "Folder prueba"
+    },
+    {
+      headers: {
+        Authorization: process.env.CLICKUP_API_TOKEN,
+        "Content-Type": "application/json"
+      }
+    }
+  );
+
+    const folderId = responseFolder.data.id;
     for (const name of listNames) {
       const responseList = await axios.post(
         `https://api.clickup.com/api/v2/folder/${folderId}/list`,
@@ -68,7 +101,7 @@ const createProject = async (req, res, next) => {
       description,
       url,
       users: foundUsers.length > 0 ? foundUsers : undefined,
-      folderId,
+      spaceId,
       clickupLists: createdLists
     });
 
@@ -79,74 +112,64 @@ const createProject = async (req, res, next) => {
     });
 
   } catch (error) {
-    next(error);
+      console.error("ClickUp Error:", error.response?.data || error.message);
+  next(error);
   }
 };
 
-//clickup
-const getAllProjects = async (req, res, next) => {
+async function getAllProjects(req, res, next) {
   try {
     let projects = [];
-    if (req.user.role === "admin") {
-      const clickupResponse = await axios.get(
-        `https://api.clickup.com/api/v2/space/${process.env.CLICKUP_SPACE_ID}/folder`,
-        {
-          headers: {
-            Authorization: process.env.CLICKUP_API_TOKEN,
-            "Content-Type": "application/json"
-          }
-        }
-      );
 
-      const folders = clickupResponse.data.folders;
-      projects = await Promise.all(
-        folders.map(async (folder) => {
-          const mongoProject = await Project.findOne({ folderId: folder.id }).populate("users", "email");
-          return {
-            mongoProject: mongoProject || null,
-            clickupFolder: folder
-          };
-        })
-      );
-    } else {
-      const userProjects = await Project.find({ users: req.user._id }).populate("users", "email");
-
-      if (!userProjects || userProjects.length === 0) {
-        throw new NotFoundError("You have no projects");
+    const responseWorkSpace = await axios.get('https://api.clickup.com/api/v2/team', {
+      headers: {
+        Authorization: process.env.CLICKUP_API_TOKEN,
       }
+    });
 
-      projects = await Promise.all(
-        userProjects.map(async (project) => {
-          const clickupFolderResponse = await axios.get(
-            `https://api.clickup.com/api/v2/folder/${project.folderId}`,
-            {
-              headers: {
-                Authorization: process.env.CLICKUP_API_TOKEN,
-                "Content-Type": "application/json"
-              }
+    const workspaceName = "Carlos Borja's Workspace";
+    const workSpaceId = responseWorkSpace.data.teams.find(team => team.name === workspaceName).id;
+
+    if (req.user.role === "admin") {
+      const SpaceResponse = await axios.get(
+      `https://api.clickup.com/api/v2/team/${workSpaceId}/space`,
+          {
+            headers: {
+              Authorization: process.env.CLICKUP_API_TOKEN,
+              "Content-Type": "application/json"
             }
-          );
+          }
+        );
 
-          return {
-            mongoProject: project,
-            clickupFolder: clickupFolderResponse.data
-          };
+        const spaces = SpaceResponse.data.spaces;
+
+    projects = (
+      await Promise.all(
+        spaces.map(async (folder) => {
+          const mongoProject = await Project.findOne({ spaceId: folder.id }).populate("users", "email");
+          return mongoProject ? mongoProject : null;
         })
-      );
+      )
+    ).filter(Boolean);
+    console.log(projects);
+    } else {
+      projects = await Project.find({ users: req.user._id }).populate("users", "email");
+      if (!projects || projects.length === 0) throw new NotFoundError("You have no projects");
+      //clickup llamada id
     }
-
     res.json(projects);
   } catch (error) {
     next(error);
   }
 };
+
 //MongoDb en clikcup no hay manera de buscar por id el folder, es esto o sacar todos y buscar por id en el response.data
-const getProjectById = async (req, res, next) => {
+async function getProjectById(req, res, next) {
   try {
     const projectId = req.params.projectId.trim();
 
     const project = await Project.findById(projectId).populate("users", "email");
-    if (!project) throw new NotFoundError("Project not found");
+    if (!project) throw new ProjectNotFound();
 
     const isUserInProject = project.users.some(
       user => user._id.toString() === req.user._id.toString()
@@ -162,46 +185,21 @@ const getProjectById = async (req, res, next) => {
   }
 };
 
-
-
-//clickup
-const updateProject = async (req, res, next) => {
-  try {
-    const projectId = req.params.projectId.trim();
-    const { title, description, url, user } = req.body;
-
-    const updated = await Project.findByIdAndUpdate(
-      projectId,
-      { title, url, description, user },
-      { new: true }
-    );
-
-    if (!updated) throw new NotFoundError("Project not found");
-
-    await axios.put(`https://api.clickup.com/api/v2/folder/${updated.folderId}`, 
-      { name: title, content: description }, 
-      { headers: { Authorization: process.env.CLICKUP_API_TOKEN } }
-    );
-
-    res.json({ message: "Project updated", project: updated });
-  } catch (error) {
-    next(error);
-  }
-};
-
-//clickup
-const deleteProject = async (req, res, next) => {
+async function deleteProject(req, res, next) {
   try {
     const projectId = req.params.projectId.trim();
 
-    const deleted = await Project.findByIdAndDelete(projectId);
-    if (!deleted) throw new NotFoundError("Project not found");
+    const project = await Project.findById(projectId);
 
-    await axios.delete(`https://api.clickup.com/api/v2/folder/${deleted.folderId}`, {
+    if (!project) throw new ProjectNotFound();
+
+    await axios.delete(`https://api.clickup.com/api/v2/space/${project.spaceId}`, {
       headers: {
         Authorization: process.env.CLICKUP_API_TOKEN
       }
     });
+
+    await Project.findByIdAndDelete(projectId);
 
     res.json({ message: "Project deleted" });
   } catch (error) {
@@ -213,6 +211,5 @@ export default {
   createProject,
   getAllProjects,
   getProjectById,
-  updateProject,
   deleteProject
 };
