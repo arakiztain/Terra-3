@@ -229,6 +229,7 @@ async function assignProject(req, res, next) {
     next(error);
   }
 }
+
 async function deleteProject(req, res, next) {
   try {
     const projectId = req.params.projectId.trim();

@@ -1,4 +1,5 @@
 import userModel from "../models/user.js";
+import projectModel from "../models/project.js";
 import mongoose from "mongoose";
 import { paginateQuery } from "../utils/paginate.js";
 import { hash } from "../utils/bcrypt.js";
@@ -51,35 +52,6 @@ const getUserById = async (req, res, next) => {
     next(error);
   }
 };
-
-/* const createUser = async (req, res, next) => {
-  try {
-    const { username, email, password, role } = req.body;
-
-    if (!username) throw new UserNameNotProvided();
-    if (!email) throw new UserEmailNotProvided();
-    if (!password) throw new UserPasswordNotProvided();
-    if (!role) throw new UserRoleNotProvided();
-    if (role && !["client", "admin"].includes(role)) throw new UserRoleIncorrect();
-
-    const existingEmail = await userModel.findOne({ email });
-    if (existingEmail) throw new UserEmailAlreadyExists();
-    const existingUsername = await userModel.findOne({ username });
-    if (existingUsername) throw new UsernameAlreadyExists();
-
-
-    const newUser = new userModel({ username, email, password, role });
-    await newUser.save();
-
-    const userToReturn = newUser.toObject();
-    delete userToReturn.password;
-
-    res.status(201).json(userToReturn);
-  } catch (error) {
-      next(error);
-  }
-};
- */
 
 async function createUser (req, res, next) {
   const { email } = req.body;
@@ -171,45 +143,30 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
-const updateCurrentUser = async (req, res, next) => {
-	const id = req.user._id;
-	const data = req.body;
-  
-	try {
-	  if (data.password && data.password.trim() !== "") {
-		  data.password = await hash(data.password);
-	  } else {
-		  delete data.password;
-	  }
-  
-	  const updatedUser = await userModel.findByIdAndUpdate(id, data, {
-		  new: true,
-		  runValidators: true,
-	  }).select("-password");
-  
-	  if (!updatedUser) throw new UserNotFound();
-  
-	  res.json(updatedUser);
-	} catch (error) {
-	  next(error);
-	}
-  };
+async function associateAccounts(email, projectName) {
+  try {
+    if (!email) throw new UserEmailNotProvided();
+    if (!projectName) throw new ProjectNameNotProvided();
 
-async function associateAccounts(email, project) {
-  try{
-    if(!email) throw new UserEmailNotProvided();
-    if(!project) throw new ProjectNameNotProvided();
-    const projectToAssign = await Project.findOne({name: project});
-    if(!projectToAssign) throw new ProjectNotFound();
+    const projectToAssign = await projectModel.findOne({ name: projectName }).populate("users", "_id email");
+    if (!projectToAssign) throw new ProjectNotFound();
 
-    let existingEmail = await userModel.findOne({ email });
-    if(!existingEmail){
-      existingEmail = await createUserWithEmail(email);
+    let user = await userModel.findOne({ email });
+    if (!user) {
+      user = await createUserWithEmail(email);
     }
-    projectToAssign.users.push(existingEmail._id);
+
+    const existingUserIds = projectToAssign.users.map(u => u._id.toString());
+    if (existingUserIds.includes(user._id.toString())) {
+      throw new UsersAssigned(`User with email ${email} is already assigned to the project`);
+    }
+
+    projectToAssign.users.push(user._id);
     await projectToAssign.save();
+
   } catch (error) {
     console.error(error);
+    throw error;
   }
 }
 
@@ -240,6 +197,6 @@ export default {
   activateUser,
   updateUser,
   deleteUser,
-  updateCurrentUser,
+  associateAccounts,
   createUserWithEmail
 };
