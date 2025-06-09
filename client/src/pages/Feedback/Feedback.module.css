@@ -70,3 +70,9 @@
     /* 0.312 is half of 0.625, 5/8*/
     padding-left:0.312em;
 }
+
+.formContainer{
+    display:grid;
+    grid-template-rows: 75px 1fr;
+    grid-template-columns: 1fr minmax(0, 2fr) minmax(0, 2fr) minmax(0, 2fr) 1fr;
+}

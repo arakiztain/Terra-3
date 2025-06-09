@@ -32,8 +32,9 @@ const Feedback = () => {
         <>
             <div className={styles.projectHeader}>
                 <ProjectHeader newIssueHandler={handleToggleForm} />
+            </div>
                 {toggleForm ? 
-                <>
+                <div className={styles.formContainer}>
                     <FeedbackForm /> 
                     <div className={styles.twoFifthsScreen}>
                         <div className={styles.lettering}>
@@ -47,12 +48,11 @@ const Feedback = () => {
                             </div>
                         </div>
                     </div>
-                </>
+                </div>
                 : <IssueDisplay issues={issues}/>
                 }
                 <img src={chatbotIcon} onClick={() => console.log("Open Chatbot")} className={styles.chatbotIcon} alt="Button to open the chatbot"/>
                 <img src={guideIcon} onClick={() => navigate('/guide')} className={styles.guideIcon} alt="Button to open the guide"/>
-            </div>
         </>
     )
 
