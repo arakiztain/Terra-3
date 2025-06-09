@@ -2,7 +2,7 @@ import Project from "../models/project.js";
 import User from "../models/user.js";
 import axios from "axios";
 import userController from "./userController.js";
-import { NotFoundError, ForbiddenError, UserNotFound, ProjectAlreadyExists, ProjectNotFound} from "../utils/errors.js";
+import { NotFoundError, ForbiddenError, UserNotFound, ProjectAlreadyExists, ProjectNotFound, UsersAssigned} from "../utils/errors.js";
 
 async function createProject(req, res, next) {
   try {
@@ -203,26 +203,28 @@ async function assignProject(req, res, next) {
 
       foundUsers = users.map(u => u._id);
     }
-    console.log("Found users:", foundUsers);
 
     const project = await Project.findById(projectId).populate("users", "email");
     if (!project) throw new ProjectNotFound();
 
+    // Verificación de permisos
     const isUserInProject = project.users.some(
       user => user._id.toString() === req.user._id.toString()
     );
 
-    if (req.user.role !== "admin" && !isUserInProject) {
-      throw new ForbiddenError("You don't have permission to access this project");
+    const existingUserIds = project.users.map(u => u._id.toString());
+    const newUserIds = foundUsers.map(id => id.toString());
+
+    const usersToAdd = newUserIds.filter(id => !existingUserIds.includes(id));
+
+    if (usersToAdd.length === 0) {
+      throw new UsersAssigned();
     }
 
-    project.users = Array.from(new Set([...project.users.map(u => u._id.toString()), ...foundUsers.map(id => id.toString())]));
-
+    project.users = [...existingUserIds, ...usersToAdd];
     await project.save();
 
-    const updatedProject = await Project.findById(projectId).populate("users", "email");
-
-    res.json(updatedProject);
+    res.json(project);
   } catch (error) {
     next(error);
   }
