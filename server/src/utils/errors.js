@@ -43,7 +43,7 @@ class ValidationError extends Error {
   }
 }
 /**
- * Review
+ * Issue
  */
 class NoReviewsFound extends Error {
   constructor() {
@@ -116,45 +116,6 @@ class ErrorDeleteImage extends Error {
   }
 }
 /**
- * Favorite
- */
-class NoFavoritesFound extends Error {
-  constructor() {
-    super("No favorites yet");
-    this.name = "NoFavoritesFound";
-    this.statusCode = 404;
-  }
-}
-class RestaurantIdNotProvided extends Error {
-  constructor() {
-    super("ID restaurant is not provided");
-    this.name = "RestaurantIdNotProvided";
-    this.statusCode = 400;
-  }
-}
-
-class FavoriteAlreadyExists extends Error {
-  constructor() {
-    super("The restaurant is already in favorites");
-    this.name = "FavoriteAlreadyExists";
-    this.statusCode = 400;
-  }
-}
-class FavoriteNotFound extends Error {
-  constructor() {
-    super("Favorite not found");
-    this.statusCode = 404;
-  }
-}
-
-class NotAuthorizedToDeleteFavorite extends Error {
-  constructor() {
-    super("Not authorized to delete another user's favorites");
-    this.statusCode = 403;
-  }
-}
-
-/**
  *  authController
  */
 
@@ -180,6 +141,15 @@ class TokenNotFound extends Error{
 /**
  *  userController
  */
+class BadPasswordError extends Error {
+  constructor(message = "The password has to be at least 8 characters long, with at least one lowercase letter, one uppercase letter and one number") {
+    super(message);
+    this.name = "BadPasswordError";
+    this.statusCode = 400;
+  }
+}
+
+
 class UserNameNotProvided extends Error {
     constructor(){
         super("Nombre de usuario no introducido");
@@ -189,7 +159,7 @@ class UserNameNotProvided extends Error {
 
 class UserEmailNotProvided extends Error {
     constructor(){
-        super("Email no introducido");
+        super("Email not provided");
         this.statusCode = 400;
     }
 }
@@ -308,8 +278,6 @@ export {
     UsersAssigned,
     InvalidRestaurantData,
     ProjectAlreadyExists,
-    NoFavoritesFound,
-    RestaurantIdNotProvided,
     ValidationError,
     NoReviewsFound,
     NoRestaurantReviewsFound,
@@ -321,12 +289,10 @@ export {
     ReviewImageNotValid,
     ErrorDeleteImage,
     NoImageProvided,
-    FavoriteAlreadyExists,
-    FavoriteNotFound,
-    NotAuthorizedToDeleteFavorite,
     EmailNotFound,
     IncorrectPassword,
     UserNameNotProvided,
+    BadPasswordError,
     UserEmailNotProvided,
     UserPasswordNotProvided,
     UserRoleNotProvided,

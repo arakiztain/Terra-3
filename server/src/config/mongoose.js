@@ -14,8 +14,8 @@ export const connectDB = async () => {
         await mongoose.connect(
             `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?authSource=admin`
         );
-        console.log("✅ Conectado a MongoDB principal");
+        console.log("✅ Connected to MongoDB");
     } catch (error) {
-        console.error("❌ Error al conectar a MongoDB:", error);
+        console.error("❌ Error connecting to MongoDB:", error);
     }
 };

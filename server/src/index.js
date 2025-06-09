@@ -4,6 +4,7 @@ import router from "./routes/router.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { connectDB } from "./config/mongoose.js";
+import errorHandler from "./middlewares/errorHandler.js";
 
 dotenv.config();
 
@@ -33,6 +34,6 @@ const startServer = async () => {
 app.use('/public', express.static('public'));
 
 app.use("/",router);
-
+app.use(errorHandler);
 
 startServer();

@@ -126,7 +126,7 @@ async function getAllProjects(req, res, next) {
         Authorization: process.env.CLICKUP_API_TOKEN,
       }
     });
-    //Change name
+    //Change name ?
     const workspaceName = process.env.CLICKUP_WORKSPACE_NAME;
     const workSpaceId = responseWorkSpace.data.teams.find(team => team.name === workspaceName).id;
 

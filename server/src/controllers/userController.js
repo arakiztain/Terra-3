@@ -3,23 +3,16 @@ import mongoose from "mongoose";
 import { paginateQuery } from "../utils/paginate.js";
 import { hash } from "../utils/bcrypt.js";
 import {
-  UserNameNotProvided,
   UserEmailNotProvided,
-  UserPasswordNotProvided,
-  UserRoleNotProvided,
-  UserRoleIncorrect,
   UserEmailAlreadyExists,
-  UsernameAlreadyExists,
   NoUsersFound,
   InvalidUserId,
-  UserNotFound
+  UserNotFound,
 } from "../utils/errors.js";
 import bcrypt from "bcrypt";
-import {
-  createActivationToken,
-  verifyToken
-} from "../utils/token.js";
+import { createActivationToken, verifyToken } from "../utils/token.js";
 import { sendEmail } from "../utils/sendEmail.js";
+import { validateActivation } from "../utils/validators.js";
 
 const getUsers = async (req, res, next) => {
   try {
@@ -88,36 +81,31 @@ const getUserById = async (req, res, next) => {
 };
  */
 
-export const createUser = async (req, res) => {
+async function createUser (req, res, next) {
   const { email } = req.body;
-
   try {
+    if (!req.body || !email) throw new UserEmailNotProvided();
+
     const existingUser = await userModel.findOne({ email });
-    if (existingUser) return res.status(400).json({ error: "El usuario ya existe" });
+    if (existingUser) throw new UserEmailAlreadyExists();
+
     await createUserWithEmail(email);
-    res.status(201).json({ message: "Usuario creado y correo enviado" });
+
+    res.status(201).json({ message: "User created and activation email sent" });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Error al crear usuario" });
+    next(err);
   }
 };
 
-export const activateUser = async (req, res) => {
+export const activateUser = async (req, res, next) => {
   const token = req.params.token;
-  console.log("Token recibido:", token);
   const { password } = req.body;
-
   try {
     const { email } = verifyToken(token);
-    console.log("Email del token:", email);
 
     const user = await userModel.findOne({ email });
-    if (!user) return res.status(400).json({ error: "Usuario no encontrado" });
 
-    if (user.activationToken !== token) {
-      console.log("Token en DB:", user.activationToken);
-      return res.status(400).json({ error: "Token inválido" });
-    }
+    validateActivation(user, token, password);
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -127,10 +115,9 @@ export const activateUser = async (req, res) => {
 
     await user.save();
 
-    res.json({ message: "Cuenta activada con éxito" });
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ error: "Token inválido o expirado" });
+    res.json({ message: "Account successfully activated" });
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -178,7 +165,7 @@ const deleteUser = async (req, res, next) => {
       throw new UserNotFound();
     }
 
-    res.json({ message: "Usuario eliminado correctamente", user: deletedUser });
+    res.json({ message: "User succesfully deleted", user: deletedUser });
   } catch (error) {
     next(error);
   }
@@ -233,14 +220,14 @@ const createUserWithEmail = async ( email ) =>{
     isActive: false,
     activationToken: token,
   });
-  console.log("This was the token generated ");
+  console.log("This was the token generated");
   console.log(token);
   await newUser.save();
   const activationUrl = `${process.env.CLIENT_URL}/user/setpass/${token}`;
   await sendEmail(
     email,
-    "Activa tu cuenta en Terra Ripple",
-    `<p>Haz clic aquí para activar tu cuenta y establecer tu contraseña:</p>
+    "Active your account in Terra Ripple",
+    `<p>Click here to activate your account and set your password:</p>
     <a href="${activationUrl}">Terra Ripple</a>`
   );
   return newUser;
