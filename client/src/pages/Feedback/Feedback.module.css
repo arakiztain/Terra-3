@@ -43,3 +43,30 @@
   min-width: 0;
   overflow: hidden;
 }
+
+.lettering{
+    grid-column: 1/2;
+    grid-row:3/4;
+}
+
+.twoFifthsScreen{
+    position:fixed;
+    display:grid;
+    width:100vw;
+    height:100vh;
+    grid-template-columns: 2fr 3fr;
+    grid-template-rows: 1fr 2fr;
+    pointer-events:none;
+}
+
+.terraformBottom{
+    padding-right:5em;
+    padding-left:5em;
+}
+
+.letteringText{
+    font-size:8em;
+    /* the font size is set here to 8em, and I want 5em of padding from the original */
+    /* 0.312 is half of 0.625, 5/8*/
+    padding-left:0.312em;
+}
