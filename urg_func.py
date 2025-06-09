@@ -18,7 +18,7 @@ def na(not_a):
     return 3
 
 def sentiment(sent):
-    if sent == "Negativo":
+    if sent == "Negative":
         return 2
     return 1
 
@@ -40,15 +40,22 @@ def presupuesto(pres):
         return 2
     return 1
 
-def dias(date):
-    date = pd.to_datetime(date)
-    today = pd.to_datetime(date.today())
-    lapse = pd.to_datetime((today - date)).day
-    if lapse >= 15:
-        return 5
-    if lapse >= 10:
+
+def dias(fecha, fin):
+    fecha = pd.to_datetime(fecha).values[0]
+    fin = fin.values[0]
+    if np.isnan(fin):
+        today = pd.Timestamp.today()
+        # print(today)
+        # print((today-fecha).days)
+        lapse = (today - fecha).days
+        # print(lapse)
+    else:
+        # print(fin-fecha)
+        lapse = (fin-fecha)/10**9/3600/24
+    if lapse >= 4:
         return 3
-    if lapse >= 5:
+    if lapse >= 3:
         return 2
     return 1
 
@@ -87,23 +94,26 @@ def urgencia(df):
         # print(i)
         iss = df_2[df_2["Issue ID"] == i]["Classification"].values[0]
         not_a = df_2[df_2["Issue ID"] == i]["Not addressing historico"].values[0]
-        ####################
-        ##DESCOMENTAR ESTO##
-        ####################
-        # sent = df_2[df_2["Issue ID"] == i]["Sentiment"].values[0]
-        # h_sent = df_2[df_2["Issue ID"] == i]["Sentiment historico"].values[0]
-        ####################
-        ##DESCOMENTAR ESTO##
-        ####################
+        ###################
+        #DESCOMENTAR ESTO##
+        ###################
+        sent = df_2[df_2["Issue ID"] == i]["Sentiment"].values[0]
+        h_sent = df_2[df_2["Issue ID"] == i]["Sentiment historico"].values[0]
+        ###################
+        #DESCOMENTAR ESTO##
+        ###################
         pres = df_2[df_2["Issue ID"] == i]["Budget"].values[0]
-        date = df_2[df_2["Issue ID"] == i]["Input Date"].values[0]
+        date = df_2[df_2["Issue ID"] == i]["Input Date"]
+        fin = df_2[df_2["Issue ID"] == i]["Deadline Real"]
         iter = df_2[df_2["Issue ID"] == i]["Iteraciones"].values[0]
         h_iter = df_2[df_2["Issue ID"] == i]["Iteraciones 30 dias"].values[0]
         brow = df_2[df_2["Issue ID"] == i]["Browser"].values[0]
-        tot = issue(iss) + na(not_a) + sentiment("Neutro") + hist_sent(-1) + presupuesto(pres) + dias(date) + itera(iter) + hist_itera(h_iter) + browser(brow)
-        if tot >= 19:
+        tot = issue(iss) + na(not_a) + sentiment("Neutro") + hist_sent(-1) + presupuesto(pres) + dias(date,fin) + itera(iter) + hist_itera(h_iter) + browser(brow) + sentiment(sent) + hist_sent(h_sent)
+
+
+        if tot >= 20:
             urg.append("Critical")
-        elif tot >= 15:
+        elif tot >= 17:
             urg.append("Urgent")
         elif tot >= 11:
             urg.append("Medium")
