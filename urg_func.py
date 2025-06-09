@@ -57,16 +57,16 @@ def itera(iter):
         return 4
     if iter >= 10:
         return 2
-    if iter >= 4
+    if iter >= 4:
         return 1
     return 0
 
 def hist_itera(h_iter):
-    if iter >= 65:
+    if h_iter >= 65:
         return 3
-    if iter >= 45:
+    if h_iter >= 45:
         return 2
-    if iter >= 25:
+    if h_iter >= 25:
         return 1
     return 0
 
@@ -76,5 +76,38 @@ def browser(brow):
     return 1
 
 
-def urgencia(df, pres):
-    return -1
+def urgencia(df):
+    ### PRE: A esta función se le pasa un dataframe de issues al que se también asocia a cada fila el presupuesto 
+    ### del proyecto asociado al issue.
+    ##################################
+    ### POST: La función devuelve la culumna Urgency del DataFrame
+    df_2 = df.copy()
+    urg = []
+    for i in df_2["Issue ID"]:
+        # print(i)
+        iss = df_2[df_2["Issue ID"] == i]["Classification"].values[0]
+        not_a = df_2[df_2["Issue ID"] == i]["Not addressing historico"].values[0]
+        ####################
+        ##DESCOMENTAR ESTO##
+        ####################
+        # sent = df_2[df_2["Issue ID"] == i]["Sentiment"].values[0]
+        # h_sent = df_2[df_2["Issue ID"] == i]["Sentiment historico"].values[0]
+        ####################
+        ##DESCOMENTAR ESTO##
+        ####################
+        pres = df_2[df_2["Issue ID"] == i]["Budget"].values[0]
+        date = df_2[df_2["Issue ID"] == i]["Input Date"].values[0]
+        iter = df_2[df_2["Issue ID"] == i]["Iteraciones"].values[0]
+        h_iter = df_2[df_2["Issue ID"] == i]["Iteraciones 30 dias"].values[0]
+        brow = df_2[df_2["Issue ID"] == i]["Browser"].values[0]
+        tot = issue(iss) + na(not_a) + sentiment("Neutro") + hist_sent(-1) + presupuesto(pres) + dias(date) + itera(iter) + hist_itera(h_iter) + browser(brow)
+        if tot >= 19:
+            urg.append("Critical")
+        elif tot >= 15:
+            urg.append("Urgent")
+        elif tot >= 11:
+            urg.append("Medium")
+        else:
+            urg.append("Low")
+    df_2["Urgency"] = urg
+    return df_2["Urgency"]
