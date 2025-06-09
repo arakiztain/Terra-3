@@ -2,7 +2,7 @@ import Project from "../models/project.js";
 import User from "../models/user.js";
 import axios from "axios";
 import userController from "./userController.js";
-import { NotFoundError, ForbiddenError, UserNotFound, ProjectAlreadyExists, ProjectNotFound} from "../utils/errors.js";
+import { NotFoundError, ForbiddenError, UserNotFound, ProjectAlreadyExists, ProjectNotFound, UsersAssigned} from "../utils/errors.js";
 
 async function createProject(req, res, next) {
   try {
@@ -13,8 +13,8 @@ async function createProject(req, res, next) {
     if (email) {
       const emails = email.map(e => e.trim());
       const users = await User.find({ email: { $in: emails } });
-      console.log("This is the email");
-      console.log(email);
+/*       console.log("This is the email");
+      console.log(email); */
       if (users.length !== emails.length) {
         const foundEmails = users.map(u => u.email);
         const notFoundEmails = emails.filter(e => !foundEmails.includes(e));
@@ -26,8 +26,8 @@ async function createProject(req, res, next) {
         // throw new UserNotFound(`The following emails were not found: ${notFoundEmails.join(', ')}`);
       }
       foundUsers = users.map(u => u._id);
-      console.log("These are the found users");
-      console.log(foundUsers)
+/*       console.log("These are the found users");
+      console.log(foundUsers) */
     }
     const existingProject = await Project.findOne({ title });
     if (existingProject) throw new ProjectAlreadyExists();
@@ -38,9 +38,9 @@ async function createProject(req, res, next) {
       }
     });
     //Buscar workspace por nombre (?)
-    const workspaceName = "Carlos Borja's Workspace";
+    const workspaceName = process.env.CLICKUP_WORKSPACE_NAME;
     const workSpaceId = responseWorkSpace.data.teams.find(team => team.name === workspaceName).id;
-
+    console.log(workSpaceId);
     //CreateSpace (project)
     
     const responseSpace = await axios.post(
@@ -126,8 +126,8 @@ async function getAllProjects(req, res, next) {
         Authorization: process.env.CLICKUP_API_TOKEN,
       }
     });
-
-    const workspaceName = "Carlos Borja's Workspace";
+    //Change name
+    const workspaceName = process.env.CLICKUP_WORKSPACE_NAME;
     const workSpaceId = responseWorkSpace.data.teams.find(team => team.name === workspaceName).id;
 
     if (req.user.role === "admin") {
@@ -151,7 +151,7 @@ async function getAllProjects(req, res, next) {
         })
       )
     ).filter(Boolean);
-    console.log(projects);
+
     } else {
       projects = await Project.find({ users: req.user._id }).populate("users", "email");
       if (!projects || projects.length === 0) throw new NotFoundError("You have no projects");
@@ -185,12 +185,56 @@ async function getProjectById(req, res, next) {
   }
 };
 
+async function assignProject(req, res, next) {
+  try {
+    const projectId = req.params.projectId.trim();
+    const { email } = req.body;
+
+    let foundUsers = [];
+    if (email) {
+      const emails = email.map(e => e.trim());
+      const users = await User.find({ email: { $in: emails } });
+
+      if (users.length !== emails.length) {
+        const foundEmails = users.map(u => u.email);
+        const notFoundEmails = emails.filter(e => !foundEmails.includes(e));
+        throw new UserNotFound(`The following emails were not found: ${notFoundEmails.join(', ')}`);
+      }
+
+      foundUsers = users.map(u => u._id);
+    }
+
+    const project = await Project.findById(projectId).populate("users", "email");
+    if (!project) throw new ProjectNotFound();
+
+    // Verificación de permisos
+    const isUserInProject = project.users.some(
+      user => user._id.toString() === req.user._id.toString()
+    );
+
+    const existingUserIds = project.users.map(u => u._id.toString());
+    const newUserIds = foundUsers.map(id => id.toString());
+
+    const usersToAdd = newUserIds.filter(id => !existingUserIds.includes(id));
+
+    if (usersToAdd.length === 0) {
+      throw new UsersAssigned();
+    }
+
+    project.users = [...existingUserIds, ...usersToAdd];
+    await project.save();
+
+    res.json(project);
+  } catch (error) {
+    next(error);
+  }
+}
 async function deleteProject(req, res, next) {
   try {
     const projectId = req.params.projectId.trim();
-
+    console.log(projectId);
     const project = await Project.findById(projectId);
-
+    console.log(project.spaceId);
     if (!project) throw new ProjectNotFound();
 
     await axios.delete(`https://api.clickup.com/api/v2/space/${project.spaceId}`, {
@@ -211,5 +255,6 @@ export default {
   createProject,
   getAllProjects,
   getProjectById,
+  assignProject,
   deleteProject
 };
