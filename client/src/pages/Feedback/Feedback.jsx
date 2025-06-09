@@ -48,7 +48,7 @@ const Feedback = () => {
                 <TourIssueForm />
                 {toggleForm ? 
                 <div className={styles.formContainer}>
-                    <FeedbackForm /> 
+                    <FeedbackForm project={project}/> 
                     <div className={styles.twoFifthsScreen}>
                         <div className={styles.lettering}>
                             <h1 className={styles.letteringText}>Tell us</h1>

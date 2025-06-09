@@ -16,6 +16,7 @@ const loginFetch = async ({ email, password }) => {
 };
 
 const createProject = async ({ title, url, description, reviewerEmails:email }) => {
+    email = Array.isArray(email) ? email.filter(Boolean) : [];
     const token = localStorage.getItem("token");
     fetch(`${serverUrl}/project`, {
         method: 'POST',
@@ -36,8 +37,7 @@ const createProject = async ({ title, url, description, reviewerEmails:email }) 
 }
 
 const updateProject = async( id, {url, description, reviewerEmails:email} ) => {
-    console.log("These are the fields");
-    console.log(id, url, description, email);
+    email = Array.isArray(email) ? email.filter(Boolean) : [];
     const token = localStorage.getItem("token");
     fetch(`${serverUrl}/project`, {
         method: 'PATCH',
