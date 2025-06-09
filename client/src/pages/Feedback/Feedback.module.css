@@ -1,0 +1,8 @@
+.projectHeader{
+    position:absolute;
+    top:0px;
+    display:grid;
+grid-template-columns: 1fr minmax(0, 2fr) minmax(0, 2fr) minmax(0, 2fr) 1fr;
+    grid-template-rows: 75px 1fr;
+    width:100%;
+}
