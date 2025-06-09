@@ -1,4 +1,4 @@
-db = db.getSiblingDB(process.env.DB_NAME);
+db = db.getSiblingDB("terra");
 
 db.users.insertMany([
   {
