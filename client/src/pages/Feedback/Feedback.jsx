@@ -12,15 +12,18 @@ import icon1 from "../../assets/_Terraforms/Individual/SVG/Melos-Blue.svg";
 import icon2 from "../../assets/_Terraforms/Individual/SVG/Punky-Lime.svg";
 import icon3 from "../../assets/_Terraforms/Individual/SVG/Boba-Orange.svg";
 import TourIssueForm from '../../components/TourIssueForm/TourIssueForm';
+import LoadSpinner from '../../components/LoadSpinner/LoadSpinner';
 const Feedback = () => {
     const [issues, setIssues] = useState([]);
     const [project, setProject] = useState([]);
     const [toggleForm, setToggleForm] = useState(false);
+    const [toggleSpinner, setToggleSpiner] = useState(true);
     const { id } = useParams();
     const navigate = useNavigate();
     useEffect(() => {
         const fetchIssues = async () =>{
             setIssues(await fetchServer.getIssues(id));
+            setToggleSpiner(false);
         }
         fetchIssues();
     }, []);
@@ -60,7 +63,7 @@ const Feedback = () => {
                     </div>
                 </div>
                 : <>
-                    <IssueDisplay issues={issues}/>
+                    {toggleSpinner ? <LoadSpinner size="fullscreen"/> : <IssueDisplay issues={issues}/>}
                 </>
                 }
 

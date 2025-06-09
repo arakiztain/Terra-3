@@ -16,8 +16,6 @@ const loginFetch = async ({ email, password }) => {
 };
 
 const createProject = async ({ title, url, description, reviewerEmails:email }) => {
-  console.log("Sends this email");
-  console.log(email);
     const token = localStorage.getItem("token");
     fetch(`${serverUrl}/project`, {
         method: 'POST',
@@ -27,6 +25,28 @@ const createProject = async ({ title, url, description, reviewerEmails:email }) 
         },
         body: JSON.stringify({
             title,
+            url,
+            description,
+            email
+        })
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+}
+
+const updateProject = async( id, {url, description, reviewerEmails:email} ) => {
+    console.log("These are the fields");
+    console.log(id, url, description, email);
+    const token = localStorage.getItem("token");
+    fetch(`${serverUrl}/project`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            id,
             url,
             description,
             email
@@ -145,5 +165,6 @@ export default {
   setIssue,
   setPassword,
   resetFetch,
-  getProjectById
+  getProjectById,
+  updateProject
 }

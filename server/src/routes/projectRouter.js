@@ -7,6 +7,8 @@ const router = Router();
 
 router.post("/", isLoggedInAPI, isAdmin, projectController.createProject);
 
+router.patch("/", isLoggedInAPI, isAdmin, projectController.updateProject);
+
 router.get("/", isLoggedInAPI, projectController.getAllProjects);
 
 router.get("/:projectId", isLoggedInAPI, projectController.getProjectById);

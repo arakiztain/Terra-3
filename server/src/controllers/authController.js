@@ -99,12 +99,8 @@ const register = async (req, res, next) => {
 
 async function getUserInfo(req, res, next) {
   try {
-    console.log("requser");
-    console.log(req.user);
     const id = req.user._id;
-    console.log("This is the id", id);
     const user = await userModel.findById(id).select("-password");
-    console.log("user", user);
     if (!user) {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
@@ -124,15 +120,12 @@ async function getUserInfo(req, res, next) {
 
 const resetPassword = async (req, res, next) => {
   const { email } = req.body;
-  console.log(req.body);
-  console.log(req.body.email);
   try {
     const user = await userModel.findOne({ email });
     if (!user) throw new EmailNotFound();
     const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "1h" });
     user.activationToken = token;
     await user.save();
-    console.log("Esto ocurre");
     const resetUrl = `${process.env.CLIENT_URL}/passwordReset/${token}`;
     await sendEmail(
       email,
@@ -149,8 +142,6 @@ const resetPassword = async (req, res, next) => {
 
 const setPassword = async (req, res, next) => {
   const { token, password } = req.body;
-  console.log("This the token", token);
-  console.log("This the last character", token[token.length - 1]);
   try {
     const user = await userModel.findOne({ activationToken:token });
     if (!user) throw new TokenNotFound();

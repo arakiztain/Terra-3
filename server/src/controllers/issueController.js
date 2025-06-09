@@ -40,8 +40,6 @@ async function getIssues(req, res) {
 async function reportIssue(req, res, next) {
   const projectId = req.params.projectId.trim();
   const { name, description, priority, tags, request_type } = req.body;
-  console.log("This is req body");
-  console.log(req.body);
   if (!name || !description) {
     return res.status(400).json({ error: "Missing required fields: name or description" });
   }
