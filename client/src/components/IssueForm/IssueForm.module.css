@@ -1,11 +1,9 @@
-
-
 .form {
     composes: form from '../../styles/gstyles.module.css';
 }
 
 .input{
-    composes: input from '../../styles/gstyles.module.css';
+    composes: input from '../../styles/gstyles.module.css';    
 }  
 
 .label{
@@ -19,7 +17,7 @@
 .textarea{
     composes: textarea from '../../styles/gstyles.module.css';
 }
-
+ 
 .select {
     composes: select from '../../styles/gstyles.module.css';  
-}
+} 

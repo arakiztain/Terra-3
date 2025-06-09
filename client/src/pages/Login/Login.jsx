@@ -26,8 +26,7 @@ const Login = () => {
   };
 
   return (
-
-    <div className={styles.fullscreen}>
+    <div className={styles.fullScreen}>
       <div className={styles.formGrid}>
         <div className={styles.formWrapper}>
           <form onSubmit={handleSubmit} className={styles.formLogin}>
@@ -62,19 +61,21 @@ const Login = () => {
             </button>
           </form>
         </div>
-        <div className={styles.terraformBottom}>
-          <img src={icon4} className={styles.icon} />
-          <img src={icon5} className={styles.icon} />
-          <img src={icon6} className={styles.icon} />
-        </div>
       </div>
       <div className={styles.lettering}>
-        <h1>Hello</h1> 
-        <h1>again!</h1> 
+        <h1 className={styles.hello}>
+          Hello<br/>again!
+        </h1>
+        {/* <h1 className={styles.again}>again!</h1>  */}
       </div>
+      <div className={styles.terraformBottom}>
+        <img src={icon4} className={styles.icon} />
+        <img src={icon5} className={styles.icon} />
+        <img src={icon6} className={styles.icon} />
+      </div>
+
       <TourLogin />
-    </div >
-  
+    </div>
   );
 };
 

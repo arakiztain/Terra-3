@@ -1,6 +1,6 @@
 @font-face {
   font-family: "UncutSans";
-  src: url("./fonts/UncutSans-Variable.ttf");
+  src: url("../fonts/UncutSans-Variable.ttf");
 }
 
 :root {
@@ -11,6 +11,11 @@
     --color-gray-dark: #222;
     --color-gray-darker: #111;
     --color-shadow: rgba(0, 0, 0, 0.7);
+
+    width: 100vw;
+    height: 100vh;
+    overflow-x: clip;
+    overflow-y: clip;
 }
   
 * {
@@ -19,10 +24,12 @@
   padding: 0;
   font-family: "UncutSans", sans-serif;
   color: var(--color-white);
+  text-decoration: none;
 }
 
 html, body {
-  height:100%;
   background-color: #0f0f0f;
+  display: flex;
+  flex-direction: column;
 }
 

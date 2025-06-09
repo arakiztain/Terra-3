@@ -43,7 +43,7 @@ const IssueForm = ({ projectId }) => {
   };
 
   return (
-    <div>
+
       <form className={styles.form} onSubmit={handleSubmit}>
         <label className={styles.label}>
           Title
@@ -108,7 +108,7 @@ const IssueForm = ({ projectId }) => {
           Submit Issue
         </button>
       </form>
-    </div>
+
   );
 };
 

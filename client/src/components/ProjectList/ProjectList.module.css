@@ -4,27 +4,9 @@
   padding: 0 1rem;
 }
 
-
 .input {
   composes: input from '../../styles/gstyles.module.css';
-  /* width: 100%;
-  padding: 1rem 0.5rem 1rem 2rem;
-  font-size: 1rem;
-  border: 3px solid #FFFFFF;
-  border-radius: 30px;
-  outline: none;
-  background-color:#0F0F0F;
-  font-weight:700; */
 } 
-/* .searchInput {
-  width: 100%;
-  padding: 0.5rem 0.75rem;
-  margin-bottom: 1.5rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  color:#FFFFFF; 
-} */
 
 .cards {  
   display: flex;
@@ -34,21 +16,6 @@
 .card {
   composes: card from "../../styles/gstyles.module.css"
 }
-/*
-.input {
-  width: 100%;
-  font-size: 1rem;
-  border-radius: 30px;
-}*/
-/* .card {
-  background-color:#0F0F0F;
-  outline: none;
-  font-weight:700;
-  color: #eee;
-  padding: 1rem 0.5rem 1rem 2rem;
-  border: 3px solid #FFFFFF;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
-} */
 
 .title {
   font-size: 1.25rem;
@@ -72,16 +39,3 @@
   color: #666;
   font-style: italic;
 }
-
-/*ya figura en admin.css*/
-/* .fullScreenCover{
-  position:absolute;
-  top:0;
-  left:0;
-  width:100vw;
-  height:100vh;
-  background-color:rgba(100,100,100,0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-} */
