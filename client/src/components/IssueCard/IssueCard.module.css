@@ -1,0 +1,26 @@
+.card {
+    background-color: #fff;
+    color:#0F0F0F;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    font-family: sans-serif;
+    margin: 12px 0;
+    max-height:300px;
+}
+
+.row {
+    margin-bottom: 8px;
+}
+
+.label {
+    font-weight: 600;
+    margin-right: 4px;
+    color: #333;
+}
+
+.link {
+    color: #0066cc;
+    text-decoration: underline;
+}
+

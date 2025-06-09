@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import fetchServer from "../utils/fetchServer.js";
 
@@ -8,24 +8,15 @@ const AuthProvider = ({ children }) => {
     const [userData, setUserData] = useState(null);
     const navigate = useNavigate();
 
-    useEffect(()=>{
-        handleGetUserInfo();
-    },[])
-
-    const handleGetUserInfo= async()=>{
-        const result = await fetchServer.getUserInfo();
-        if(result.user){
-            setUserData(result.user);
-        }
-    }
-
-    const handleLogin = async ({email, password}) => {
+    const handleLogin = async (email, password) => {
+        console.log("Hellouses");
+        console.log("mail and pass", email, password);
         const result = await fetchServer.loginFetch({ email, password });
         if (result.error) {
             return result.error;
         } else {
             localStorage.setItem("token", result.token);
-            setUserData(result.user);
+            setUserData({user: result.user, token: result.token});
             if (result.user.role === "admin") {
                 navigate("/admin")
             } else {
@@ -43,7 +34,7 @@ const AuthProvider = ({ children }) => {
     }; 
 
     return (
-        <AuthContext.Provider value={{ userData: userData, setUserData, onLogin: handleLogin, onLogout: handleLogout }}>
+        <AuthContext.Provider value={{ userData: userData, setUserData, onLogin: handleLogin, onLogout: handleLogout  }}>
             {children}
         </AuthContext.Provider>
     );

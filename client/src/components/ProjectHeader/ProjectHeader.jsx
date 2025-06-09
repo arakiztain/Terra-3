@@ -3,7 +3,7 @@ import { useState } from "react";
 const ProjectHeader = () =>{
     const [menuOpen, setMenuOpen] = useState(false);
     return(
-        <div className={styles.projectHeader}>
+        <>
             <a className={styles.projectLink} href="www.google.es"><button className={styles.projectLinkButton}>My project</button></a>
             <button className={styles.issueButton}>New Issue</button>
             <div className={styles.menuContainer} onClick={() => setMenuOpen(!menuOpen)}>
@@ -17,7 +17,7 @@ const ProjectHeader = () =>{
                     <a className={styles.menuSignout} href="">Sign out</a>
                 </div>}
             </div>
-        </div>
+        </>
     )
 }
 
