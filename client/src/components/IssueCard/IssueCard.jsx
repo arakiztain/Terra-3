@@ -1,7 +1,6 @@
 import styles from './IssueCard.module.css'
 
 const IssueCard = ({ issue, className }) => {
-  console.log(issue);
   return (
     <div className={`${styles.card} ${className}`}>
       <div className={styles.row}>

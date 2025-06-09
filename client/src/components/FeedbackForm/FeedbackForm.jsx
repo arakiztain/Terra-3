@@ -76,8 +76,6 @@ const FeedbackForm = () => {
             screenshot,
         };
         fetchServer.setIssue(data, id);
-        console.log("Formdata outside fetch");
-        console.log(data, id);
     };
 
     return (

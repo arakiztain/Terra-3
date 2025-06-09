@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import icon1 from "../../assets/_Terraforms/Individual/SVG/Melos-Blue.svg";
 import icon2 from "../../assets/_Terraforms/Individual/SVG/Punky-Lime.svg";
 import icon3 from "../../assets/_Terraforms/Individual/SVG/Boba-Orange.svg";
+import TourIssueForm from '../../components/TourIssueForm/TourIssueForm';
 const Feedback = () => {
     const [issues, setIssues] = useState([]);
     const [toggleForm, setToggleForm] = useState(false);
@@ -24,22 +25,23 @@ const Feedback = () => {
     }, []);
 
     const handleToggleForm = () => {
-        console.log("toggleForm");
         setToggleForm(!toggleForm);
     }
 
     return(
-        <>
+        <>  
+        
             <div className={styles.projectHeader}>
                 <ProjectHeader newIssueHandler={handleToggleForm} />
             </div>
+                <TourIssueForm />
                 {toggleForm ? 
                 <div className={styles.formContainer}>
                     <FeedbackForm /> 
                     <div className={styles.twoFifthsScreen}>
                         <div className={styles.lettering}>
                             <h1 className={styles.letteringText}>Tell us</h1>
-                            <h1 className={styles.letteringText}>more</h1>
+                            <h1 id="lettering" className={styles.letteringText}>more</h1>
                             <h1 className={styles.letteringText}>about it!</h1>
                             <div className={styles.terraformBottom}>
                                 <img src={icon1} alt="" />
@@ -49,8 +51,11 @@ const Feedback = () => {
                         </div>
                     </div>
                 </div>
-                : <IssueDisplay issues={issues}/>
+                : <>
+                    <IssueDisplay issues={issues}/>
+                </>
                 }
+
                 <img src={chatbotIcon} onClick={() => console.log("Open Chatbot")} className={styles.chatbotIcon} alt="Button to open the chatbot"/>
                 <img src={guideIcon} onClick={() => navigate('/guide')} className={styles.guideIcon} alt="Button to open the guide"/>
         </>

@@ -4,8 +4,8 @@ const ProjectHeader = ({ newIssueHandler }) =>{
     const [menuOpen, setMenuOpen] = useState(false);
     return(
         <>
-            <a className={styles.projectLink} href="www.google.es"><button className={styles.projectLinkButton}>My project</button></a>
-            <button className={styles.issueButton} onClick={()=> newIssueHandler()}>New Issue</button>
+            <a id="joyRide-project" className={styles.projectLink} href="www.google.es"><button className={styles.projectLinkButton}>My project</button></a>
+            <button id="joyRide-issue" className={styles.issueButton} onClick={()=> newIssueHandler()}>New Issue</button>
             <div className={styles.menuContainer} onClick={() => setMenuOpen(!menuOpen)}>
                 <button className={styles.menuButton}>Menu</button>
                 {menuOpen && <div className={styles.menuDropdown}>
