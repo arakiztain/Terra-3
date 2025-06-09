@@ -100,6 +100,24 @@ const getIssues = async ( id ) => {
     }
 }
 
+const getProjectById = async ( id ) => {
+      const token = localStorage.getItem("token");
+    try{
+        const response = await fetch(`${serverUrl}/project/${id}`, {
+            method: 'GET',
+            headers: { 
+              'Content-Type': 'application/json',
+              "Authorization": `Bearer ${token}`,
+             },
+        });
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}
+
 const setIssue = async ( formData, id ) =>{
     const token = localStorage.getItem("token");
     try{
@@ -126,5 +144,6 @@ export default {
   getIssues,
   setIssue,
   setPassword,
-  resetFetch
+  resetFetch,
+  getProjectById
 }

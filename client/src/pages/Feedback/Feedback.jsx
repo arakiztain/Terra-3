@@ -14,6 +14,7 @@ import icon3 from "../../assets/_Terraforms/Individual/SVG/Boba-Orange.svg";
 import TourIssueForm from '../../components/TourIssueForm/TourIssueForm';
 const Feedback = () => {
     const [issues, setIssues] = useState([]);
+    const [project, setProject] = useState([]);
     const [toggleForm, setToggleForm] = useState(false);
     const { id } = useParams();
     const navigate = useNavigate();
@@ -24,6 +25,13 @@ const Feedback = () => {
         fetchIssues();
     }, []);
 
+    useEffect(() => {
+        const fetchProject = async () =>{
+            setProject(await fetchServer.getProjectById(id));
+        }
+        fetchProject();
+    }, [id]);
+
     const handleToggleForm = () => {
         setToggleForm(!toggleForm);
     }
@@ -32,7 +40,7 @@ const Feedback = () => {
         <>  
         
             <div className={styles.projectHeader}>
-                <ProjectHeader newIssueHandler={handleToggleForm} />
+                <ProjectHeader siteUrl={project.url} newIssueHandler={handleToggleForm} />
             </div>
                 <TourIssueForm />
                 {toggleForm ? 

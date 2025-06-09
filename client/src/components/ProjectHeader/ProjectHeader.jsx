@@ -1,10 +1,10 @@
 import styles from "./ProjectHeader.module.css"
 import { useState } from "react";
-const ProjectHeader = ({ newIssueHandler }) =>{
+const ProjectHeader = ({ newIssueHandler, siteUrl }) =>{
     const [menuOpen, setMenuOpen] = useState(false);
     return(
         <>
-            <a id="joyRide-project" className={styles.projectLink} href="www.google.es"><button className={styles.projectLinkButton}>My project</button></a>
+            <a id="joyRide-project" className={styles.projectLink} href={siteUrl}><button className={styles.projectLinkButton}>My project</button></a>
             <button id="joyRide-issue" className={styles.issueButton} onClick={()=> newIssueHandler()}>New Issue</button>
             <div className={styles.menuContainer} onClick={() => setMenuOpen(!menuOpen)}>
                 <button className={styles.menuButton}>Menu</button>
