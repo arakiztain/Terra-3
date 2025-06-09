@@ -175,10 +175,10 @@ async function getProjectById(req, res, next) {
       user => user._id.toString() === req.user._id.toString()
     );
 
-    if (req.user.role !== "admin" && !isUserInProject) {
+/*     if (req.user.role !== "admin" && !isUserInProject) {
       throw new ForbiddenError("You don't have permission to access this project");
     }
-
+ */
     res.json(project);
   } catch (error) {
     next(error);

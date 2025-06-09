@@ -2,14 +2,12 @@ import userModel from "../models/user.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import {
-  UserNameNotProvided,
   UserEmailNotProvided,
   UserPasswordNotProvided,
   EmailNotFound,
   TokenNotFound,
   IncorrectPassword,
-  UserEmailAlreadyExists,
-  UsernameAlreadyExists,
+  UserEmailAlreadyExists
 } from "../utils/errors.js";
 import { sendEmail } from "../utils/sendEmail.js";
 
@@ -52,7 +50,7 @@ const login = async (req, res, next) => {
 
 const register = async (req, res, next) => {
   try {
-    const { email, password, role} = req.body;
+    const { email, password/* , role */} = req.body;
 
     if (!email) throw new UserEmailNotProvided();
     if (!password) throw new UserPasswordNotProvided();
@@ -64,8 +62,8 @@ const register = async (req, res, next) => {
 
     const newUser = new userModel({
       email,
-      password: hashedPassword,
-      role
+      password: hashedPassword/* ,
+      role */
     });
 
     await newUser.save();
