@@ -53,13 +53,14 @@ async function reportIssue(req, res, next) {
     priority: priority || 3, // values from 1 (Urgent) to 4 (Low)
     request_type
   };
-
+  
   try {
     const project = await projectModel.findById(projectId);
     if (!project) {
       return next(new ProjectNotFound())
     }
     const listId = project.clickupLists.find(list => list.name === request_type.toLowerCase()).listId;
+    console.log("List ID:", listId);
     taskData.list_id = listId;
 
     const response = await axios.post(
@@ -72,7 +73,7 @@ async function reportIssue(req, res, next) {
         }
       }
     );
-
+    console.log(listId);
     res.status(201).json({
       message: "✅ Issue successfully created in ClickUp",
       task: response.data
@@ -124,7 +125,6 @@ async function deleteIssue(req, res) {
         }
       }
     );
-
     console.log("🗑️ Task deleted:", response.data);
     return res.json({ message: "Task successfully deleted" });
 
