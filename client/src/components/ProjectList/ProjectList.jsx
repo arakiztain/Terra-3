@@ -1,6 +1,5 @@
 import { useState } from "react";
 import styles from "./ProjectList.module.css";
-
 const ProjectList = ({ projectList = [], onEditProject, userMode }) => {
   const [search, setSearch] = useState("");
 const filtered = (projectList || [])
@@ -18,7 +17,7 @@ const filtered = (projectList || [])
         placeholder="Search projects..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className={styles.input}
+        className={styles.searchInput}
       />
       <div className={styles.cards}>
         {filtered.length > 0 ? (

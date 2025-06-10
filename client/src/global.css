@@ -1,0 +1,18 @@
+@font-face {
+    font-family: "UncutSans";
+    src:url('./fonts/UncutSans-Variable.ttf');
+}
+
+* {
+    font-family: "UncutSans";
+    font-weight:700;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+}
+
+body{
+    color:white;
+    background-color:#0F0F0F;
+}
