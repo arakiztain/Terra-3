@@ -1,16 +1,16 @@
 .chatbotContainer {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 5em;
+  right: 1em;
   z-index: 1000;
   font-family: "UncutSans", sans-serif;
 }
 
 .chatbotButton {
-  width: 60px;
-  height: 60px;
+  width: 53px;
+  height: 53px;
   border-radius: 50%;
-  background-color: #7CE55E;
+  background-color: #ffb41d;
   color: #0F0F0F;
   border: none;
   display: flex;
