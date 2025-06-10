@@ -161,7 +161,7 @@ async function getAllProjects(req, res, next) {
         Authorization: process.env.CLICKUP_API_TOKEN,
       }
     });
-    //Change name
+    //Change name ?
     const workspaceName = process.env.CLICKUP_WORKSPACE_NAME;
     const workSpaceId = responseWorkSpace.data.teams.find(team => team.name === workspaceName).id;
 
@@ -209,10 +209,10 @@ async function getProjectById(req, res, next) {
       user => user._id.toString() === req.user._id.toString()
     );
 
-    if (req.user.role !== "admin" && !isUserInProject) {
+/*     if (req.user.role !== "admin" && !isUserInProject) {
       throw new ForbiddenError("You don't have permission to access this project");
     }
-
+ */
     res.json(project);
   } catch (error) {
     next(error);
@@ -263,6 +263,7 @@ async function assignProject(req, res, next) {
     next(error);
   }
 }
+
 async function deleteProject(req, res, next) {
   try {
     const projectId = req.params.projectId.trim();
