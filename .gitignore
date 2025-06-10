@@ -140,3 +140,6 @@ dist
 .pnp.*
 node_modules/
 client/.vite/
+
+# Carpeta que no subirá
+"Modelo sentimiento Terra/"

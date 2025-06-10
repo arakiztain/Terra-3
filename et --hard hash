@@ -1,0 +1,254 @@
+[33mcommit 04dc4506fde7cfc88a8f4f0bd4154c55858c22eb[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdata[m[33m)[m
+Author: PacoFletcher <pacofletcher@gmail.com>
+Date:   Tue Jun 10 11:07:51 2025 +0200
+
+    modelo a medias y sentiment historico
+
+[33mcommit c8a7e72c136080648248c190e6af8141ff0aa05b[m[33m ([m[1;31morigin/data[m[33m)[m
+Author: InigoLopez1999 <iniloay@gmail.com>
+Date:   Mon Jun 9 17:02:53 2025 +0200
+
+    Add files via upload
+
+[33mcommit 9f1cf51a9fd561ee8084731d755a98aa30f32b55[m
+Author: PacoFletcher <pacofletcher@gmail.com>
+Date:   Mon Jun 9 16:56:38 2025 +0200
+
+    ahora si
+
+[33mcommit 61d1096b5aae420c581cdbece5f0d9a08eaf8aad[m
+Author: PacoFletcher <pacofletcher@gmail.com>
+Date:   Mon Jun 9 16:37:16 2025 +0200
+
+    de locos
+
+[33mcommit 36815ea6552b00fcac9fe5fc559a583960424adc[m
+Author: PacoFletcher <pacofletcher@gmail.com>
+Date:   Mon Jun 9 13:21:15 2025 +0200
+
+    insertar sentiment
+
+[33mcommit 63d1b2f14ce8d439afce9a21c91e65a215a08252[m
+Author: PacoFletcher <pacofletcher@gmail.com>
+Date:   Fri Jun 6 13:56:53 2025 +0200
+
+    funciones
+
+[33mcommit a2f800d3968fe931a95bb70b0e1d2b5c62d753fb[m
+Author: PacoFletcher <pacofletcher@gmail.com>
+Date:   Fri Jun 6 10:42:30 2025 +0200
+
+    nuevos issues
+
+[33mcommit 9e64071fff8aeab542ba06ce17cb8423caa9ed58[m
+Author: PacoFletcher <pacofletcher@gmail.com>
+Date:   Thu Jun 5 17:18:39 2025 +0200
+
+    ahora si
+
+[33mcommit b69022fd2e8cb10400451d468b478c2c44d4859f[m
+Author: PacoFletcher <pacofletcher@gmail.com>
+Date:   Thu Jun 5 17:00:34 2025 +0200
+
+    iteraciones + historico
+
+[33mcommit 656e388081c94f35feb11e45ce0fdce47bdd8795[m
+Author: PacoFletcher <pacofletcher@gmail.com>
+Date:   Thu Jun 5 15:39:58 2025 +0200
+
+    carpeta data mover base de datos + cosas
+
+[33mcommit c2ba60c9341e7c49cf4d74de051f5b53a379c4a1[m
+Author: InigoLopez1999 <iniloay@gmail.com>
+Date:   Thu Jun 5 12:00:32 2025 +0200
+
+    Add files via upload
+
+[33mcommit 79eb810f4b4d919ad2701b81e9c05f07a0e65066[m
+Author: PacoFletcher <pacofletcher@gmail.com>
+Date:   Thu Jun 5 10:52:16 2025 +0200
+
+    holi
+
+[33mcommit 492d257d1fbe9ee0d995c71bd46defbf346a0fb5[m[33m ([m[1;32mdev[m[33m)[m
+Merge: fc7897b aeb5bed
+Author: arakiztain <arakiztain.gaizka@gmail.com>
+Date:   Thu Jun 5 09:31:03 2025 +0200
+
+    Merge pull request #27 from arakiztain/issueDisplay
+    
+    Issue display
+
+[33mcommit aeb5bed26352b79dfb3ee988e45bf5f7d791be80[m
+Merge: bb4e141 fc7897b
+Author: Carlos Borja <48533334+CarlosBor@users.noreply.github.com>
+Date:   Wed Jun 4 19:19:41 2025 +0200
+
+    Merge branch 'dev' into issueDisplay
+
+[33mcommit fc7897b81446e1d848bded8450207ac48df32327[m
+Merge: 0a68563 ea59840
+Author: Carlos Borja <48533334+CarlosBor@users.noreply.github.com>
+Date:   Wed Jun 4 19:15:02 2025 +0200
+
+    Merge pull request #25 from arakiztain/server/feature/projecGetAll
+    
+    projectController getAlls client
+
+[33mcommit bb4e141ac766d4c7e7ea788712ebd9eeb8ee5151[m
+Merge: eb6f158 0a68563
+Author: Carlos Borja <48533334+CarlosBor@users.noreply.github.com>
+Date:   Wed Jun 4 19:13:29 2025 +0200
+
+    Merge branch 'dev' into issueDisplay
+
+[33mcommit eb6f158887638f2dcf65b5d11b5709fa2bbac55b[m
+Author: CarlosBor <carlosborjawebdev@gmail.com>
+Date:   Wed Jun 4 19:11:18 2025 +0200
+
+    Add working project creation panel, working issue creation, long-polling in docker-compose, basic mongodb volume, many details remaining
+
+[33mcommit 174519b2187352762ce7dee48a310b23e03beeb0[m
+Merge: a0acec4 020f520
+Author: Carlos Borja <48533334+CarlosBor@users.noreply.github.com>
+Date:   Wed Jun 4 16:52:43 2025 +0200
+
+    Merge pull request #26 from arakiztain/client/feature/context
+    
+    Client/feature/context
+
+[33mcommit 020f5201229b8efdc54ccfb8c72fe1f217a4daf1[m[33m ([m[1;31morigin/client/feature/context[m[33m)[m
+Merge: 1d3ef80 a0acec4
+Author: Carlos Borja <48533334+CarlosBor@users.noreply.github.com>
+Date:   Wed Jun 4 16:52:34 2025 +0200
+
+    Merge branch 'issueDisplay' into client/feature/context
+
+[33mcommit ea59840744e7a2d9515dfa99ffa78ca324736faa[m[33m ([m[1;31morigin/server/feature/projecGetAll[m[33m)[m
+Author: arakiztain <arakiztain.gaizka@gmail.com>
+Date:   Wed Jun 4 16:38:28 2025 +0200
+
+    projectController getAlls client
+
+[33mcommit 0a68563a41fba9dc05c8a942796ee0313fa10778[m
+Merge: 79d94d1 94dcdd7
+Author: javierlla <114091612+javierlla@users.noreply.github.com>
+Date:   Wed Jun 4 16:26:43 2025 +0200
+
+    Merge pull request #24 from arakiztain/server/feature/issueLists
+    
+    issueController projectId
+
+[33mcommit 94dcdd7abb0a85bdbc97a869c83e1528a33a1131[m[33m ([m[1;31morigin/server/feature/issueLists[m[33m)[m
+Author: arakiztain <arakiztain.gaizka@gmail.com>
+Date:   Wed Jun 4 16:24:56 2025 +0200
+
+    issueController api
+
+[33mcommit a0acec4a6bb80ef648b8ba39d7ce24d2b3a2e612[m
+Author: Carlos <carlosborjawebdev@gmail.com>
+Date:   Wed Jun 4 15:33:37 2025 +0200
+
+    Work towards fetch and display of Clickup Issues
+
+[33mcommit 79d94d1cd4dbd3c223ecea9eaa7b98727c2c9644[m
+Merge: c744fef 6973505
+Author: arakiztain <arakiztain.gaizka@gmail.com>
+Date:   Wed Jun 4 12:58:49 2025 +0200
+
+    Merge pull request #21 from arakiztain/adminConnection
+    
+    Admin connection
+
+[33mcommit c744fef36478f77f10e8decb70fe288472b9984d[m
+Merge: 294ab95 1e05f80
+Author: Carlos Borja <48533334+CarlosBor@users.noreply.github.com>
+Date:   Wed Jun 4 12:53:40 2025 +0200
+
+    Merge pull request #23 from arakiztain/server/feature/issueLists
+    
+    reportIssue
+
+[33mcommit 1e05f8099003504a526dd5f52af8955ec6c81e24[m
+Author: arakiztain <arakiztain.gaizka@gmail.com>
+Date:   Wed Jun 4 12:51:22 2025 +0200
+
+    reportIssue
+
+[33mcommit 1d3ef8062c4d7722dfdae4c1c3fb5915587245de[m[33m ([m[1;31morigin/client/feature/projects[m[33m)[m
+Merge: f893418 294ab95
+Author: Carlos Borja <48533334+CarlosBor@users.noreply.github.com>
+Date:   Wed Jun 4 12:33:06 2025 +0200
+
+    Merge branch 'dev' into client/feature/projects
+
+[33mcommit 6973505ef42cf39da506afa5c48ce4522097bfee[m[33m ([m[1;31morigin/adminConnection[m[33m)[m
+Merge: 06bbfbb 294ab95
+Author: Carlos Borja <48533334+CarlosBor@users.noreply.github.com>
+Date:   Wed Jun 4 12:28:57 2025 +0200
+
+    Merge branch 'dev' into adminConnection
+
+[33mcommit f893418cecaa8698ec7290a1884ee1f76b5d4c82[m
+Author: rogeliost3 <rogeliost2008@gmail.com>
+Date:   Wed Jun 4 12:16:13 2025 +0200
+
+    commit authMiddleware.js
+
+[33mcommit 2b32e770563b6e98ab3c9b4ed423c24ee4b2ec8c[m
+Author: rogeliost3 <rogeliost2008@gmail.com>
+Date:   Wed Jun 4 12:12:06 2025 +0200
+
+    AuthContext and admin/user derivation after login
+
+[33mcommit 06bbfbbd435ca68dbb5cf333a4fba23c21bc126c[m
+Author: Carlos <carlosborjawebdev@gmail.com>
+Date:   Wed Jun 4 11:59:18 2025 +0200
+
+    Users can now be added to the project if they exist previously
+
+[33mcommit 8b11877f343905b0de5ced091917dc4e81b5b246[m
+Author: rogeliost3 <rogeliost2008@gmail.com>
+Date:   Wed Jun 4 10:41:55 2025 +0200
+
+    push testing mong users
+
+[33mcommit 294ab95912b7ea2b2a4daa5ae01a6b56fa6b172a[m
+Merge: d7be883 5eba81d
+Author: Daniel Arroyo Paredes <darroyo083@gmail.com>
+Date:   Wed Jun 4 10:40:56 2025 +0200
+
+    Merge pull request #20 from arakiztain/server/feature/admin
+    
+    email separated by ,
+
+[33mcommit b9269256c630f126207b16691ce07553be0219ef[m
+Author: Carlos <carlosborjawebdev@gmail.com>
+Date:   Wed Jun 4 10:40:19 2025 +0200
+
+    Project management stuff, fix email and edit remaining
+
+[33mcommit 5eba81d0de74befda6268aea2ab4a57cf5a610c2[m[33m ([m[1;31morigin/server/feature/admin[m[33m)[m
+Author: arakiztain <arakiztain.gaizka@gmail.com>
+Date:   Wed Jun 4 10:38:40 2025 +0200
+
+    email separated by ,
+
+[33mcommit 55c62f274c398c4683c13f4cf1a268574dfea9b0[m
+Author: rogeliost3 <rogeliost2008@gmail.com>
+Date:   Wed Jun 4 09:30:05 2025 +0200
+
+    authContext, Login modified
+
+[33mcommit d7be88350fcd6ba85bd395f1003ab48023086a37[m
+Merge: bfe8fb9 cff3d8c
+Author: javierlla <114091612+javierlla@users.noreply.github.com>
+Date:   Wed Jun 4 09:28:25 2025 +0200
+
+    Merge pull request #18 from arakiztain/server/feature/admin
+    
+    ProjectController API
+
+[33mcommit cff3d8c1848e02f16fec0e5315af3d8141b555c1[m
+Merge: 4880fba bfe8fb9
+Author: javierlla <114091612+ja
