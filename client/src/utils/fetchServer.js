@@ -1,19 +1,5 @@
 const serverUrl = "http://localhost:3004";
 
-async function getUserInfo() {
-  try {
-    const response = await fetch(`${serverUrl}/user-info`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error:", error);
-    throw error;
-  }
-}
-
 const loginFetch = async ({ email, password }) => {
   console.log({ email, password });
   try {
@@ -32,6 +18,7 @@ const loginFetch = async ({ email, password }) => {
 };
 
 const createProject = async ({ title, url, description, reviewerEmails:email }) => {
+    email = Array.isArray(email) ? email.filter(Boolean) : [];
     const token = localStorage.getItem("token");
     console.log("recibido en createProject: ",{ title, url, description, email });
     console.log("token: ",token);
@@ -64,8 +51,54 @@ const createProject = async ({ title, url, description, reviewerEmails:email }) 
     .catch(error => console.error('Error:', error));*/
 }
 
+const updateProject = async( id, {url, description, reviewerEmails:email} ) => {
+    email = Array.isArray(email) ? email.filter(Boolean) : [];
+    const token = localStorage.getItem("token");
+    fetch(`${serverUrl}/project`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            id,
+            url,
+            description,
+            email
+        })
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+}
+const resetFetch = ({ email }) => {
+    fetch(`${serverUrl}/reset-password`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email
+        })
+    })    
+}
+
+const setPassword = ({ password, token }) => {
+    fetch(`${serverUrl}/set-password`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            password,
+            token
+        })
+    })
+}
+
 const getProjects = async () => {
   const token = localStorage.getItem("token");
+  console.log("Does");
   try {
     const response = await fetch(`${serverUrl}/project`, {
       method: "GET",
@@ -75,6 +108,8 @@ const getProjects = async () => {
       },
     });
     const data = await response.json();
+    console.log("This is the data returned");
+    console.log(data);
     return data;
   } catch (error) {
     console.error("Error:", error);
@@ -82,10 +117,10 @@ const getProjects = async () => {
   }
 };
 
-const getIssues = async () => {
+const getIssues = async ( id ) => {
     const token = localStorage.getItem("token");
     try{
-        const response = await fetch(`${serverUrl}/issue`, {
+        const response = await fetch(`${serverUrl}/issue/${id}`, {
             method: 'GET',
             headers: { 
               'Content-Type': 'application/json',
@@ -99,16 +134,34 @@ const getIssues = async () => {
         throw error;
     }
 }
-const setIssue = async ({ formData }) =>{
+
+const getProjectById = async ( id ) => {
+      const token = localStorage.getItem("token");
+    try{
+        const response = await fetch(`${serverUrl}/project/${id}`, {
+            method: 'GET',
+            headers: { 
+              'Content-Type': 'application/json',
+              "Authorization": `Bearer ${token}`,
+             },
+        });
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}
+
+const setIssue = async ( formData, id ) =>{
     const token = localStorage.getItem("token");
     try{
-        const response = await fetch(`${serverUrl}/issue/report-issue/684077b8ceed6d9c2be69759`, {
+        const response = await fetch(`${serverUrl}/issue/report-issue/${id}`, {
             method: 'POST',
             headers: { 
               'Content-Type': 'application/json',
               "Authorization": `Bearer ${token}`,
              },
-            
             body: JSON.stringify(formData)
         });
         const data = await response.json();
@@ -123,7 +176,10 @@ export default {
   loginFetch,
   createProject,
   getProjects,
-  getUserInfo,
   getIssues,
-  setIssue  
+  setIssue,
+  setPassword,
+  resetFetch,
+  getProjectById,
+  updateProject
 }

@@ -1,6 +1,4 @@
 import styles from "./Dashboard.module.css";
-import IssueForm from "../../components/IssueForm/IssueForm";
-import IssueCard from "../../components/IssueCard/IssueCard";
 import { useState, useEffect } from "react";
 import fetchServer from "../../utils/fetchServer";
 
@@ -23,7 +21,7 @@ const Dashboard = () =>{
             {issues && issues.length > 0 && issues.map(issue => <IssueCard key={issue._id} issue={issue}/>)}
             <IssueForm />
         </div>
-  );
+    );
 }
 
 export default Dashboard;

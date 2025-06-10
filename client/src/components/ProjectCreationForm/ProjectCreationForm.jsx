@@ -42,12 +42,9 @@ const ProjectCreationForm = ({ promptReload, reloadFlag, project }) => {
   };
   
   const handleSubmit = (e) => {
-    console.log("Esta es formdata");
-    console.log(formData);
     e.preventDefault();
-    if (project && project.id) {
-      console.log("actualizando project");
-      fetchServer.updateProject(project.id, { ...formData });
+    if (project && project._id) {
+      fetchServer.updateProject(project._id, { ...formData });
     } else {
       console.log("creando project");
       fetchServer.createProject({ ...formData });

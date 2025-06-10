@@ -1,11 +1,74 @@
+import styles from './Feedback.module.css';
 import FeedbackForm from "../../components/FeedbackForm/FeedbackForm";
 import ProjectHeader from "../../components/ProjectHeader/ProjectHeader";
+import IssueDisplay from '../../components/IssueDisplay/IssueDisplay';
+import { useState, useEffect } from "react";
+import fetchServer from '../../utils/fetchServer';
+import { useParams } from "react-router-dom";
+import chatbotIcon from '../../assets/icons/chatbotIcon.png';
+import guideIcon from '../../assets/icons/guideIcon.png';
+import { useNavigate } from 'react-router-dom';
+import icon1 from "../../assets/_Terraforms/Individual/SVG/Melos-Blue.svg";
+import icon2 from "../../assets/_Terraforms/Individual/SVG/Punky-Lime.svg";
+import icon3 from "../../assets/_Terraforms/Individual/SVG/Boba-Orange.svg";
+import TourIssueForm from '../../components/TourIssueForm/TourIssueForm';
+import LoadSpinner from '../../components/LoadSpinner/LoadSpinner';
+const Feedback = () => {
+    const [issues, setIssues] = useState([]);
+    const [project, setProject] = useState([]);
+    const [toggleForm, setToggleForm] = useState(false);
+    const [toggleSpinner, setToggleSpiner] = useState(true);
+    const { id } = useParams();
+    const navigate = useNavigate();
+    useEffect(() => {
+        const fetchIssues = async () =>{
+            setIssues(await fetchServer.getIssues(id));
+            setToggleSpiner(false);
+        }
+        fetchIssues();
+    }, []);
 
-const Feedback = () =>{
+    useEffect(() => {
+        const fetchProject = async () =>{
+            setProject(await fetchServer.getProjectById(id));
+        }
+        fetchProject();
+    }, [id]);
+
+    const handleToggleForm = () => {
+        setToggleForm(!toggleForm);
+    }
+
     return(
-        <>
-            <ProjectHeader />
-            <FeedbackForm />
+        <>  
+        
+            <div className={styles.projectHeader}>
+                <ProjectHeader siteUrl={project.url} newIssueHandler={handleToggleForm} />
+            </div>
+                <TourIssueForm />
+                {toggleForm ? 
+                <div className={styles.formContainer}>
+                    <FeedbackForm project={project}/> 
+                    <div className={styles.twoFifthsScreen}>
+                        <div className={styles.lettering}>
+                            <h1 className={styles.letteringText}>Tell us</h1>
+                            <h1 id="lettering" className={styles.letteringText}>more</h1>
+                            <h1 className={styles.letteringText}>about it!</h1>
+                            <div className={styles.terraformBottom}>
+                                <img src={icon1} alt="" />
+                                <img src={icon2} alt="" />
+                                <img src={icon3} alt="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                : <>
+                    {toggleSpinner ? <LoadSpinner size="fullscreen"/> : <IssueDisplay issues={issues}/>}
+                </>
+                }
+
+                <img src={chatbotIcon} onClick={() => console.log("Open Chatbot")} className={styles.chatbotIcon} alt="Button to open the chatbot"/>
+                <img src={guideIcon} onClick={() => navigate('/guide')} className={styles.guideIcon} alt="Button to open the guide"/>
         </>
     )
 

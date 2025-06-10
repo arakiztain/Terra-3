@@ -1,13 +1,45 @@
 import { useState } from "react";
 import styles from "./FeedbackForm.module.css";
+import "./customSelect.css";
+import { useParams } from "react-router-dom";
+import fetchServer from "../../utils/fetchServer";
+import Select from "react-select";
 
-const FeedbackForm = () => {
+const FeedbackForm = ( { project }) => {
     const [browser, setBrowser] = useState(getBrowser());
+    const [issueName, setIssueName] = useState("");
     const [otherBrowser, setOtherBrowser] = useState("");
+    const [device, setDevice] = useState(getDeviceTypeWithFallback());
+    const [description, setDescription] = useState("");
+    const [pageUrl, setPageUrl] = useState("");
+    const [request, setRequest] = useState("");
+    const [screenshot, setScreenshot] = useState(null);
+    const { id } = useParams();
 
+    const requestTypeOptions = [
+        { value: "Copy revision", label: "Copy revision" },
+        { value: "New Item", label: "New Item" },
+        { value: "Design Issues", label: "Design Issues" },
+        { value: "Requested Change", label: "Requested Change" },
+        { value: "Bugfix", label: "Bugfix" },
+    ];
+
+    const browserOptions = [
+        { value: "Chrome", label: "Chrome" },
+        { value: "Firefox", label: "Firefox" },
+        { value: "Safari", label: "Safari" },
+        { value: "Edge", label: "Edge" },
+        { value: "Other", label: "Other" },
+    ];
+
+    const deviceOptions = [
+        { value: "desktop", label: "Desktop" },
+        { value: "tablet", label: "Tablet" },
+        { value: "mobile", label: "Mobile" },
+    ];
+    
     function getBrowser() {
         const ua = navigator.userAgent;
-
         if (ua.includes("Firefox/")) return "Firefox";
         if (ua.includes("Edg/")) return "Edge";
         if (ua.includes("Chrome/") && !ua.includes("Edg/") && !ua.includes("OPR/")) return "Chrome";
@@ -19,111 +51,103 @@ const FeedbackForm = () => {
     function getDeviceTypeWithFallback() {
         const ua = navigator.userAgent;
         const width = window.innerWidth;
-
         if (/Tablet|iPad/.test(ua) || (width >= 600 && width <= 1024)) return "tablet";
         if (/Mobi|Android|iPhone|BlackBerry|IEMobile|Silk/.test(ua) || width < 600) return "mobile";
         return "desktop";
     }
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const requestId = crypto.randomUUID();
+        const data = {
+            name: issueName,
+            request_type: request,
+            browser: browser === "Other" ? otherBrowser : browser,
+            device,
+            description,
+            pageUrl,
+            screenshot,
+            id,
+            requestId,
+        };
+        fetchServer.setIssue(data, id);
+    };
 
-    return(
-        <form className={styles.form}>
-        <label className={styles.label}>
-            Request type:
-            <select className={styles.select} name="requestType" required>
-            <option value="">Select...</option>
-            <option value="Copy revision">Copy revision</option>
-            <option value="Design Issues">Design Issues</option>
-            <option value="Requested Change">Requested Change</option>
-            </select>
-        </label>
-
-        <label className={styles.label}>
-            Status:
-            <select className={styles.select} name="status" required>
-            <option value="">Select...</option>
-            <option value="complete">Complete</option>
-            <option value="incomplete">Incomplete</option>
-            </select>
-        </label>
-
-        <label className={styles.label}>
-            Request#:
-            <input className={styles.input} type="text" inputMode="numeric" pattern="[0-9]*" name="requestNumber" required />
-        </label>
-
-        <label className={styles.label}>
-            Input date:
-            <input className={styles.input} type="date" name="inputDate" required />
-        </label>
-
-        <label className={styles.label}>
-            Requester:
-            <input className={styles.input} type="text" name="requester" required />
-        </label>
-
-        <label className={styles.label}>
-            Device:
-            <select className={styles.select} name="device" value={getDeviceTypeWithFallback()} required>
-                <option value="">Select...</option>
-                <option value="desktop">Desktop</option>
-                <option value="mobile">Mobile</option>
-                <option value="tablet">Tablet</option>
-            </select>
-        </label>
-
-        <label className={styles.label}>
-            Browser:
-            <select className={styles.select}
-            name="browser"
-            required
-            value={browser}
-            onChange={(e) => setBrowser(e.target.value)}
-            >
-            <option value="">Select...</option>
-            <option value="Chrome">Chrome</option>
-            <option value="Firefox">Firefox</option>
-            <option value="Safari">Safari</option>
-            <option value="Other">Other</option>
-            </select>
-        </label>
-
-        {browser === "Other" && (
-            <label className={styles.label}>
-            Specify browser:
-                <input className={styles.input}
-                type="text"
-                name="otherBrowser"
-                value={otherBrowser}
-                onChange={(e) => setOtherBrowser(e.target.value)}
-                required
-            />
+    return (
+        <form className={styles.form} onSubmit={handleSubmit}>
+            <div>
+                <label>
+                    Name:
+                    <input className={styles.formInput} type="text" name="issueName" value={issueName} onChange={(e) => setIssueName(e.target.value)} required />
+                </label>
+                <label>
+                    Request type:
+                    <Select
+                        options={requestTypeOptions}
+                        value={requestTypeOptions.find(opt => opt.value === request)}
+                        onChange={opt => setRequest(opt.value)}
+                        classNamePrefix="react-select"
+                        className={styles.formInput}
+                    />
+                </label>
+            </div>
+            <div className={styles.twoColumns}>
+                <div className={styles.halfWidth}>
+                    <label>
+                        Browser:
+                        <Select
+                            options={browserOptions}
+                            value={browserOptions.find(opt => opt.value === browser)}
+                            onChange={opt => setBrowser(opt.value)}
+                            classNamePrefix="react-select"
+                            className={styles.formInput}
+                        />
+                    </label>
+                    {browser === "Other" && (
+                        <label>
+                            Specify browser:
+                            <input
+                                type="text"
+                                name="otherBrowser"
+                                value={otherBrowser}
+                                onChange={(e) => setOtherBrowser(e.target.value)}
+                                required
+                                className={styles.formInput}
+                            />
+                        </label>
+                    )}
+                </div>
+                <div className={styles.halfWidth}>
+                    <label>
+                        Device
+                        <Select
+                            options={deviceOptions}
+                            value={deviceOptions.find(opt => opt.value === device)}
+                            onChange={opt => setDevice(opt.value)}
+                            classNamePrefix="react-select"
+                            className={styles.formInput}
+                        />
+                    </label>
+                </div>
+            </div>
+            <label>
+                Request:
+                <textarea className={`${styles.bigInput} ${styles.formInput}`} name="description" value={description} onChange={(e) => setDescription(e.target.value)} required />
             </label>
-        )}
-
-        <label className={styles.label}>
-            Request:
-            <textarea className={styles.textarea} name="request" rows="4" required />
-        </label>
-
-        <label className={styles.label}>
-            Url:
-            <input className={styles.input} type="url" name="page" required />
-        </label>
-
-        <label className={styles.label}>
-            Screenshot:
-            <input className={styles.input} type="file" name="screenshot" accept="image/*"/>
-        </label>
-
-        <label className={styles.label}>
-            Terra comments:
-            <textarea className={styles.textarea} name="terraComments" rows="3" />
-        </label>
-
-        <button className={styles.button} type="submit">Submit</button>
+            <label>
+                Page URL:
+                <input className={styles.formInput} type="text" name="pageUrl" value={pageUrl} onChange={(e) => setPageUrl(e.target.value)} />
+            </label>
+            <label>
+                Screenshot:
+                <input className={styles.formInput} type="file" name="screenshot" accept="image/*" onChange={(e) => setScreenshot(e.target.files[0])} />
+            </label>
+            <div className={styles.buttonContainer}>
+                <button className={`${styles.submitButton} ${styles.formInput}`} type="submit">Submit!</button>
+                <button className={`${styles.anotherButton} ${styles.formInput}`} type="button"> + </button>
+            </div>
         </form>
-    )
-}
+    );
+};
 
 export default FeedbackForm;

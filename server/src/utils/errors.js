@@ -9,10 +9,10 @@ class ProjectNotFound extends Error {
   }
 }
 
-class InvalidRestaurantId extends Error {
+class UsersAssigned extends Error {
   constructor() {
-    super("ID de restaurante no válido");
-    this.name = "InvalidRestaurantId";
+    super("All provided users are already assigned to this project");
+    this.name = "UsersAssigned";
     this.statusCode = 400;
   }
 }
@@ -43,7 +43,7 @@ class ValidationError extends Error {
   }
 }
 /**
- * Review
+ * Issue
  */
 class NoReviewsFound extends Error {
   constructor() {
@@ -116,45 +116,6 @@ class ErrorDeleteImage extends Error {
   }
 }
 /**
- * Favorite
- */
-class NoFavoritesFound extends Error {
-  constructor() {
-    super("No favorites yet");
-    this.name = "NoFavoritesFound";
-    this.statusCode = 404;
-  }
-}
-class RestaurantIdNotProvided extends Error {
-  constructor() {
-    super("ID restaurant is not provided");
-    this.name = "RestaurantIdNotProvided";
-    this.statusCode = 400;
-  }
-}
-
-class FavoriteAlreadyExists extends Error {
-  constructor() {
-    super("The restaurant is already in favorites");
-    this.name = "FavoriteAlreadyExists";
-    this.statusCode = 400;
-  }
-}
-class FavoriteNotFound extends Error {
-  constructor() {
-    super("Favorite not found");
-    this.statusCode = 404;
-  }
-}
-
-class NotAuthorizedToDeleteFavorite extends Error {
-  constructor() {
-    super("Not authorized to delete another user's favorites");
-    this.statusCode = 403;
-  }
-}
-
-/**
  *  authController
  */
 
@@ -170,9 +131,25 @@ class IncorrectPassword extends Error{
         this.statusCode = 400;
     }
 }
+
+class TokenNotFound extends Error{
+      constructor(){
+        super("Account with token not found");
+        this.statusCode = 400;
+    }
+}
 /**
  *  userController
  */
+class BadPasswordError extends Error {
+  constructor(message = "The password has to be at least 8 characters long, with at least one lowercase letter, one uppercase letter and one number") {
+    super(message);
+    this.name = "BadPasswordError";
+    this.statusCode = 400;
+  }
+}
+
+
 class UserNameNotProvided extends Error {
     constructor(){
         super("Nombre de usuario no introducido");
@@ -182,7 +159,7 @@ class UserNameNotProvided extends Error {
 
 class UserEmailNotProvided extends Error {
     constructor(){
-        super("Email no introducido");
+        super("Email not provided");
         this.statusCode = 400;
     }
 }
@@ -298,11 +275,9 @@ class ForbiddenError extends Error {
 
 export {
     ProjectNotFound,
-    InvalidRestaurantId,
+    UsersAssigned,
     InvalidRestaurantData,
     ProjectAlreadyExists,
-    NoFavoritesFound,
-    RestaurantIdNotProvided,
     ValidationError,
     NoReviewsFound,
     NoRestaurantReviewsFound,
@@ -314,12 +289,10 @@ export {
     ReviewImageNotValid,
     ErrorDeleteImage,
     NoImageProvided,
-    FavoriteAlreadyExists,
-    FavoriteNotFound,
-    NotAuthorizedToDeleteFavorite,
     EmailNotFound,
     IncorrectPassword,
     UserNameNotProvided,
+    BadPasswordError,
     UserEmailNotProvided,
     UserPasswordNotProvided,
     UserRoleNotProvided,
@@ -334,6 +307,7 @@ export {
     UnauthorizedError,
     TokenExpiredError,
     InvalidTokenError,
+    TokenNotFound,
     NotFoundError,
     ForbiddenError
 }

@@ -13,8 +13,6 @@ const Admin = () =>{
     useEffect(() => {
     const fetchProjects = async () =>{
       setProjects(await fetchServer.getProjects());
-      console.log("this is projects oh no");
-      console.log(projects);
     }
     fetchProjects();
   }, [reloadFlag])

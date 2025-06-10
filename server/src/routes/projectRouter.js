@@ -5,12 +5,16 @@ import { isAdmin } from "../middlewares/isAdmin.js";
 
 const router = Router();
 
-router.post("/", isLoggedInAPI, isAdmin, projectController.createProject);
+router.post("/", isAdmin, projectController.createProject);
 
-router.get("/", isLoggedInAPI, isAdmin, projectController.getAllProjects);
+router.patch("/", isLoggedInAPI, isAdmin, projectController.updateProject);
 
-router.get("/:projectId", isLoggedInAPI, projectController.getProjectById);
+router.get("/", isLoggedInAPI, projectController.getAllProjects);
 
-router.delete("/:projectId", isLoggedInAPI, isAdmin, projectController.deleteProject);
+router.get("/:projectId", projectController.getProjectById);
+
+router.put("/:projectId", isAdmin, projectController.assignProject);
+
+router.delete("/:projectId", isAdmin, projectController.deleteProject);
 
 export default router;

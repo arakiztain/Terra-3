@@ -1,4 +1,5 @@
 import styles from "./Login.module.css";
+import styles from "./Login.module.css";
 import { useState, useContext } from "react";
 import icon4 from "../../assets/_Terraforms/Individual/SVG/Melos-Blue.svg";
 import icon5 from "../../assets/_Terraforms/Individual/SVG/Punky-Lime.svg";
@@ -43,6 +44,7 @@ const Login = () => {
               />
               <label className={styles.shyLabel}>Email</label>
             </div>
+            <div className={styles.field}>
             <div className={styles.field}>
               <input
                 id="login__input-password"
