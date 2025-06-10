@@ -148,3 +148,7 @@ form[data-request-type="design-issues"] .react-select__control.react-select__con
 form[data-request-type="new-item"] .react-select__control.react-select__control {
   border-color: #F78BD8 !important; /* .item */
 }
+
+.toast{
+    font-family: "UncutSans" !important;
+}

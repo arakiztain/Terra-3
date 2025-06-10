@@ -1,15 +1,14 @@
 import styles from './IssueCard.module.css'
-
+import fetchServer from '../../utils/fetchServer';
+import { useState } from 'react';
 const extractMetadata = ( description ) => {
   const metadataStart = description.indexOf('<!-- METADATA ');
   if (metadataStart === -1) {
-    // No metadata found
     return null;
   }
 
   const metadataEnd = description.indexOf('-->', metadataStart);
   if (metadataEnd === -1) {
-    // Malformed metadata comment
     return null;
   }
 
@@ -26,10 +25,26 @@ const extractMetadata = ( description ) => {
 }
 
 const IssueCard = ({ issue, className }) => {
-  console.log("This is the description");
-  console.log(issue.description);
-  console.log("Here it is parsed");
-  console.log(extractMetadata(issue.description));
+  const [toggleInput, setToggleInput] = useState(false);
+  const [newDescription, setNewDescription] = useState('');
+  const handleReject = async () => {
+    let payload = extractMetadata(issue.description);
+    payload.description = newDescription;
+    try {
+      const res = await fetchServer.rejectIssue( payload, issue.id );
+      const result = await res.json();
+      console.log(result);
+    } catch (err) {
+      console.error("Error submitting issue:", err);
+    }
+  }
+  const toggleInputHandler = () => {
+    setToggleInput(!toggleInput);
+  }
+  const acceptHandler = async () =>{
+    const res = await fetchServer.acceptIssue( issue.id );
+  }
+
   return (
     <div className={`${styles.card} ${className}`}>
       <div className={styles.row}>
@@ -44,6 +59,12 @@ const IssueCard = ({ issue, className }) => {
       <div className={styles.row}>
         <span className={styles.label}>Project:</span> {issue.project?.name}
       </div>
+      <button onClick={acceptHandler}>Accept</button>
+      <button onClick={toggleInputHandler}>Reject</button>
+      {toggleInput && <div className={styles.input}>
+        <input value={newDescription} onChange={(e) => setNewDescription(e.target.value)} type="text" placeholder="What do you want changed?" />
+        <button onClick={handleReject}>Submit</button>
+      </div>}
     </div>
   )
 }

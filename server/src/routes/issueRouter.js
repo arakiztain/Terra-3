@@ -9,6 +9,7 @@ const router = express.Router();
 router.post("/report-issue/:projectId", issueController.reportIssue);
 router.get("/:projectId", issueController.getIssues);
 router.put("/update/:issueId", issueController.updateIssue);
+router.put("/accept/:issueId", issueController.acceptIssue);
 router.delete("/delete/:issueId", issueController.deleteIssue);
 router.post("/:issueId/screenshot", prepareProjectName,
     uploadIssueScreenshot.array("screenshot", 10), // allow up to 5 images

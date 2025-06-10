@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styles from "./ProjectList.module.css";
+import fetchServer from "../../utils/fetchServer";
 const ProjectList = ({ projectList = [], onEditProject, userMode }) => {
   const [search, setSearch] = useState("");
 const filtered = (projectList || [])
@@ -10,6 +11,11 @@ const filtered = (projectList || [])
     description?.toLowerCase().includes(search.toLowerCase()) ||
     (Array.isArray(users) && users.some((r) => r.email?.toLowerCase().includes(search.toLowerCase())))
   );
+
+  const handleSendReminder = (_id) => {
+    console.log(_id)
+    fetchServer.sendReminderEmail(_id);
+  }
   return (<>
     <div className={styles.container}>
       <input
@@ -21,8 +27,9 @@ const filtered = (projectList || [])
       />
       <div className={styles.cards}>
         {filtered.length > 0 ? (
-          filtered.map(({ id, _id, title, url, users, description }) => (
+          filtered.map(({ id, _id, title, url, users, description, taskCount }) => (
             <div key={id} className={styles.card}>
+              {taskCount && taskCount.count > 0 && <h3 onClick={()=> handleSendReminder(_id)}>Reviewable tasks: {taskCount.count} 📧 👈</h3>}
               <h2 className={styles.title}>{title}</h2>
               <a href={url} target="_blank" rel="noopener noreferrer" className={styles.url}>
                 {url}

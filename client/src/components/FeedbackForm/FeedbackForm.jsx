@@ -4,8 +4,10 @@ import "./customSelect.css";
 import { useParams } from "react-router-dom";
 import fetchServer from "../../utils/fetchServer";
 import Select from "react-select";
+import { ToastContainer, toast, Bounce } from 'react-toastify';
 
-const FeedbackForm = ( { project }) => {
+
+const FeedbackForm = ( { project, toggleForm }) => {
     const [browser, setBrowser] = useState(getBrowser());
     const [issueName, setIssueName] = useState("");
     const [otherBrowser, setOtherBrowser] = useState("");
@@ -56,13 +58,13 @@ const FeedbackForm = ( { project }) => {
         return "desktop";
     }
 
-const selectColorMap = {
-  "Copy revision": "#d97706",
-  "New Item": "#2563eb",
-  "Design Issues": "#dc2626",
-  "Requested Change": "#16a34a",
-  "Bugfix": "#7c3aed"
-};
+    const selectColorMap = {
+    "Copy revision": "#d97706",
+    "New Item": "#2563eb",
+    "Design Issues": "#dc2626",
+    "Requested Change": "#16a34a",
+    "Bugfix": "#7c3aed"
+    };
 
 const customStyles = (request) => ({
   control: (base, state) => ({
@@ -75,7 +77,35 @@ const customStyles = (request) => ({
   })
 });
 
-    const handleSubmit = (e) => {
+  const notifyError = () => 
+    toast('❌ There was a problem', {
+      position: "bottom-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      transition: Bounce,
+      className: styles.toast
+    });
+
+    const notifySuccess = () => 
+    toast('✅ Queried successfully!', {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+        className: styles.toast
+    });
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const requestId = crypto.randomUUID();
         const data = {
@@ -89,7 +119,13 @@ const customStyles = (request) => ({
             id,
             requestId,
         };
-        fetchServer.setIssue(data, id);
+        const result = await fetchServer.setIssue(data, id);
+        if(result && result.message.includes("Issue successfully")){
+            notifySuccess();
+            toggleForm();
+        }else{
+            notifyError();
+        }
     };
 
     return (
@@ -108,7 +144,8 @@ const customStyles = (request) => ({
                         onChange={opt => setRequest(opt.value)}
                         classNamePrefix="react-select"
                         className={styles.formInput}
-  styles={customStyles(request)}                    />
+                        styles={customStyles(request)}
+                    />
                 </label>
             </div>
             <div className={styles.twoColumns}>
@@ -167,6 +204,7 @@ const customStyles = (request) => ({
             <div className={styles.buttonContainer}>
                 <button id="buttonContainer1" className={`${styles.submitButton} ${styles.formInput}`} type="submit">Submit!</button>
                 <button id="buttonContainer2" className={`${styles.anotherButton} ${styles.formInput}`} type="button"> + </button>
+                <ToastContainer />
             </div>
         </form>
     );
