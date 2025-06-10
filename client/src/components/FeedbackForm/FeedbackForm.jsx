@@ -56,6 +56,25 @@ const FeedbackForm = ( { project }) => {
         return "desktop";
     }
 
+const selectColorMap = {
+  "Copy revision": "#d97706",
+  "New Item": "#2563eb",
+  "Design Issues": "#dc2626",
+  "Requested Change": "#16a34a",
+  "Bugfix": "#7c3aed"
+};
+
+const customStyles = (request) => ({
+  control: (base, state) => ({
+    ...base,
+    borderColor: selectColorMap[request] || base.borderColor,
+    boxShadow: state.isFocused ? `0 0 0 1px ${selectColorMap[request]}` : "none",
+    "&:hover": {
+      borderColor: selectColorMap[request] || base.borderColor
+    }
+  })
+});
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const requestId = crypto.randomUUID();
@@ -74,21 +93,22 @@ const FeedbackForm = ( { project }) => {
     };
 
     return (
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className={styles.form} onSubmit={handleSubmit} data-request-type={request.toLowerCase().replace(/\s+/g, '-')}>
             <div>
                 <label>
                     Name:
-                    <input className={styles.formInput} type="text" name="issueName" value={issueName} onChange={(e) => setIssueName(e.target.value)} required />
+                    <input id="name" className={styles.formInput} type="text" name="issueName" value={issueName} onChange={(e) => setIssueName(e.target.value)} required />
                 </label>
                 <label>
                     Request type:
                     <Select
+                        id="requestType"
                         options={requestTypeOptions}
                         value={requestTypeOptions.find(opt => opt.value === request)}
                         onChange={opt => setRequest(opt.value)}
                         classNamePrefix="react-select"
                         className={styles.formInput}
-                    />
+  styles={customStyles(request)}                    />
                 </label>
             </div>
             <div className={styles.twoColumns}>
@@ -96,6 +116,7 @@ const FeedbackForm = ( { project }) => {
                     <label>
                         Browser:
                         <Select
+                            id="browser"
                             options={browserOptions}
                             value={browserOptions.find(opt => opt.value === browser)}
                             onChange={opt => setBrowser(opt.value)}
@@ -121,6 +142,7 @@ const FeedbackForm = ( { project }) => {
                     <label>
                         Device
                         <Select
+                            id="device"
                             options={deviceOptions}
                             value={deviceOptions.find(opt => opt.value === device)}
                             onChange={opt => setDevice(opt.value)}
@@ -132,19 +154,19 @@ const FeedbackForm = ( { project }) => {
             </div>
             <label>
                 Request:
-                <textarea className={`${styles.bigInput} ${styles.formInput}`} name="description" value={description} onChange={(e) => setDescription(e.target.value)} required />
+                <textarea id="description" className={`${styles.bigInput} ${styles.formInput}`} name="description" value={description} onChange={(e) => setDescription(e.target.value)} required />
             </label>
             <label>
                 Page URL:
-                <input className={styles.formInput} type="text" name="pageUrl" value={pageUrl} onChange={(e) => setPageUrl(e.target.value)} />
+                <input id="pageUrl" className={styles.formInput} type="text" name="pageUrl" value={pageUrl} onChange={(e) => setPageUrl(e.target.value)} />
             </label>
             <label>
                 Screenshot:
-                <input className={styles.formInput} type="file" name="screenshot" accept="image/*" onChange={(e) => setScreenshot(e.target.files[0])} />
+                <input id="screenshot" className={styles.formInput} type="file" name="screenshot" accept="image/*" onChange={(e) => setScreenshot(e.target.files[0])} />
             </label>
             <div className={styles.buttonContainer}>
-                <button className={`${styles.submitButton} ${styles.formInput}`} type="submit">Submit!</button>
-                <button className={`${styles.anotherButton} ${styles.formInput}`} type="button"> + </button>
+                <button id="buttonContainer1" className={`${styles.submitButton} ${styles.formInput}`} type="submit">Submit!</button>
+                <button id="buttonContainer2" className={`${styles.anotherButton} ${styles.formInput}`} type="button"> + </button>
             </div>
         </form>
     );
