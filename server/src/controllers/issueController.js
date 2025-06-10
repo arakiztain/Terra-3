@@ -6,6 +6,8 @@ import fs from "fs";
 import FormData from "form-data";
 import { ProjectNotFound } from "../utils/errors.js";
 import markdown from 'markdown-builder';
+import Project from "../models/project.js";
+
 dotenv.config();
 
 async function getIssues(req, res) {
@@ -38,6 +40,7 @@ async function getIssues(req, res) {
 }
 
 async function reportIssue(req, res, next) {
+  console.log("Alcoholes destiladosasdasd");
   const projectId = req.params.projectId.trim();
   const { 
     name, 
@@ -47,8 +50,11 @@ async function reportIssue(req, res, next) {
     description, 
     pageUrl,
     screenshot,
-    requestId 
+    requestId,
+    token
   } = req.body;
+
+
 
 const { headers, emphasis } = markdown;
 
@@ -85,7 +91,28 @@ const generateMarkdown = ({
     screenshot,
     requestId 
   });
-  
+
+  const Proyecto = await Project.findById(projectId);
+  const nombreProyecto = Proyecto.title;
+  const fecha = Date.now();
+  const screenshotPresent = screenshot ? true : false;
+
+  const objetoData = {
+    name, 
+    request_type,
+    browser,
+    device,
+    description, 
+    pageUrl,
+    requestId,
+    projectId,
+    nombreProyecto,
+    fecha,
+    screenshotPresent,
+    token
+  };
+  console.log("Este el objeto")
+  console.log(objetoData);
   const metadata = "\n\n\n <!-- METADATA \n" + fullRequestData + "\n -->";
   const fullDescription = generateMarkdown({ description, browser, device, pageUrl, requestId, projectId }) + "\n\n" + metadata;
 

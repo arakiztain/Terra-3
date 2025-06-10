@@ -2,7 +2,7 @@ import { useState } from "react";
 import styles from "./ProjectList.module.css";
 const ProjectList = ({ projectList = [], onEditProject, userMode }) => {
   const [search, setSearch] = useState("");
-const filtered = (projectList || [])
+  const filtered = (projectList || [])
   .filter(project => project && typeof project === "object")
   .filter(({ title, url, description, users }) =>
     title?.toLowerCase().includes(search.toLowerCase()) ||

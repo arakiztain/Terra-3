@@ -147,7 +147,7 @@ const setIssue = async ( formData, id ) =>{
               'Content-Type': 'application/json',
               "Authorization": `Bearer ${token}`,
              },
-            body: JSON.stringify(formData)
+            body: JSON.stringify({...formData, token})
         });
         const data = await response.json();
         return data;
