@@ -12,15 +12,13 @@ const Admin = () =>{
     useEffect(() => {
     const fetchProjects = async () =>{
       setProjects(await fetchServer.getProjects());
-      console.log("this is projects oh no");
-      console.log(projects);
     }
     fetchProjects();
   }, [reloadFlag])
 
   return (
     <div className={style.container}>
-      <ProjectList projectList={projects} onEditProject={(project) => { setEditingProject(project); setShowEditForm(true); }} />
+      <ProjectList projectList={projects} onEditProject={(project) => {setEditingProject(project); setShowEditForm(true); }} />
       {showEditForm &&
         <div className={style.fullScreenCover} onClick={() => setShowEditForm(false)}>
           <div onClick={(e) => e.stopPropagation()}>

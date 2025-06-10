@@ -5,14 +5,13 @@ import { useParams } from "react-router-dom";
 import fetchServer from "../../utils/fetchServer";
 import Select from "react-select";
 
-const FeedbackForm = () => {
+const FeedbackForm = ( { project }) => {
     const [browser, setBrowser] = useState(getBrowser());
     const [issueName, setIssueName] = useState("");
     const [otherBrowser, setOtherBrowser] = useState("");
     const [device, setDevice] = useState(getDeviceTypeWithFallback());
-    const [status, setStatus] = useState("");
     const [description, setDescription] = useState("");
-    const [inputDate, setInputDate] = useState("");
+    const [pageUrl, setPageUrl] = useState("");
     const [request, setRequest] = useState("");
     const [screenshot, setScreenshot] = useState(null);
     const { id } = useParams();
@@ -39,11 +38,6 @@ const FeedbackForm = () => {
         { value: "mobile", label: "Mobile" },
     ];
     
-    const statusOptions = [
-        { value: "open", label: "Open" },
-        { value: "closed", label: "Closed" },
-    ];
-
     function getBrowser() {
         const ua = navigator.userAgent;
         if (ua.includes("Firefox/")) return "Firefox";
@@ -64,20 +58,19 @@ const FeedbackForm = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
+        const requestId = crypto.randomUUID();
         const data = {
             name: issueName,
             request_type: request,
             browser: browser === "Other" ? otherBrowser : browser,
             device,
-            status,
             description,
-            inputDate,
+            pageUrl,
             screenshot,
+            id,
+            requestId,
         };
         fetchServer.setIssue(data, id);
-        console.log("Formdata outside fetch");
-        console.log(data, id);
     };
 
     return (
@@ -137,33 +130,18 @@ const FeedbackForm = () => {
                     </label>
                 </div>
             </div>
-
-            <label>
-                Status:
-                    <Select
-                        options={statusOptions}
-                        value={statusOptions.find(opt => opt.value === status)}
-                        onChange={opt => setStatus(opt.value)}
-                        classNamePrefix="react-select"
-                        className={styles.formInput}
-                    />
-            </label>
-
             <label>
                 Request:
                 <textarea className={`${styles.bigInput} ${styles.formInput}`} name="description" value={description} onChange={(e) => setDescription(e.target.value)} required />
             </label>
-
             <label>
                 Page URL:
-                <input className={styles.formInput} type="text" name="inputDate" value={inputDate} onChange={(e) => setInputDate(e.target.value)} required />
+                <input className={styles.formInput} type="text" name="pageUrl" value={pageUrl} onChange={(e) => setPageUrl(e.target.value)} />
             </label>
-
             <label>
                 Screenshot:
                 <input className={styles.formInput} type="file" name="screenshot" accept="image/*" onChange={(e) => setScreenshot(e.target.files[0])} />
             </label>
-
             <div className={styles.buttonContainer}>
                 <button className={`${styles.submitButton} ${styles.formInput}`} type="submit">Submit!</button>
                 <button className={`${styles.anotherButton} ${styles.formInput}`} type="button"> + </button>

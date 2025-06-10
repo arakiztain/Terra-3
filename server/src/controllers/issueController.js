@@ -5,7 +5,7 @@ import path from "path";
 import fs from "fs";
 import FormData from "form-data";
 import { ProjectNotFound } from "../utils/errors.js";
-
+import markdown from 'markdown-builder';
 dotenv.config();
 
 async function getIssues(req, res) {
@@ -39,19 +39,64 @@ async function getIssues(req, res) {
 
 async function reportIssue(req, res, next) {
   const projectId = req.params.projectId.trim();
-  const { name, description, priority, tags, request_type } = req.body;
-  console.log("This is req body");
-  console.log(req.body);
+  const { 
+    name, 
+    request_type,
+    browser,
+    device,
+    description, 
+    pageUrl,
+    screenshot,
+    requestId 
+  } = req.body;
+
+const { headers, emphasis } = markdown;
+
+const generateMarkdown = ({
+  description,
+  browser,
+  device,
+  pageUrl,
+  requestId,
+  projectId
+}) => {
+  let md = '';
+
+  if (description) {
+    md += headers.h2('Description: ');
+    md += description + '\n\n';
+  }
+  if (browser) md += emphasis.b('Browser:') + ' ' + browser + '\n\n';
+  if (device) md += emphasis.b('Device:') + ' ' + device + '\n\n';
+  if (pageUrl) md += emphasis.b('Page URL:') + ' ' + pageUrl + '\n\n';
+  if (requestId) md += emphasis.b('Request ID:') + ' ' + requestId + '\n\n';
+  if (projectId) md += emphasis.b('Project ID:') + ' ' + projectId + '\n\n';
+
+  return md.trim();
+};
+
+  const fullRequestData = JSON.stringify({
+    name, 
+    request_type,
+    browser,
+    device,
+    description, 
+    pageUrl,
+    screenshot,
+    requestId 
+  });
+  
+  const metadata = "\n\n\n <!-- METADATA \n" + fullRequestData + "\n -->";
+  const fullDescription = generateMarkdown({ description, browser, device, pageUrl, requestId, projectId }) + "\n\n" + metadata;
+
   if (!name || !description) {
     return res.status(400).json({ error: "Missing required fields: name or description" });
   }
 
   const taskData = {
     name,
-    description,
-    tags: tags || [],
-    priority: priority || 3, // values from 1 (Urgent) to 4 (Low)
-    request_type
+    markdown_description: fullDescription,
+    request_type,
   };
   
   try {

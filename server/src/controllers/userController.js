@@ -77,7 +77,13 @@ export const activateUser = async (req, res, next) => {
 
     const user = await userModel.findOne({ email });
 
+
     validateActivation(user, token, password);
+
+    if (user.activationToken !== token) {
+      return res.status(400).json({ error: "Token inválido" });
+    }
+
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -177,8 +183,11 @@ const createUserWithEmail = async ( email ) =>{
     isActive: false,
     activationToken: token,
   });
+
   console.log("This was the token generated");
   console.log(token);
+
+
   await newUser.save();
   const activationUrl = `${process.env.CLIENT_URL}/user/setpass/${token}`;
   await sendEmail(
