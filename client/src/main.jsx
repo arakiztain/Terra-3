@@ -1,4 +1,3 @@
-
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom'
@@ -13,6 +12,7 @@ import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import Guide from './pages/Guide/Guide'
 import Faq from './pages/Faq/Faq';
 import IssueLogged from './pages/IssueLogged/IssueLogged';
+import Chatbot from './components/Chatbot/Chatbot';
 import './global.css';
 
 const router = createBrowserRouter([
@@ -23,6 +23,7 @@ const router = createBrowserRouter([
       <AuthProvider>
         <Title />
         <Outlet />
+        <Chatbot />
       </AuthProvider>
     </>
   ),
