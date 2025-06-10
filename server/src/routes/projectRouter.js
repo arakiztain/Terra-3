@@ -7,7 +7,7 @@ const router = Router();
 
 router.post("/", isAdmin, projectController.createProject);
 
-router.get("/", isAdmin, projectController.getAllProjects);
+router.get("/", projectController.getAllProjects);
 
 router.get("/:projectId", projectController.getProjectById);
 

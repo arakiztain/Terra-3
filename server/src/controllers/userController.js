@@ -9,6 +9,8 @@ import {
   NoUsersFound,
   InvalidUserId,
   UserNotFound,
+  ProjectNameNotProvided,
+  ProjectNotFound
 } from "../utils/errors.js";
 import bcrypt from "bcrypt";
 import { createActivationToken, verifyToken } from "../utils/token.js";

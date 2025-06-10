@@ -8,6 +8,13 @@ class ProjectNotFound extends Error {
     this.statusCode = 404;
   }
 }
+class ProjectNameNotProvided extends Error {
+  constructor(message = "Project name not provided") {
+    super(message);
+    this.name = "ProjectNameNotProvided";
+    this.statusCode = 404;
+  }
+}
 
 class UsersAssigned extends Error {
   constructor() {
@@ -118,7 +125,20 @@ class ErrorDeleteImage extends Error {
 /**
  *  authController
  */
-
+class UserNotActive extends Error {
+  constructor() {
+    super("User not active");
+    this.name = "UserNotActive";
+    this.statusCode = 404;
+  }
+}
+class UserHasNoPassword extends Error {
+  constructor() {
+    super("User has no password");
+    this.name = "UserHasNoPassword";
+    this.statusCode = 404;
+  }
+}
 class EmailNotFound extends Error{
     constructor(){
         super("El email de usuario no existe");
@@ -275,6 +295,7 @@ class ForbiddenError extends Error {
 
 export {
     ProjectNotFound,
+    ProjectNameNotProvided,
     UsersAssigned,
     InvalidRestaurantData,
     ProjectAlreadyExists,
@@ -290,6 +311,8 @@ export {
     ErrorDeleteImage,
     NoImageProvided,
     EmailNotFound,
+    UserNotActive,
+    UserHasNoPassword,
     IncorrectPassword,
     UserNameNotProvided,
     BadPasswordError,

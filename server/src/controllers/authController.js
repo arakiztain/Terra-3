@@ -10,30 +10,27 @@ import {
   UserEmailAlreadyExists
 } from "../utils/errors.js";
 import { sendEmail } from "../utils/sendEmail.js";
+import { validateLogin, validateLoginFields, validateRegisterFields } from "../utils/validators.js";
 
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    if (!email) throw new UserEmailNotProvided();
-    if (!password) throw new UserPasswordNotProvided();
-    
+
+    validateLoginFields(email, password);
+
     const user = await userModel.findOne({ email });
-    /* if (!user || !user.isActive || !user.password) {
-    return res.status(401).json({ error: 'Usuario no activo o sin contraseña' });
-    } */
-    if (!user) throw new EmailNotFound();
+
+    validateLogin(user, user.isActive, user.password);
 
     const isMatch = await bcryptjs.compare(password, user.password);
     if (!isMatch) throw new IncorrectPassword();
 
     const token = jwt.sign(
-      {
-        _id: user._id,
-        role: user.role,
-      },
+      { _id: user._id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "24h" }
     );
+
     res.json({
       token,
       user: {
@@ -48,13 +45,13 @@ const login = async (req, res, next) => {
   }
 };
 
+
 const register = async (req, res, next) => {
   try {
-    const { email, password/* , role */} = req.body;
+    const { email, password/* , role */ } = req.body;
 
-    if (!email) throw new UserEmailNotProvided();
-    if (!password) throw new UserPasswordNotProvided();
-    
+    validateRegisterFields(email, password);
+
     const existingEmail = await userModel.findOne({ email });
     if (existingEmail) throw new UserEmailAlreadyExists();
 
@@ -69,19 +66,13 @@ const register = async (req, res, next) => {
     await newUser.save();
 
     const token = jwt.sign(
-      {
-        _id: newUser._id,
-        role: newUser.role,
-      },
+      { _id: newUser._id, role: newUser.role },
       process.env.JWT_SECRET,
       { expiresIn: "24h" }
     );
 
-    const userToReturn = newUser.toObject();
-    delete userToReturn.password;
-
     res.status(201).json({
-      message: "Usuario creado correctamente",
+      message: "User created",
       token,
       user: {
         id: newUser._id,
@@ -94,6 +85,7 @@ const register = async (req, res, next) => {
     next(error);
   }
 };
+
 
 async function getUserInfo(req, res, next) {
   try {
@@ -122,30 +114,28 @@ async function getUserInfo(req, res, next) {
 
 const resetPassword = async (req, res, next) => {
   const { email } = req.body;
-  console.log(req.body);
-  console.log(req.body.email);
+
   try {
     const user = await userModel.findOne({ email });
     if (!user) throw new EmailNotFound();
     const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "1h" });
     user.activationToken = token;
     await user.save();
-    console.log("Esto ocurre");
     const resetUrl = `${process.env.CLIENT_URL}/passwordReset/${token}`;
     await sendEmail(
       email,
       "Terra Ripple password reset",
-      `<p>Haz clic aqui para restablecer tu contraseña:</p>
+      `<p>Click here to reset your password:</p>
       <a href="${resetUrl}">Terra Ripple</a>`
       );
 
-    res.json({ message: "Correo enviado" });
+    res.json({ message: "Email sent" });
   } catch (error) {
     next(error);
   }
 }
 
-const setPassword = async (req, res, next) => {
+/* const setPassword = async (req, res, next) => {
   const { token, password } = req.body;
   console.log("This the token", token);
   console.log("This the last character", token[token.length - 1]);
@@ -156,12 +146,12 @@ const setPassword = async (req, res, next) => {
     user.password = hashedPassword;
     user.activationToken = undefined;
     await user.save();
-    res.json({ message: "Contraseña restablecida" });
+    res.json({ message: "Password set" });
   } catch (error) {
     next(error);
   }
 }
-
+ */
 const createUserWithEmail = async ( email ) =>{
   const token = createActivationToken(email);
   const newUser = new userModel({
@@ -185,6 +175,6 @@ export default {
 	login,
 	register,
   sendEmail,
-  resetPassword,
-  setPassword
+  resetPassword/* ,
+  setPassword */
 };

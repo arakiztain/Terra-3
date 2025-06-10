@@ -120,48 +120,61 @@ async function createProject(req, res, next) {
 async function getAllProjects(req, res, next) {
   try {
     let projects = [];
+    const clickupToken = process.env.CLICKUP_API_TOKEN;
+    const workspaceName = process.env.CLICKUP_WORKSPACE_NAME;
 
     const responseWorkSpace = await axios.get('https://api.clickup.com/api/v2/team', {
-      headers: {
-        Authorization: process.env.CLICKUP_API_TOKEN,
-      }
+      headers: { Authorization: clickupToken },
     });
-    //Change name ?
-    const workspaceName = process.env.CLICKUP_WORKSPACE_NAME;
     const workSpaceId = responseWorkSpace.data.teams.find(team => team.name === workspaceName).id;
 
     if (req.user.role === "admin") {
-      const SpaceResponse = await axios.get(
-      `https://api.clickup.com/api/v2/team/${workSpaceId}/space`,
-          {
-            headers: {
-              Authorization: process.env.CLICKUP_API_TOKEN,
-              "Content-Type": "application/json"
-            }
-          }
-        );
+      const SpaceResponse = await axios.get(`https://api.clickup.com/api/v2/team/${workSpaceId}/space`, {
+        headers: {
+          Authorization: clickupToken,
+          "Content-Type": "application/json",
+        }
+      });
+      const spaces = SpaceResponse.data.spaces;
 
-        const spaces = SpaceResponse.data.spaces;
-
-    projects = (
-      await Promise.all(
-        spaces.map(async (folder) => {
-          const mongoProject = await Project.findOne({ spaceId: folder.id }).populate("users", "email");
-          return mongoProject ? mongoProject : null;
-        })
-      )
-    ).filter(Boolean);
+      projects = (
+        await Promise.all(
+          spaces.map(async (space) => {
+            const mongoProject = await Project.findOne({ spaceId: space.id }).populate("users", "email");
+            return mongoProject ? mongoProject : null;
+          })
+        )
+      ).filter(Boolean);
 
     } else {
-      projects = await Project.find({ users: req.user._id }).populate("users", "email");
-      if (!projects || projects.length === 0) throw new NotFoundError("You have no projects");
-      //clickup llamada id
+      const localProjects = await Project.find({ users: req.user._id }).populate("users", "email");
+      if (!localProjects || localProjects.length === 0) throw new NotFoundError("You have no projects");
+
+      projects = await Promise.all(
+        localProjects.map(async (localProject) => {
+          try {
+            const clickupResponse = await axios.get(`https://api.clickup.com/api/v2/space/${localProject.spaceId}`, {
+              headers: { Authorization: clickupToken },
+            });
+            return {
+              ...localProject.toObject(),
+              clickupData: clickupResponse.data,
+            };
+          } catch (err) {
+            return {
+              ...localProject.toObject(),
+              clickupData: null,
+            };
+          }
+        })
+      );
     }
+
     res.json(projects);
   } catch (error) {
     next(error);
   }
-};
+}
 
 //MongoDb en clikcup no hay manera de buscar por id el folder, es esto o sacar todos y buscar por id en el response.data
 async function getProjectById(req, res, next) {
