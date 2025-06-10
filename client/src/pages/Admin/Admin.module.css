@@ -5,20 +5,7 @@
   align-items: center;
 }
 
-.buttonTour {
-  composes: buttonTour from '../../styles/gstyles.module.css';
-}
-
-/* .fullscreen{
-  background-color:#0F0F0F;
-  height: 100vh;
-  width: 100vw;
-  display: grid;
-  grid-template-columns: 3fr 2fr;
-  grid-template-rows: 1fr 2fr;
-} */
-/* 
-.fullScreen{
+.fullScreenCover{
   position:absolute;
   top:0;
   left:0;
@@ -28,4 +15,4 @@
   display: flex;
   justify-content: center;
   align-items: center;
-} */
+}

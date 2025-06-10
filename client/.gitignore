@@ -1,6 +1,3 @@
-ignore/
-src/pages/Admin/doc_apoyo/
-
 # Logs
 logs
 *.log

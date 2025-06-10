@@ -1,4 +1,4 @@
-import styles from './Admin.module.css';
+import style from './Admin.module.css';
 import ProjectList from '../../components/ProjectList/ProjectList';
 import ProjectCreationForm from "../../components/ProjectCreationForm/ProjectCreationForm";
 import { useState, useEffect } from 'react';
@@ -9,7 +9,6 @@ const Admin = () =>{
   const [reloadFlag, setReloadFlag] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
   const [showEditForm, setShowEditForm] = useState(false);
-  
     useEffect(() => {
     const fetchProjects = async () =>{
       setProjects(await fetchServer.getProjects());
@@ -18,10 +17,10 @@ const Admin = () =>{
   }, [reloadFlag])
 
   return (
-    <div className={styles.container}>
-      <ProjectList projectList={projects} onEditProject={(project) => { setEditingProject(project); setShowEditForm(true); }} />
+    <div className={style.container}>
+      <ProjectList projectList={projects} onEditProject={(project) => {setEditingProject(project); setShowEditForm(true); }} />
       {showEditForm &&
-        <div onClick={() => setShowEditForm(false)}>
+        <div className={style.fullScreenCover} onClick={() => setShowEditForm(false)}>
           <div onClick={(e) => e.stopPropagation()}>
             <ProjectCreationForm
               promptReload={setReloadFlag}
