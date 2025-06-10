@@ -9,10 +9,10 @@ class ProjectNotFound extends Error {
   }
 }
 
-class InvalidRestaurantId extends Error {
+class UsersAssigned extends Error {
   constructor() {
-    super("ID de restaurante no válido");
-    this.name = "InvalidRestaurantId";
+    super("All provided users are already assigned to this project");
+    this.name = "UsersAssigned";
     this.statusCode = 400;
   }
 }
@@ -305,7 +305,7 @@ class ForbiddenError extends Error {
 
 export {
     ProjectNotFound,
-    InvalidRestaurantId,
+    UsersAssigned,
     InvalidRestaurantData,
     ProjectAlreadyExists,
     NoFavoritesFound,
