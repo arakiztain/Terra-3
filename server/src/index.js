@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import { connectDB } from "./config/mongoose.js";
 import errorHandler from "./middlewares/errorHandler.js";
 
+
 dotenv.config();
 
 const APP_PORT = process.env.APP_PORT || 3003;

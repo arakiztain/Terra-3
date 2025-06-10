@@ -13,5 +13,7 @@ router.delete("/delete/:issueId", issueController.deleteIssue);
 router.post("/:issueId/screenshot", prepareProjectName,
     uploadIssueScreenshot.array("screenshot", 10), // allow up to 5 images
     issueController.uploadScreenshot);
+    
+router.post("/clickup-webhook", issueController.handleClickUpWebhook);
 
 export default router;

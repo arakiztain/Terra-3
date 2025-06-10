@@ -55,7 +55,7 @@ async function createProject(req, res, next) {
     
     const spaceId = responseSpace.data.id;
 
-    const listNames = ["copy revision", "design issues", "requested change", "new item"];
+    const listNames = ["copy revision", "design issues", "requested change", "new item", "bugfix"];
     const createdLists = [];
 
     //Crear FolderId con los equipos de cada proyecto (space)

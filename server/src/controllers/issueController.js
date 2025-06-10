@@ -282,10 +282,32 @@ async function uploadScreenshot(req, res) {
   }
 }
 
+
+async function handleClickUpWebhook(req, res) {
+  const { task } = req.body;
+
+  const event = 'taskUpdated';
+  
+  if (event === 'taskUpdated' && task) {
+    const updateInfo = {
+      id: task.id,
+      name: task.name,
+      status: task.status.status,
+    };
+
+    console.log('🟢 Emitiendo evento socket:', updateInfo);
+    req.io.emit('taskUpdated', updateInfo); // ⚡ Emitir evento global
+  }
+
+  res.sendStatus(200);
+}
+
+
 export default {
   getIssues,
   reportIssue,
   updateIssue,
   deleteIssue,
-  uploadScreenshot
+  uploadScreenshot,
+  handleClickUpWebhook
 };
