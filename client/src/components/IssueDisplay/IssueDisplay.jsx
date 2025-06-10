@@ -5,7 +5,7 @@ import dianaLime from '../../assets/icons/dianaLime.png';
 import formaOrange from '../../assets/icons/formaOrange.png';
 import prismoPink from '../../assets/icons/prismoPink.png';
 const IssueDisplay = ({ issues }) => {
-
+    console.log(issues);
     return(
         <div className={styles.wrapper}>
             {issues.filter(issue => issue.list.name === "copy revision").length > 0 && (
@@ -19,7 +19,7 @@ const IssueDisplay = ({ issues }) => {
                 </div>
                 {issues.filter(issue => issue.list.name === "copy revision").map(issue => <IssueCard className={styles.copyCards} key={issue._id} issue={issue} />)}                
             </div>)}
-            {issues.filter(issue => issue.list.name === "requested changes").length > 0 && (
+            {issues.filter(issue => issue.list.name === "requested change").length > 0 && (
             <div className={`${styles.changes} ${styles.container}`}>
                 <div className={styles.issueHeader}>
                     <img src={dianaLime} alt="dianaLime" className={styles.icon}/>
@@ -28,9 +28,9 @@ const IssueDisplay = ({ issues }) => {
                         <span>Changes requested by the reviewer</span>
                     </div>
                 </div>
-                {issues.filter(issue => issue.list.name === "requested changes").map(issue => <IssueCard className={styles.changeCards} key={issue._id} issue={issue} />)}                
+                {issues.filter(issue => issue.list.name === "requested change").map(issue => <IssueCard className={styles.changeCards} key={issue._id} issue={issue} />)}                
             </div>)}
-            {issues.filter(issue => issue.list.name === "design issues").length > 0 && (
+            {issues.filter(issue => issue.list.name === "design issue").length > 0 && (
             <div className={`${styles.design} ${styles.container}`}>
                 <div className={styles.issueHeader}>
                     <img src={formaOrange} alt="formaOrange" className={styles.icon}/>
@@ -39,7 +39,7 @@ const IssueDisplay = ({ issues }) => {
                         <span>Design-related issues</span>
                     </div>
                 </div>
-                {issues.filter(issue => issue.list.name === "design issues").map(issue => <IssueCard className={styles.designCards} key={issue._id} issue={issue} />)}                
+                {issues.filter(issue => issue.list.name === "design issue").map(issue => <IssueCard className={styles.designCards} key={issue._id} issue={issue} />)}                
             </div>)}
             {issues.filter(issue => issue.list.name === "new item").length > 0 && (
             <div className={`${styles.item} ${styles.container}`}>
