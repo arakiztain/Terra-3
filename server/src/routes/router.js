@@ -4,7 +4,6 @@ import authRouter from "./authRouter.js";
 import userRouter from "./userRouter.js";
 import issueRouter from "./issueRouter.js";
 import projectRouter from "./projectRouter.js";
-import formRoutes from '../../data/src/routes/formRouter.js';
 import { isAdmin } from "../middlewares/isAdmin.js";
 
 const router = Router();
@@ -15,9 +14,7 @@ router.get("/",(req,res)=>{
 
 router.use("/", authRouter);
 router.use("/issue", isLoggedInAPI, issueRouter);
-router.use("/user",  isLoggedInAPI, userRouter);
+router.use("/user", isLoggedInAPI, isAdmin, userRouter);
 router.use("/project", isLoggedInAPI, projectRouter);
-router.use('/form', formRoutes);
-
 
 export default router

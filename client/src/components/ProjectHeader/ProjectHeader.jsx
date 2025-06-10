@@ -1,11 +1,11 @@
 import styles from "./ProjectHeader.module.css"
 import { useState } from "react";
-const ProjectHeader = () =>{
+const ProjectHeader = ({ newIssueHandler }) =>{
     const [menuOpen, setMenuOpen] = useState(false);
     return(
-        <div className={styles.projectHeader}>
+        <>
             <a className={styles.projectLink} href="www.google.es"><button className={styles.projectLinkButton}>My project</button></a>
-            <button className={styles.issueButton}>New Issue</button>
+            <button className={styles.issueButton} onClick={()=> newIssueHandler()}>New Issue</button>
             <div className={styles.menuContainer} onClick={() => setMenuOpen(!menuOpen)}>
                 <button className={styles.menuButton}>Menu</button>
                 {menuOpen && <div className={styles.menuDropdown}>
@@ -17,7 +17,7 @@ const ProjectHeader = () =>{
                     <a className={styles.menuSignout} href="">Sign out</a>
                 </div>}
             </div>
-        </div>
+        </>
     )
 }
 

@@ -36,6 +36,7 @@ const ProjectCreationForm = ({ promptReload, reloadFlag, project }) => {
     if (project && project.id) {
       fetchServer.updateProject(project.id, { ...formData });
     } else {
+      console.log("es el else por dios");
       fetchServer.createProject({ ...formData });
     }
     promptReload(!reloadFlag);

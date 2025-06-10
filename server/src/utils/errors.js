@@ -9,10 +9,10 @@ class ProjectNotFound extends Error {
   }
 }
 
-class InvalidRestaurantId extends Error {
+class UsersAssigned extends Error {
   constructor() {
-    super("ID de restaurante no válido");
-    this.name = "InvalidRestaurantId";
+    super("All provided users are already assigned to this project");
+    this.name = "UsersAssigned";
     this.statusCode = 400;
   }
 }
@@ -170,6 +170,13 @@ class IncorrectPassword extends Error{
         this.statusCode = 400;
     }
 }
+
+class TokenNotFound extends Error{
+      constructor(){
+        super("Account with token not found");
+        this.statusCode = 400;
+    }
+}
 /**
  *  userController
  */
@@ -298,7 +305,7 @@ class ForbiddenError extends Error {
 
 export {
     ProjectNotFound,
-    InvalidRestaurantId,
+    UsersAssigned,
     InvalidRestaurantData,
     ProjectAlreadyExists,
     NoFavoritesFound,
@@ -334,6 +341,7 @@ export {
     UnauthorizedError,
     TokenExpiredError,
     InvalidTokenError,
+    TokenNotFound,
     NotFoundError,
     ForbiddenError
 }
