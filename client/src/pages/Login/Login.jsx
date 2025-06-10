@@ -4,7 +4,7 @@ import icon4 from "../../assets/_Terraforms/Individual/SVG/Melos-Blue.svg";
 import icon5 from "../../assets/_Terraforms/Individual/SVG/Punky-Lime.svg";
 import icon6 from "../../assets/_Terraforms/Individual/SVG/Boba-Orange.svg";
 import { AuthContext } from "../../context/AuthContext";
-import TourLogin from "./TourLogin";
+// import TourLogin from "./TourLogin";
 
 const Login = () => {
   const [userData, setUserData] = useState({
@@ -74,7 +74,7 @@ const Login = () => {
         <img src={icon6} className={styles.icon} />
       </div>
 
-      <TourLogin />
+      {/* <TourLogin /> */}
     </div>
   );
 };

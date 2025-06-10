@@ -47,6 +47,7 @@
   bottom: 35px;
   max-width: 100%;
   z-index:0;
+  user-select: none;
 } 
 
 /* .again {
@@ -112,10 +113,19 @@
 }
  
 .input { 
-  composes: input from '../../styles/gstyles.module.css';
+  /* composes: input from '../../styles/gstyles.module.css'; */
+  margin-top: 0.3rem;
+  padding: 1.5rem 1rem 0.5rem 1rem;
+  margin-bottom: 1.2rem;   
+  font-weight: 700;
+  border: 3px solid var(--color-white);
+  background-color: var(--color-off-black);
+  color: var(--color-white);
+  border-radius: 30px;
+  outline: none;
+  z-index: 2;
   /* margin-top: 0.3rem;
   margin-bottom: 1.2rem; */
-  padding: 1.5rem 1rem .5rem 1rem;
   /* border: 3px solid var(--color-white);
   border-radius: 30px;
   background-color: var(--color-off-black);

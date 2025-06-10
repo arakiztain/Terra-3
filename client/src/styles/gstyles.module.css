@@ -3,12 +3,12 @@
   flex: 1;
   justify-content: center;
   align-items: center;
-  width: 100vw;
+  width: 100vw; 
   padding:1rem;
 }
 
 .input,
-.select {  
+.select {   
   margin-top: 0.3rem;
   padding: 0.5rem 1rem 0.5rem 1rem;
   margin-bottom: 1.2rem;   
@@ -92,14 +92,14 @@ select:disabled {
 }
 
 .button {
-  border: 3px solid var(--color-black);
+  border: 3px solid var(--color-black); 
   color: var(--color-off-black);
   margin-top: 1.5rem;
   font-size: 1.1rem;
   font-weight: 700;
   border-radius: 30px;
   /* height: 2.5rem; */
-  padding: 1rem 0 1rem 0;
+  padding: 0.5rem 0 0.5rem 0;
   width: 10rem;
   background-color: var(--color-white);
   z-index: 2;
