@@ -1,13 +1,9 @@
 .form {
-  composes: form from '../../styles/gstyles.module.css'; 
-  /* display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  width: 300px; */
- } 
- 
+    composes: form from '../../styles/gstyles.module.css';
+}
+
 .input{
-    composes: input from '../../styles/gstyles.module.css';
+    composes: input from '../../styles/gstyles.module.css';    
 }  
 
 .label{
@@ -21,3 +17,7 @@
 .textarea{
     composes: textarea from '../../styles/gstyles.module.css';
 }
+ 
+.select {
+    composes: select from '../../styles/gstyles.module.css';  
+} 

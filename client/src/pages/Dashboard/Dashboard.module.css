@@ -1,7 +1,4 @@
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-}
+.fullScreen {
+    composes: fullScreen from '../../styles/gstyles.module.css'; 
+    flex-direction: column;    
+}    

@@ -1,10 +1,10 @@
 .container {
     padding: 40px;
-    font-family: Arial, sans-serif;
+    /* font-family: Arial, sans-serif; */
     border-radius: 8px;
   }
   
-  .title {
+  .title_center {
     text-align: center;
     /* color: #333; */
     margin-bottom: 20px;

@@ -1,20 +1,25 @@
 import styles from "./Dashboard.module.css";
 import { useState, useEffect } from "react";
 import fetchServer from "../../utils/fetchServer";
-import ProjectList from "../../components/ProjectList/ProjectList";
 
 const Dashboard = () =>{
-    const [projects, setProjects] = useState([]);
-    useEffect(() => {
-        const fetchProjects = async () => {
-            setProjects(await fetchServer.getProjects());
+    const [issues, setIssues] = useState([]);
+
+    //ProjectList load, to render a project choice
+    //Probably will need a spinner or something here.
+    useEffect(()=>{
+        const fetchData = async () =>{
+            setIssues(await fetchServer.getIssues());
         }
-        fetchProjects();
-    }, [])
+        fetchData();
+        console.log(issues);
+    },[])
 
     return (
-        <div className={styles.wrapper}>
-            <ProjectList projectList={projects} userMode={true} onEditProject={console.log("Nope")} />
+        <div className={styles.fullScreen}>
+            <h2>Dashboard</h2>
+            {issues && issues.length > 0 && issues.map(issue => <IssueCard key={issue._id} issue={issue}/>)}
+            <IssueForm />
         </div>
     );
 }

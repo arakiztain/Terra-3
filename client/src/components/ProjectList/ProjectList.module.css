@@ -4,28 +4,17 @@
   padding: 0 1rem;
 }
 
-.searchInput {
-  width: 100%;
-  padding: 0.5rem 0.75rem;
-  margin-bottom: 1.5rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  color:#FFFFFF;
-}
+.input {
+  composes: input from '../../styles/gstyles.module.css';
+} 
 
-.cards {
+.cards {  
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
-
 .card {
-  background-color: #222;
-  color: #eee;
-  padding: 1rem 1.25rem;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+  composes: card from "../../styles/gstyles.module.css"
 }
 
 .title {
@@ -49,16 +38,4 @@
   text-align: center;
   color: #666;
   font-style: italic;
-}
-
-.fullScreenCover{
-  position:absolute;
-  top:0;
-  left:0;
-  width:100vw;
-  height:100vh;
-  background-color:rgba(100,100,100,0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
