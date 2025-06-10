@@ -13,8 +13,6 @@ async function createProject(req, res, next) {
     if (email) {
       const emails = email.map(e => e.trim());
       const users = await User.find({ email: { $in: emails } });
-/*       console.log("This is the email");
-      console.log(email); */
       if (users.length !== emails.length) {
         const foundEmails = users.map(u => u.email);
         const notFoundEmails = emails.filter(e => !foundEmails.includes(e));
@@ -26,8 +24,6 @@ async function createProject(req, res, next) {
         // throw new UserNotFound(`The following emails were not found: ${notFoundEmails.join(', ')}`);
       }
       foundUsers = users.map(u => u._id);
-/*       console.log("These are the found users");
-      console.log(foundUsers) */
     }
     const existingProject = await Project.findOne({ title });
     if (existingProject) throw new ProjectAlreadyExists();
@@ -117,6 +113,45 @@ async function createProject(req, res, next) {
   }
 };
 
+async function updateProject(req, res, next) {
+  console.log("Reaches");
+  try {
+    const { id, description, url, email } = req.body;
+    const project = await Project.findById(id);
+    if (!project) throw new ProjectNotFound();
+
+    const emails = (email || []).map(e => e.trim());
+    const existingUsers = await User.find({ email: { $in: emails } });
+    const existingUserEmails = existingUsers.map(u => u.email);
+
+    const missingEmails = emails.filter(e => !existingUserEmails.includes(e));
+    const newUsers = await Promise.all(
+      missingEmails.map(email => userController.createUserWithEmail(email))
+    );
+
+    const allUsers = [...existingUsers, ...newUsers];
+    const updatedUserIds = allUsers.map(u => u._id.toString());
+
+    const currentUserIds = project.users.map(id => id.toString());
+    const removedUserIds = currentUserIds.filter(id => !updatedUserIds.includes(id));
+    const addedUserIds = updatedUserIds.filter(id => !currentUserIds.includes(id));
+
+    project.description = description ?? project.description;
+    project.url = url ?? project.url;
+    project.users = updatedUserIds;
+
+    await project.save();
+
+    res.status(200).json({
+      message: `Project updated. Users removed: ${removedUserIds.length}, users added: ${addedUserIds.length}`,
+      project
+    });
+  } catch (error) {
+    console.error("UpdateProject Error:", error.response?.data || error.message);
+    next(error);
+  }
+}
+
 async function getAllProjects(req, res, next) {
   try {
     let projects = [];
@@ -151,7 +186,6 @@ async function getAllProjects(req, res, next) {
         })
       )
     ).filter(Boolean);
-
     } else {
       projects = await Project.find({ users: req.user._id }).populate("users", "email");
       if (!projects || projects.length === 0) throw new NotFoundError("You have no projects");
@@ -255,6 +289,8 @@ export default {
   createProject,
   getAllProjects,
   getProjectById,
+  deleteProject,
+  updateProject,
   assignProject,
   deleteProject
 };

@@ -104,18 +104,15 @@ export const createUser = async (req, res) => {
 
 export const activateUser = async (req, res) => {
   const token = req.params.token;
-  console.log("Token recibido:", token);
   const { password } = req.body;
 
   try {
     const { email } = verifyToken(token);
-    console.log("Email del token:", email);
 
     const user = await userModel.findOne({ email });
     if (!user) return res.status(400).json({ error: "Usuario no encontrado" });
 
     if (user.activationToken !== token) {
-      console.log("Token en DB:", user.activationToken);
       return res.status(400).json({ error: "Token inválido" });
     }
 
@@ -233,8 +230,6 @@ const createUserWithEmail = async ( email ) =>{
     isActive: false,
     activationToken: token,
   });
-  console.log("This was the token generated ");
-  console.log(token);
   await newUser.save();
   const activationUrl = `${process.env.CLIENT_URL}/user/setpass/${token}`;
   await sendEmail(

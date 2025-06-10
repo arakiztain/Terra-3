@@ -9,14 +9,12 @@ const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
 
     const handleLogin = async (email, password) => {
-        console.log("Hellouses");
-        console.log("mail and pass", email, password);
         const result = await fetchServer.loginFetch({ email, password });
         if (result.error) {
             return result.error;
         } else {
             localStorage.setItem("token", result.token);
-            setUserData({user: result.user, token: result.token});
+            setUserData({user: result.user, token: result.token, email});
             if (result.user.role === "admin") {
                 navigate("/admin")
             } else {

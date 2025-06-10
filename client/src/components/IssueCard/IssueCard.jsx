@@ -1,7 +1,35 @@
 import styles from './IssueCard.module.css'
 
+const extractMetadata = ( description ) => {
+  const metadataStart = description.indexOf('<!-- METADATA ');
+  if (metadataStart === -1) {
+    // No metadata found
+    return null;
+  }
+
+  const metadataEnd = description.indexOf('-->', metadataStart);
+  if (metadataEnd === -1) {
+    // Malformed metadata comment
+    return null;
+  }
+
+  const jsonString = description.substring(metadataStart + 14, metadataEnd).trim();
+
+  try {
+    const metadata = JSON.parse(jsonString);
+    // metadata is now the parsed object
+    return metadata;
+  } catch (e) {
+    // JSON parse error
+    return null;
+  }
+}
+
 const IssueCard = ({ issue, className }) => {
-  console.log(issue);
+  console.log("This is the description");
+  console.log(issue.description);
+  console.log("Here it is parsed");
+  console.log(extractMetadata(issue.description));
   return (
     <div className={`${styles.card} ${className}`}>
       <div className={styles.row}>

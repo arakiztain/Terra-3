@@ -34,7 +34,7 @@ const filtered = (projectList || [])
                 {userMode ? (
                   <a href={`/projects/${_id}`} className={styles.viewDetails}>View details</a>
                 ) : (
-                  <span onClick={() => onEditProject({ id, title, url, description, reviewerEmails: users.map(u => u.email) })}>
+                  <span onClick={() => onEditProject({ _id, title, url, description, reviewerEmails: users.map(u => u.email) })}>
                     Edit form
                   </span>
                 )}

@@ -1,0 +1,19 @@
+/* Button Tour */
+.tour__button {
+  padding: 10px 20px;
+  width:53px;
+  height:53px;
+  border-radius:100px;
+  z-index: 10;
+  background-color:#3d9dd8;
+  color:white;
+  font-size:27px;
+  position: fixed;
+  bottom: 145px;
+  right: 16px;
+  cursor: pointer;
+}
+
+.tour__button:hover {
+  cursor:pointer
+}

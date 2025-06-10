@@ -16,8 +16,7 @@ const loginFetch = async ({ email, password }) => {
 };
 
 const createProject = async ({ title, url, description, reviewerEmails:email }) => {
-  console.log("Sends this email");
-  console.log(email);
+    email = Array.isArray(email) ? email.filter(Boolean) : [];
     const token = localStorage.getItem("token");
     fetch(`${serverUrl}/project`, {
         method: 'POST',
@@ -27,6 +26,27 @@ const createProject = async ({ title, url, description, reviewerEmails:email }) 
         },
         body: JSON.stringify({
             title,
+            url,
+            description,
+            email
+        })
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+}
+
+const updateProject = async( id, {url, description, reviewerEmails:email} ) => {
+    email = Array.isArray(email) ? email.filter(Boolean) : [];
+    const token = localStorage.getItem("token");
+    fetch(`${serverUrl}/project`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            id,
             url,
             description,
             email
@@ -100,6 +120,24 @@ const getIssues = async ( id ) => {
     }
 }
 
+const getProjectById = async ( id ) => {
+      const token = localStorage.getItem("token");
+    try{
+        const response = await fetch(`${serverUrl}/project/${id}`, {
+            method: 'GET',
+            headers: { 
+              'Content-Type': 'application/json',
+              "Authorization": `Bearer ${token}`,
+             },
+        });
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}
+
 const setIssue = async ( formData, id ) =>{
     const token = localStorage.getItem("token");
     try{
@@ -126,5 +164,7 @@ export default {
   getIssues,
   setIssue,
   setPassword,
-  resetFetch
+  resetFetch,
+  getProjectById,
+  updateProject
 }
