@@ -199,27 +199,30 @@ const createUserWithEmail = async (email) => {
           font-family: Arial, sans-serif;
           margin: 0;
           padding: 0;
-          background-color: #f5f5f5;
-          color: #0F0F0F;
+          background-color: #0F0F0F;
+          color: #FFFFFF;
         }
         .container {
           max-width: 600px;
           margin: 0 auto;
-          background-color: #ffffff;
+          background-color: #0F0F0F;
           border-radius: 8px;
           overflow: hidden;
-          box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+          border: 1px solid #333333;
+          box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
         .header {
           background-color: #0F0F0F;
           color: white;
           padding: 20px;
           text-align: center;
+          border-bottom: 1px solid #333333;
         }
         .header h1 {
           margin: 0;
           font-size: 24px;
           font-weight: 700;
+          color: #FFFFFF;
         }
         .logo {
           display: flex;
@@ -234,6 +237,10 @@ const createUserWithEmail = async (email) => {
         .content {
           padding: 30px 20px;
           line-height: 1.5;
+          color: #FFFFFF;
+        }
+        .content p {
+          color: #FFFFFF !important;
         }
         .button-container {
           text-align: center;
@@ -242,7 +249,7 @@ const createUserWithEmail = async (email) => {
         .button {
           display: inline-block;
           background-color: #7CE55E;
-          color: #0F0F0F;
+          color: #0F0F0F !important;
           text-decoration: none;
           padding: 14px 24px;
           border-radius: 25px;
@@ -253,21 +260,45 @@ const createUserWithEmail = async (email) => {
         }
         .button:hover {
           background-color: #65CC47;
+          color: #0F0F0F !important;
+        }
+        .button:visited {
+          color: #0F0F0F !important;
         }
         .footer {
-          background-color: #f5f5f5;
+          background-color: #151515;
           padding: 20px;
           text-align: center;
-          color: #666;
+          color: #999999;
           font-size: 12px;
+          border-top: 1px solid #333333;
+        }
+        .footer p {
+          color: #999999 !important;
         }
         .icons {
           margin: 15px 0;
           text-align: center;
+          display: flex;
+          justify-content: center;
         }
         .icons img {
           height: 30px;
           margin: 0 5px;
+        }
+        a {
+          color: #7CE55E !important;
+          text-decoration: underline;
+        }
+        a:hover {
+          color: #65CC47 !important;
+        }
+        a:visited {
+          color: #7CE55E !important;
+        }
+        h2 {
+          color: #FFFFFF !important;
+          margin-bottom: 20px;
         }
       </style>
     </head>
@@ -275,36 +306,38 @@ const createUserWithEmail = async (email) => {
       <div class="container">
         <div class="header">
           <div class="logo">
-            <!-- <img src="https://tu-dominio.com/path/to/icon1.png" alt="Logo 1"> -->
-            <!-- <img src="https://tu-dominio.com/path/to/icon2.png" alt="Logo 2"> -->
-            <!-- <img src="https://tu-dominio.com/path/to/icon3.png" alt="Logo 3"> -->
-            <h1>terra ripple</h1>
+            <img src="https://i.imgur.com/KwCgOBD.png" alt="Logo 1" style="height: 40px;">
+            <img src="https://i.imgur.com/KoHaqQM.png" alt="Logo 2" style="height: 40px;">
+            <img src="https://i.imgur.com/VFP5Bse.png" alt="Logo 3" style="height: 40px;">
+            <h1 style="color: #FFFFFF;">terra ripple</h1>
           </div>
         </div>
         
         <div class="content">
-          <h2>Welcome to Terra Ripple!</h2>
-          <p>You've been invited to join the Terra Ripple platform.</p>
-          <p>To activate your account and set your password, please click the button below:</p>
+          <h2 style="color: #FFFFFF;">Welcome to Terra Ripple!</h2>
+          <p style="color: #FFFFFF;">You've been invited to join the Terra Ripple platform.</p>
+          <p style="color: #FFFFFF;">To activate your account and set your password, please click the button below:</p>
           
           <div class="button-container">
-            <a href="${activationUrl}" class="button">Activate Account</a>
+            <a href="${activationUrl}" class="button" style="color: #0F0F0F !important;">Activate Account</a>
           </div>
           
-          <p>If the button doesn't work, copy and paste this link into your browser:</p>
-          <p><a href="${activationUrl}">${activationUrl}</a></p>
+          <p style="color: #FFFFFF;">If the button doesn't work, copy and paste this link into your browser:</p>
+          <p style="color: #FFFFFF;"><a href="${activationUrl}" style="color: #7CE55E !important;">${activationUrl}</a></p>
           
-          <p>This link will expire in 24 hours.</p>
+          <p style="color: #FFFFFF;">This link will expire in 24 hours.</p>
           
-          <p>Thank you,<br>The Terra Ripple Team</p>
+          <p style="color: #FFFFFF;">Thank you,<br>The Terra Ripple Team</p>
         </div>
         
         <div class="footer">
           <div class="icons">
-            <!-- Aquí puedes incluir los íconos del footer si los tienes disponibles online -->
+            <img src="https://i.imgur.com/KwCgOBD.png" alt="Logo 1" style="height: 40px;">
+            <img src="https://i.imgur.com/KoHaqQM.png" alt="Logo 2" style="height: 40px;">
+            <img src="https://i.imgur.com/VFP5Bse.png" alt="Logo 3" style="height: 40px;">
           </div>
-          <p>© ${new Date().getFullYear()} Terra Ripple. All rights reserved.</p>
-          <p>If you didn't request this email, please ignore it.</p>
+          <p style="color: #999999;">© ${new Date().getFullYear()} Terra Ripple. All rights reserved.</p>
+          <p style="color: #999999;">If you didn't request this email, please ignore it.</p>
         </div>
       </div>
     </body>
