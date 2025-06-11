@@ -4,17 +4,27 @@ import ProjectCreationForm from "../../components/ProjectCreationForm/ProjectCre
 import { useState, useEffect } from 'react';
 import fetchServer from '../../utils/fetchServer';
 
+
 const Admin = () =>{
   const [projects, setProjects] = useState([]);
   const [reloadFlag, setReloadFlag] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
   const [showEditForm, setShowEditForm] = useState(false);
-    useEffect(() => {
-    const fetchProjects = async () =>{
-      setProjects(await fetchServer.getProjects());
-    }
-    fetchProjects();
-  }, [reloadFlag])
+useEffect(() => {
+  const fetchProjectsWithTaskCounts = async () => {
+    const baseProjects = await fetchServer.getProjects();
+    const projectsWithCounts = await Promise.all(
+      baseProjects.map(async (project) => {
+        const count = await fetchServer.getTaskCount(project._id);
+        console.log("Does the count", count);
+        return { ...project, taskCount: count };
+      })
+    );
+    setProjects(projectsWithCounts);
+  };
+
+  fetchProjectsWithTaskCounts();
+}, [reloadFlag]);
 
   return (
     <div className={style.container}>

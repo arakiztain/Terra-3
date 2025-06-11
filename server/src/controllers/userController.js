@@ -176,7 +176,7 @@ async function associateAccounts(email, projectName) {
   }
 }
 
-const createUserWithEmail = async ( email ) =>{
+const createUserWithEmail = async (email) => {
   const token = createActivationToken(email);
   const newUser = new userModel({
     email,
@@ -184,18 +184,172 @@ const createUserWithEmail = async ( email ) =>{
     activationToken: token,
   });
 
-  console.log("This was the token generated");
-  console.log(token);
-
-
   await newUser.save();
   const activationUrl = `${process.env.CLIENT_URL}/user/setpass/${token}`;
+  
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Terra Ripple - Activate your account</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: #0F0F0F;
+          color: #FFFFFF;
+        }
+        .container {
+          max-width: 600px;
+          margin: 0 auto;
+          background-color: #0F0F0F;
+          border-radius: 8px;
+          overflow: hidden;
+          border: 1px solid #333333;
+          box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .header {
+          background-color: #0F0F0F;
+          color: white;
+          padding: 20px;
+          text-align: center;
+          border-bottom: 1px solid #333333;
+        }
+        .header h1 {
+          margin: 0;
+          font-size: 24px;
+          font-weight: 700;
+          color: #FFFFFF;
+        }
+        .logo {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-bottom: 10px;
+        }
+        .logo img {
+          height: 40px;
+          margin: 0 5px;
+        }
+        .content {
+          padding: 30px 20px;
+          line-height: 1.5;
+          color: #FFFFFF;
+        }
+        .content p {
+          color: #FFFFFF !important;
+        }
+        .button-container {
+          text-align: center;
+          margin: 30px 0;
+        }
+        .button {
+          display: inline-block;
+          background-color: #7CE55E;
+          color: #0F0F0F !important;
+          text-decoration: none;
+          padding: 14px 24px;
+          border-radius: 25px;
+          font-weight: bold;
+          border: none;
+          font-size: 16px;
+          transition: background-color 0.3s;
+        }
+        .button:hover {
+          background-color: #65CC47;
+          color: #0F0F0F !important;
+        }
+        .button:visited {
+          color: #0F0F0F !important;
+        }
+        .footer {
+          background-color: #151515;
+          padding: 20px;
+          text-align: center;
+          color: #999999;
+          font-size: 12px;
+          border-top: 1px solid #333333;
+        }
+        .footer p {
+          color: #999999 !important;
+        }
+        .icons {
+          margin: 15px 0;
+          text-align: center;
+          display: flex;
+          justify-content: center;
+        }
+        .icons img {
+          height: 30px;
+          margin: 0 5px;
+        }
+        a {
+          color: #7CE55E !important;
+          text-decoration: underline;
+        }
+        a:hover {
+          color: #65CC47 !important;
+        }
+        a:visited {
+          color: #7CE55E !important;
+        }
+        h2 {
+          color: #FFFFFF !important;
+          margin-bottom: 20px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <div class="logo">
+            <img src="https://i.imgur.com/KwCgOBD.png" alt="Logo 1" style="height: 40px;">
+            <img src="https://i.imgur.com/KoHaqQM.png" alt="Logo 2" style="height: 40px;">
+            <img src="https://i.imgur.com/VFP5Bse.png" alt="Logo 3" style="height: 40px;">
+            <h1 style="color: #FFFFFF;">terra ripple</h1>
+          </div>
+        </div>
+        
+        <div class="content">
+          <h2 style="color: #FFFFFF;">Welcome to Terra Ripple!</h2>
+          <p style="color: #FFFFFF;">You've been invited to join the Terra Ripple platform.</p>
+          <p style="color: #FFFFFF;">To activate your account and set your password, please click the button below:</p>
+          
+          <div class="button-container">
+            <a href="${activationUrl}" class="button" style="color: #0F0F0F !important;">Activate Account</a>
+          </div>
+          
+          <p style="color: #FFFFFF;">If the button doesn't work, copy and paste this link into your browser:</p>
+          <p style="color: #FFFFFF;"><a href="${activationUrl}" style="color: #7CE55E !important;">${activationUrl}</a></p>
+          
+          <p style="color: #FFFFFF;">This link will expire in 24 hours.</p>
+          
+          <p style="color: #FFFFFF;">Thank you,<br>The Terra Ripple Team</p>
+        </div>
+        
+        <div class="footer">
+          <div class="icons">
+            <img src="https://i.imgur.com/KwCgOBD.png" alt="Logo 1" style="height: 40px;">
+            <img src="https://i.imgur.com/KoHaqQM.png" alt="Logo 2" style="height: 40px;">
+            <img src="https://i.imgur.com/VFP5Bse.png" alt="Logo 3" style="height: 40px;">
+          </div>
+          <p style="color: #999999;">© ${new Date().getFullYear()} Terra Ripple. All rights reserved.</p>
+          <p style="color: #999999;">If you didn't request this email, please ignore it.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
   await sendEmail(
     email,
-    "Active your account in Terra Ripple",
-    `<p>Click here to activate your account and set your password:</p>
-    <a href="${activationUrl}">Terra Ripple</a>`
+    "Activate your account in Terra Ripple",
+    htmlContent
   );
+  
   return newUser;
 }
 

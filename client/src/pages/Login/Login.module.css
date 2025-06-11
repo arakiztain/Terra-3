@@ -134,3 +134,7 @@
   font-size: 1rem;
   color: #FFFFFF;
 }
+
+.toast{
+    font-family: "UncutSans" !important;
+}

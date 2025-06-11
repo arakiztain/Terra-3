@@ -16,3 +16,7 @@ body{
     color:white;
     background-color:#0F0F0F;
 }
+
+.Toastify__progress-bar {
+  background: white !important;
+}

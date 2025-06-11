@@ -1,60 +1,92 @@
 import styles from './IssueDisplay.module.css';
-import IssueCard from '../IssueCard/IssueCard';
 import bobaBlue from '../../assets/icons/bobaBlue.png';
 import dianaLime from '../../assets/icons/dianaLime.png';
 import formaOrange from '../../assets/icons/formaOrange.png';
 import prismoPink from '../../assets/icons/prismoPink.png';
+import IssueSection from '../IssueSection/IssueSection';
 const IssueDisplay = ({ issues }) => {
-    console.log(issues);
-    return(
-        <div className={styles.wrapper}>
-            {issues.filter(issue => issue.list.name === "copy revision").length > 0 && (
-            <div className={`${styles.revision} ${styles.container}`}>
-                <div className={styles.issueHeader}>
-                    <img src={bobaBlue} alt="bobaBlue" className={styles.icon}/>
-                    <div className={styles.headerText}>
-                        <h2 className={styles.headerTitle}>Copy revisions</h2>
-                        <span>Texts to be changed</span>
-                    </div>
-                </div>
-                {issues.filter(issue => issue.list.name === "copy revision").map(issue => <IssueCard className={styles.copyCards} key={issue._id} issue={issue} />)}                
-            </div>)}
-            {issues.filter(issue => issue.list.name === "requested change").length > 0 && (
-            <div className={`${styles.changes} ${styles.container}`}>
-                <div className={styles.issueHeader}>
-                    <img src={dianaLime} alt="dianaLime" className={styles.icon}/>
-                    <div className={styles.headerText}>
-                        <h2 className={styles.headerTitle}>Requested Changes</h2>
-                        <span>Changes requested by the reviewer</span>
-                    </div>
-                </div>
-                {issues.filter(issue => issue.list.name === "requested change").map(issue => <IssueCard className={styles.changeCards} key={issue._id} issue={issue} />)}                
-            </div>)}
-            {issues.filter(issue => issue.list.name === "design issue").length > 0 && (
-            <div className={`${styles.design} ${styles.container}`}>
-                <div className={styles.issueHeader}>
-                    <img src={formaOrange} alt="formaOrange" className={styles.icon}/>
-                    <div className={styles.headerText}>
-                        <h2 className={styles.headerTitle}>Design Issues</h2>
-                        <span>Design-related issues</span>
-                    </div>
-                </div>
-                {issues.filter(issue => issue.list.name === "design issue").map(issue => <IssueCard className={styles.designCards} key={issue._id} issue={issue} />)}                
-            </div>)}
-            {issues.filter(issue => issue.list.name === "new item").length > 0 && (
-            <div className={`${styles.item} ${styles.container}`}>
-                <div className={styles.issueHeader}>
-                    <img src={prismoPink} alt="prismoPink" className={styles.icon}/>
-                    <div className={styles.headerText}>
-                        <h2 className={styles.headerTitle}>New Items</h2>
-                        <span>New items requested</span>
-                        </div>
-                </div>
-                {issues.filter(issue => issue.list.name === "new item").map(issue => <IssueCard className={styles.itemCards} key={issue._id} issue={issue} />)}                
-            </div>
-            )}
-        </div>
-    )
-}
+  if (issues.length === 0) {
+    return <div className={styles.noIssues}>You have no issues to show!</div>;
+  }
+
+  const sections = [
+    {
+      title: 'Copy revisions',
+      description: 'Texts to be changed',
+      icon: bobaBlue,
+      listName: 'copy revision',
+      className: 'revision',
+      cardClassName: 'copyCards',
+    },
+    {
+      title: 'Requested Changes',
+      description: 'Changes requested by the reviewer',
+      icon: dianaLime,
+      listName: 'requested change',
+      className: 'changes',
+      cardClassName: 'changeCards',
+    },
+    {
+      title: 'Design Issues',
+      description: 'Design-related issues',
+      icon: formaOrange,
+      listName: 'design issues',
+      className: 'design',
+      cardClassName: 'designCards',
+    },
+    {
+      title: 'New Items',
+      description: 'New items requested',
+      icon: prismoPink,
+      listName: 'new item',
+      className: 'item',
+      cardClassName: 'itemCards',
+    },
+  ];
+    const pendingIssues = issues.filter(issue => issue.status.status === "to do" || issue.status.status === "working");
+    const toReviewIssues = issues.filter(issue => issue.status.status === "review required");
+    const resolvedIssues = issues.filter(issue => issue.status.status === "complete");
+  return (
+    <div className={styles.wrapper}>
+    <span>This is toreview</span>
+    {sections.map(section => (
+        <IssueSection
+          key={section.listName}
+          title={section.title}
+          description={section.description}
+          icon={section.icon}
+          issues={toReviewIssues.filter(toReviewIssues => toReviewIssues.list.name === section.listName)}
+          className={section.className}
+          cardClassName={section.cardClassName}
+          review={true}
+        />
+      ))}
+      <span>This is pending</span>
+      {sections.map(section => (
+        <IssueSection
+          key={section.listName}
+          title={section.title}
+          description={section.description}
+          icon={section.icon}
+          issues={pendingIssues.filter(pendingIssues => pendingIssues.list.name === section.listName)}
+          className={section.className}
+          cardClassName={section.cardClassName}
+        />
+      ))}
+      <span>This is resolved</span>
+    {sections.map(section => (
+        <IssueSection
+          key={section.listName}
+          title={section.title}
+          description={section.description}
+          icon={section.icon}
+          issues={resolvedIssues.filter(resolvedIssues => resolvedIssues.list.name === section.listName)}
+          className={section.className}
+          cardClassName={section.cardClassName}
+        />
+      ))}
+    </div>
+  );
+};
 
 export default IssueDisplay;
