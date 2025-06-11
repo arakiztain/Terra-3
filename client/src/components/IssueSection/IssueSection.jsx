@@ -1,7 +1,7 @@
 import IssueCard from '../IssueCard/IssueCard';
 import styles from './IssueDisplay.module.css';
 
-const IssueSection = ({ title, description, icon, issues, className, cardClassName, review }) => {
+const IssueSection = ({ title, description, icon, issues, className, cardClassName, review, forceReload }) => {
   if (issues.length === 0) return null;
 
   return (
@@ -14,7 +14,7 @@ const IssueSection = ({ title, description, icon, issues, className, cardClassNa
         </div>
       </div>
       {issues.map(issue => (
-        <IssueCard review={review} className={styles[cardClassName]} key={issue._id} issue={issue} />
+        <IssueCard review={review} forceReload={forceReload} className={styles[cardClassName]} key={issue._id} issue={issue} />
       ))}
     </div>
   );

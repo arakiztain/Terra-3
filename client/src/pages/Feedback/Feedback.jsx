@@ -18,16 +18,21 @@ const Feedback = () => {
     const [issues, setIssues] = useState([]);
     const [project, setProject] = useState([]);
     const [toggleForm, setToggleForm] = useState(false);
+    const [reload, setReload] = useState(false);
     const [toggleSpinner, setToggleSpiner] = useState(true);
     const { id } = useParams();
     const navigate = useNavigate();
+        const forceReload = () => {
+        setReload(!reload);
+    };
+
     useEffect(() => {
         const fetchIssues = async () =>{
             setIssues(await fetchServer.getIssues(id));
             setToggleSpiner(false);
         }
         fetchIssues();
-    }, [toggleForm]);
+    }, [toggleForm, reload]);
 
     useEffect(() => {
         const fetchProject = async () =>{
@@ -39,7 +44,9 @@ const Feedback = () => {
     const handleToggleForm = () => {
         setToggleForm(!toggleForm);
     }
+    
 
+    
     return(
         <>  
         
@@ -65,7 +72,7 @@ const Feedback = () => {
                     </div>
                 </div>
                 : <>
-                    {toggleSpinner ? <LoadSpinner size="fullscreen"/> : <IssueDisplay issues={issues}/>}
+                    {toggleSpinner ? <LoadSpinner size="fullscreen"/> : <IssueDisplay forceReload={forceReload} issues={issues}/>}
                 </>
                 }
                 <img src={guideIcon} onClick={() => navigate('/guide')} className={styles.guideIcon} alt="Button to open the guide"/>

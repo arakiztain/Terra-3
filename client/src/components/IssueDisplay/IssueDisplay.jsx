@@ -5,7 +5,7 @@ import formaOrange from '../../assets/icons/formaOrange.png';
 import prismoPink from '../../assets/icons/prismoPink.png';
 import IssueSection from '../IssueSection/IssueSection';
 
-const IssueDisplay = ({ issues }) => {
+const IssueDisplay = ({ issues, forceReload }) => {
   if (issues.length === 0) {
     return <div className={styles.noIssues}>You have no issues to show!</div>;
   }
@@ -66,6 +66,7 @@ const IssueDisplay = ({ issues }) => {
                   className={section.className}
                   cardClassName={section.cardClassName}
                   review={true}
+                  forceReload={forceReload}
                 />
               ))}
             </div>
