@@ -5,7 +5,6 @@ import IssueDisplay from '../../components/IssueDisplay/IssueDisplay';
 import { useState, useEffect } from "react";
 import fetchServer from '../../utils/fetchServer';
 import { useParams } from "react-router-dom";
-import chatbotIcon from '../../assets/icons/chatbotIcon.png';
 import guideIcon from '../../assets/icons/guideIcon.png';
 import { useNavigate } from 'react-router-dom';
 import icon1 from "../../assets/_Terraforms/Individual/SVG/Melos-Blue.svg";
@@ -26,7 +25,7 @@ const Feedback = () => {
             setToggleSpiner(false);
         }
         fetchIssues();
-    }, []);
+    }, [toggleForm]);
 
     useEffect(() => {
         const fetchProject = async () =>{
@@ -43,12 +42,12 @@ const Feedback = () => {
         <>  
         
             <div className={styles.projectHeader}>
-                <ProjectHeader siteUrl={project.url} newIssueHandler={handleToggleForm} />
+                <ProjectHeader siteUrl={project.url} formState={toggleForm} newIssueHandler={handleToggleForm} />
             </div>
                 <TourIssueForm />
                 {toggleForm ? 
                 <div className={styles.formContainer}>
-                    <FeedbackForm project={project}/> 
+                    <FeedbackForm project={project} toggleForm={handleToggleForm}/> 
                     <div className={styles.twoFifthsScreen}>
                         <div className={styles.lettering}>
                             <h1 className={styles.letteringText}>Tell us</h1>
@@ -66,8 +65,6 @@ const Feedback = () => {
                     {toggleSpinner ? <LoadSpinner size="fullscreen"/> : <IssueDisplay issues={issues}/>}
                 </>
                 }
-
-                <img src={chatbotIcon} onClick={() => console.log("Open Chatbot")} className={styles.chatbotIcon} alt="Button to open the chatbot"/>
                 <img src={guideIcon} onClick={() => navigate('/guide')} className={styles.guideIcon} alt="Button to open the guide"/>
         </>
     )

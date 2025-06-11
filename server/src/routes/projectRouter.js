@@ -17,4 +17,12 @@ router.put("/:projectId", isAdmin, projectController.assignProject);
 
 router.delete("/:projectId", isAdmin, projectController.deleteProject);
 
+router.get("/:projectId/task-count", projectController.getTaskCount);
+
+router.post("/:projectId/reminder", projectController.sendReminderEmail);
+
 export default router;
+
+
+
+

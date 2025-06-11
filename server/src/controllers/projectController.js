@@ -3,6 +3,7 @@ import User from "../models/user.js";
 import axios from "axios";
 import userController from "./userController.js";
 import { NotFoundError, ForbiddenError, UserNotFound, ProjectAlreadyExists, ProjectNotFound, UsersAssigned} from "../utils/errors.js";
+import { sendEmail } from "../utils/sendEmail.js";
 
 async function createProject(req, res, next) {
   try {
@@ -40,11 +41,10 @@ async function createProject(req, res, next) {
     //CreateSpace (project)
     
     const responseSpace = await axios.post(
-    `https://api.clickup.com/api/v2/team/${workSpaceId}/space`,
-    {
-      name: title/* ,
-      content: description */
-    },
+      `https://api.clickup.com/api/v2/team/${workSpaceId}/space`,
+      {
+        name: title
+      },
       {
         headers: {
           Authorization: process.env.CLICKUP_API_TOKEN,
@@ -55,43 +55,33 @@ async function createProject(req, res, next) {
     
     const spaceId = responseSpace.data.id;
 
-    const listNames = ["copy revision", "design issues", "requested change", "new item"];
-    const createdLists = [];
-
     //Crear FolderId con los equipos de cada proyecto (space)
-    const responseFolder = await axios.post(
-    `https://api.clickup.com/api/v2/space/${spaceId}/folder`,
-    {
-      //name : folderName (equipo)
-      name: "Folder prueba"
-    },
+      const responseFolder = await axios.post(
+        `https://api.clickup.com/api/v2/space/${spaceId}/folder_template/${process.env.CLICKUP_FOLDER_TEMPLATE_ID}`,
+        { options: { return_immediately: false }, name: 'Ripple' }, // body payload only
+        {
+          headers: {
+            Accept: 'application/json',
+            Authorization: process.env.CLICKUP_API_TOKEN,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+    const folderId = responseFolder.data.id;
+    console.log("This is the folderId,", folderId);
+    const responseList = await axios.get(
+    `https://api.clickup.com/api/v2/folder/${folderId}/list`,
     {
       headers: {
         Authorization: process.env.CLICKUP_API_TOKEN,
         "Content-Type": "application/json"
       }
     }
-  );
+    );
 
-    const folderId = responseFolder.data.id;
-    for (const name of listNames) {
-      const responseList = await axios.post(
-        `https://api.clickup.com/api/v2/folder/${folderId}/list`,
-        { name },
-        {
-          headers: {
-            Authorization: process.env.CLICKUP_API_TOKEN,
-            "Content-Type": "application/json"
-          }
-        }
-      );
-
-      createdLists.push({
-        name,
-        listId: responseList.data.id
-      });
-    }
-
+    const createdLists = responseList.data.lists.map(list => ({ listId: list.id, name: list.name }));
+    console.log("createdLists", createdLists);
     const project = await Project.create({
       title,
       description,
@@ -109,7 +99,7 @@ async function createProject(req, res, next) {
 
   } catch (error) {
       console.error("ClickUp Error:", error.response?.data || error.message);
-  next(error);
+    next(error);
   }
 };
 
@@ -286,6 +276,57 @@ async function deleteProject(req, res, next) {
   }
 };
 
+export async function getTaskCount(req, res) {
+  //TODO Coger solo las tasks que cuentan
+  try {
+    const project = await Project.findById(req.params.projectId);
+    if (!project) return res.status(404).json({ error: "Project not found" });
+
+    const listIds = project.clickupLists.map(list => list.listId);
+    let totalTasks = 0;
+
+    for (const listId of listIds) {
+      const response = await axios.get(
+        `https://api.clickup.com/api/v2/list/${listId}/task?include_closed=true`,
+        {
+          headers: { Authorization: process.env.CLICKUP_API_TOKEN }
+        }
+      );
+      totalTasks += response.data.tasks.length;
+    }
+
+    res.json({ count: totalTasks });
+  } catch (error) {
+    console.error("Error in getTaskCount:", error.response?.data || error.message);
+    res.status(500).json({ error: "Failed to retrieve task count" });
+  }
+}
+
+async function sendReminderEmail(req, res, next) {
+  try {
+    const projectId = req.params.projectId.trim();
+
+    const project = await Project.findById(projectId).populate("users", "email");
+    if (!project) throw new ProjectNotFound();
+
+    const emails = project.users.map(user => user.email).filter(Boolean);
+
+    await Promise.all(
+      emails.map(email =>
+        sendEmail(
+          email,
+          `You have tasks pending for feedback!`,
+          `<p>This is a reminder to check your tasks for the project <strong>${project.title}</strong>.</p>`
+        )
+      )
+    );
+
+    res.status(200).json({ message: `Reminders sent to ${emails.length} users.` });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export default {
   createProject,
   getAllProjects,
@@ -293,5 +334,6 @@ export default {
   deleteProject,
   updateProject,
   assignProject,
-  deleteProject
+  getTaskCount,
+  sendReminderEmail
 };

@@ -1,8 +1,7 @@
 import styles from "./ProjectHeader.module.css"
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-
-const ProjectHeader = ({ newIssueHandler, siteUrl }) => {
+const ProjectHeader = ({ newIssueHandler, siteUrl, formState }) =>{
     const [menuOpen, setMenuOpen] = useState(false);
     const navigate = useNavigate();
     
@@ -14,7 +13,7 @@ const ProjectHeader = ({ newIssueHandler, siteUrl }) => {
     return(
         <>
             <a id="joyRide-project" className={styles.projectLink} href={siteUrl}><button className={styles.projectLinkButton}>My project</button></a>
-            <button id="joyRide-issue" className={styles.issueButton} onClick={()=> newIssueHandler()}>New Issue</button>
+            <button id="joyRide-issue" className={styles.issueButton} onClick={()=> newIssueHandler()}>{formState ? "See issues" : "New issue"}</button>
             <div className={styles.menuContainer} onClick={() => setMenuOpen(!menuOpen)}>
                 <button className={styles.menuButton}>Menu</button>
                 {menuOpen && <div className={styles.menuDropdown}>
