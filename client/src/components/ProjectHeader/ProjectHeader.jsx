@@ -1,7 +1,16 @@
 import styles from "./ProjectHeader.module.css"
 import { useState } from "react";
-const ProjectHeader = ({ newIssueHandler, siteUrl }) =>{
+import { useNavigate } from 'react-router-dom';
+
+const ProjectHeader = ({ newIssueHandler, siteUrl }) => {
     const [menuOpen, setMenuOpen] = useState(false);
+    const navigate = useNavigate();
+    
+    const handleNavigation = (path) => {
+        setMenuOpen(false);
+        navigate(path);
+    };
+    
     return(
         <>
             <a id="joyRide-project" className={styles.projectLink} href={siteUrl}><button className={styles.projectLinkButton}>My project</button></a>
@@ -12,7 +21,7 @@ const ProjectHeader = ({ newIssueHandler, siteUrl }) =>{
                     <a className={styles.menuProfile} href="">Profile</a>
                     <a className={styles.menuRecord} href="">Record</a>
                     <a className={styles.menuContact} href="">Contact</a>
-                    <a className={styles.menuGuide} href="">Guide</a>
+                    <a className={styles.menuGuide} onClick={() => handleNavigation('/guide')}>Guide</a>
                     <a className={styles.menuTerrahq} href="">Terra hq</a>
                     <a className={styles.menuSignout} href="">Sign out</a>
                 </div>}

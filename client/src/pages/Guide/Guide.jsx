@@ -1,91 +1,126 @@
 import React from 'react';
 import styles from './Guide.module.css';
+import icon1 from "../../assets/_Terraforms/Individual/SVG/Punky-Green.svg";
+import icon2 from "../../assets/_Terraforms/Individual/SVG/Mistyk-Blue.svg";
+import icon3 from "../../assets/_Terraforms/Individual/SVG/Melos-Pink.svg";
 
 const Guide = () => {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>
-        DOCUMENTACIÓN DE USO - PÁGINA DE LOGIN DE TERRA RIPPLE
+        USER GUIDE
+        <div className={styles.subtitle}>TERRA RIPPLE</div>
       </h1>
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>OBJETIVO</h2>
+        <h2 className={styles.sectionTitle}>GETTING STARTED</h2>
         <p className={styles.text}>
-          Describir detalladamente el funcionamiento de la página de login de Terra Ripple para que un asistente conversacional (chatbot) pueda guiar al usuario en su uso.
+          Welcome to Terra Ripple, the platform that simplifies project management and feedback tracking. This guide will help you make the most of all the available features.
         </p>
       </section>
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>ESTRUCTURA DE LA INTERFAZ</h2>
+        <h2 className={styles.sectionTitle}>PLATFORM ACCESS</h2>
         <ol className={styles.list}>
           <li className={styles.listItem}>
-            <strong>Encabezado:</strong>
-            <p>Logotipo y nombre de la plataforma: "terra ripple", ubicado en la parte superior izquierda.</p>
+            <strong>Login:</strong>
+            <p>To access Terra Ripple, enter your username and password on the login screen, and click "Log in!".</p>
           </li>
           <li className={styles.listItem}>
-            <strong>Mensaje de bienvenida:</strong>
-            <p>Texto grande y visible en pantalla: "Hello again!". Indica que es una interfaz para usuarios recurrentes.</p>
+            <strong>Forgot your password?</strong>
+            <p>If you can't remember your password, click on "Forgot your password?" on the login screen. We'll send instructions to reset it to the email associated with your account.</p>
           </li>
           <li className={styles.listItem}>
-            <strong>Formulario de login:</strong>
-            <ul className={styles.list}>
-              <li className={styles.listItem}>Campo de texto <strong>"Username*"</strong> (obligatorio): aquí el usuario debe ingresar su nombre de usuario o dirección de correo electrónico asociada a su cuenta.</li>
-              <li className={styles.listItem}>Campo de texto <strong>"Password*"</strong> (obligatorio): aquí el usuario debe ingresar su contraseña de acceso.</li>
-              <li className={styles.listItem}>Botón <strong>"Log in!"</strong>: al presionarlo, se procesan los datos introducidos y se intenta autenticar al usuario.</li>
-            </ul>
+            <strong>First access:</strong>
+            <p>If this is your first time accessing the platform after an administrator has created your account, check your email for the activation link to set your password.</p>
           </li>
         </ol>
       </section>
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>FUNCIONALIDAD DEL LOGIN</h2>
+        <h2 className={styles.sectionTitle}>MAIN NAVIGATION</h2>
         <ol className={styles.list}>
           <li className={styles.listItem}>
-            <strong>Validación de campos:</strong>
-            <p>Ambos campos son obligatorios. El sistema no permitirá iniciar sesión si alguno está vacío.</p>
+            <strong>Dashboard:</strong>
+            <p>After logging in, you'll access the main dashboard where you can see all your active projects and important notifications.</p>
           </li>
           <li className={styles.listItem}>
-            <strong>Acción al hacer clic en “Log in!”:</strong>
-            <ul className={styles.list}>
-              <li className={styles.listItem}>El sistema verifica las credenciales ingresadas.</li>
-              <li className={styles.listItem}>Si las credenciales son correctas, se redirige al usuario a su panel de control.</li>
-              <li className={styles.listItem}>Si son incorrectas, se muestra un mensaje de error solicitando revisar el nombre de usuario o la contraseña.</li>
-            </ul>
+            <strong>Projects:</strong>
+            <p>Access each project by clicking on its card from the dashboard. You'll be able to see details, pending tasks, and current progress.</p>
+          </li>
+          <li className={styles.listItem}>
+            <strong>Menu:</strong>
+            <p>Use the menu button in the top-right corner to navigate to different sections: Profile, FAQ, Contact, Guide, and Terra HQ.</p>
           </li>
         </ol>
       </section>
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>RECOMENDACIONES PARA EL USUARIO</h2>
+        <h2 className={styles.sectionTitle}>ISSUE MANAGEMENT</h2>
+        <ol className={styles.list}>
+          <li className={styles.listItem}>
+            <strong>Reporting an issue:</strong>
+            <p>To report an error or problem, access the corresponding project and click on the "New Issue" button. Fill out the form with as much information as possible.</p>
+          </li>
+          <li className={styles.listItem}>
+            <strong>Important data when reporting:</strong>
+            <ul className={styles.list}>
+              <li className={styles.listItem}>Descriptive name for the issue</li>
+              <li className={styles.listItem}>Request type (copy revision, design issues, etc.)</li>
+              <li className={styles.listItem}>Browser and device used</li>
+              <li className={styles.listItem}>Detailed description of the problem</li>
+              <li className={styles.listItem}>URL of the page where it occurred</li>
+              <li className={styles.listItem}>Screenshots (if possible)</li>
+            </ul>
+          </li>
+          <li className={styles.listItem}>
+            <strong>Issue tracking:</strong>
+            <p>Once reported, you can track the status of your issue from the project page. You'll receive notifications when updates are made.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>ADDITIONAL FEATURES</h2>
         <ul className={styles.list}>
-          <li className={styles.listItem}>Asegurarse de que el teclado no esté en mayúsculas activadas al escribir la contraseña.</li>
-          <li className={styles.listItem}>Verificar que los datos introducidos sean correctos antes de iniciar sesión.</li>
-          <li className={styles.listItem}>En caso de olvidar la contraseña, buscar un enlace como “¿Olvidaste tu contraseña?” o contactar con soporte (si aplica).</li>
-          <li className={styles.listItem}>Si el usuario no tiene cuenta, debe buscar un enlace para registrarse en la página anterior.</li>
+          <li className={styles.listItem}>
+            <strong>Virtual assistant:</strong>
+            <p>Use our integrated chatbot to get quick answers to your frequently asked questions and solve minor problems without needing to contact support.</p>
+          </li>
+          <li className={styles.listItem}>
+            <strong>Advanced filters:</strong>
+            <p>In all sections that display lists (projects, tasks, issues), you have advanced filters to quickly find what you're looking for.</p>
+          </li>
+          <li className={styles.listItem}>
+            <strong>Project access:</strong>
+            <p>Access your project directly by clicking the "My project" button from the project page to view the website you're providing feedback on.</p>
+          </li>
         </ul>
       </section>
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>INDICACIONES PARA EL CHATBOT</h2>
+        <h2 className={styles.sectionTitle}>USEFUL TIPS</h2>
         <ul className={styles.list}>
           <li className={styles.listItem}>
-            <strong>Si el usuario pregunta cómo iniciar sesión:</strong>
-            <p>Indicarle que debe introducir su nombre de usuario y contraseña, y luego hacer clic en “Log in!”.</p>
+            <strong>Keep your browser updated:</strong>
+            <p>Maintain your browser up to date to enjoy all the functionalities and security improvements of Terra Ripple.</p>
           </li>
           <li className={styles.listItem}>
-            <strong>Si el usuario pregunta por campos obligatorios:</strong>
-            <p>Explicar que tanto “Username” como “Password” son obligatorios (marcados con *).</p>
+            <strong>Document issues thoroughly:</strong>
+            <p>When reporting issues, be as specific as possible and provide all steps to reproduce the problem. This will accelerate its resolution.</p>
           </li>
           <li className={styles.listItem}>
-            <strong>Si el usuario dice que no puede iniciar sesión:</strong>
-            <p>Sugerir que revise que los datos estén correctamente escritos, que no tenga activado el bloqueo de mayúsculas, o que restablezca la contraseña.</p>
-          </li>
-          <li className={styles.listItem}>
-            <strong>Si el usuario no tiene cuenta:</strong>
-            <p>Indicarle que revise si hay una opción para crear una cuenta o registrarse desde la pantalla anterior.</p>
+            <strong>Use the guided tour:</strong>
+            <p>If you're new to the platform, look for the tour buttons that will guide you through the different features and how to use them.</p>
           </li>
         </ul>
       </section>
+
+      <div className={styles.footer}>
+        <img src={icon1} className={styles.icon} alt="Terra Icon" />
+        <img src={icon2} className={styles.icon} alt="Terra Icon" />
+        <img src={icon3} className={styles.icon} alt="Terra Icon" />
+      </div>
     </div>
   );
 };
