@@ -43,7 +43,7 @@ def presupuesto(pres):
 
 def dias(fecha, fin):
     fecha = pd.to_datetime(fecha).values[0]
-    fin = fin.values[0]
+    fin = pd.to_datetime(fin).values[0]
     if np.isnan(fin):
         today = pd.Timestamp.today()
         # print(today)
@@ -89,6 +89,7 @@ def urgencia(df):
     ##################################
     ### POST: La función devuelve la culumna Urgency del DataFrame
     df_2 = df.copy()
+    print(df_2.columns)
     urg = []
     for i in df_2["Issue ID"]:
         # print(i)
@@ -103,12 +104,12 @@ def urgencia(df):
         #DESCOMENTAR ESTO##
         ###################
         pres = df_2[df_2["Issue ID"] == i]["Budget"].values[0]
-        date = df_2[df_2["Issue ID"] == i]["Input Date"]
+        fecha = df_2[df_2["Issue ID"] == i]["Input Date"]
         fin = df_2[df_2["Issue ID"] == i]["Deadline Real"]
         iter = df_2[df_2["Issue ID"] == i]["Iteraciones"].values[0]
         h_iter = df_2[df_2["Issue ID"] == i]["Iteraciones 30 dias"].values[0]
         brow = df_2[df_2["Issue ID"] == i]["Browser"].values[0]
-        tot = issue(iss) + na(not_a) + sentiment("Neutro") + hist_sent(-1) + presupuesto(pres) + dias(date,fin) + itera(iter) + hist_itera(h_iter) + browser(brow) + sentiment(sent) + hist_sent(h_sent)
+        tot = issue(iss) + na(not_a) + sentiment("Neutro") + hist_sent(-1) + presupuesto(pres) + dias(fecha,fin) + itera(iter) + hist_itera(h_iter) + browser(brow) + sentiment(sent) + hist_sent(h_sent)
 
 
         if tot >= 20:

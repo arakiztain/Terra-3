@@ -32,22 +32,29 @@ df_orig = sql_query(query1)
 
 df_project = sql_query(query2)
 
+df_orig.rename(columns={"Device ":"Device"}, inplace=True)
 
 df_orig["Input Date"] = pd.to_datetime(df_orig["Input Date"])
 
 
 ## DEFINIMOS FUNCIONES NECESARIAS
 
-
 def inicio_proyecto(proj_id):
-    return pd.to_datetime(df_project[df_project["Project ID"] == proj_id]["Beggining date"].values[0])
+    inicio = pd.to_datetime(df_project[df_project["Project ID"] == proj_id]["Beggining date"].values[0])
+    # print(inicio)
+    return inicio
 
 def timelapse(issue_id):
-    date = df[df["Issue ID"] == issue_id]["Input Date"].values[0]
-    date = pd.to_datetime(date)
-    # print(date)
-    proj_id = df[df["Issue ID"] == issue_id]["Project ID"]
-    return max(date - pd.DateOffset(days=30), inicio_proyecto(proj_id))
+    fecha = df[df["Issue ID"] == issue_id]["Input Date"].values[0]
+    fecha = pd.to_datetime(fecha)
+    # print(fecha,type(fecha))
+    proj_id = df[df["Issue ID"] == issue_id]["Project ID"].values[0]
+    date1 = fecha - pd.DateOffset(days=30)
+    # print(date1)
+    ini = inicio_proyecto(proj_id)
+    # print(ini)
+    res = max(date1, ini)
+    return res
 
 def suma_it(issue_id):
     fecha_30 = timelapse(issue_id)
@@ -85,29 +92,29 @@ def suma_neg(issue_id):
     return int(aux["Issue ID"].count())
 
 
-issue_type = {"Copy issues": "E1",
-              "Design issues": "E2",
-              "Request change": "E2",
-              "New item": "E3",
-              "Not addressing": "E4",
-              "Bug fix": "E3"}
+issue_type = {"Copy Issues": "E1",
+              "Design Issues": "E2",
+              "Request Change": "E2",
+              "New Item": "E3",
+              "Not Addressing": "E4",
+              "Bug Fix": "E3"}
 
 def nueva_entrada(lectura):
     dic = {
-            "Issue ID": [lectura["Issue ID"]],
-            "Project ID": [lectura["Project ID"]],
-            "Classifiation": [lectura["Classification"]],
-            "Screenshot": [bool(lectura["Screenshot"])],
+            "Issue ID": [lectura["requestId"]],
+            "Project ID": [lectura["projectId"]],
+            "Classification": [lectura["request_type"]],
+            "Screenshot": [int(bool(lectura["screenshotPresent"]))],
             "Urgency": [None],
-            "Input Date": [lectura["Input Date"]],
+            "Input Date": [pd.to_datetime(lectura["fecha"],origin = "unix",unit = "ms")],
             "Deadline Theor": [None],
             "Deadline Real": [None],
-            "Employee ID": [issue_type[lectura["Classification"]]],
-            "Device": [lectura["Device"]],
-            "Browser": [lectura["Browser"]],
-            "Page": [lectura["Page"]],
+            "Employee ID": [issue_type[lectura["request_type"]]],
+            "Device": [lectura["device"]],
+            "Browser": [lectura["browser"]],
+            "Page": [lectura["pageUrl"]],
             "Contact ID": [lectura["Contact ID"]],
-            "Request": [lectura["Request"]],
+            "Request": [lectura["description"]],
             "Iteraciones": [0],
             "Iteraciones 30 dias": [None],
             "Not addressing historico": [None],
@@ -119,9 +126,22 @@ def nueva_entrada(lectura):
 
 ### GENERAMOS DATAFRAME CON LA ENTRADA
 
-dic = {"Issue ID": "IPC10010111","Project ID": "PC1001","Input Date": "2025-06-10","Device": "Desktop","Page": "Home",
-       "Browser": "Chrome", "Contact ID": "COC101", "Request": "This is a very good job","Classification": "Bug fix",
-       "Screenshot": True}
+dic = {
+  "name": "fdss",
+  "request_type": "Design Issues",
+  "browser": "Firefox",
+  "device": "desktop",
+  "description": "asdasd",
+  "pageUrl": "asdasd",
+  "requestId": "2ba5def5-8ffa-420b-9e64-7398e84f9a3f",
+  "projectId": "PC1001",
+  "nombreProyecto": "projectname",
+  "fecha": 1749565515781,
+  "screenshotPresent": False,
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODQ4MDc4YWMzZTMzMDk3ZGYyNjY0M2QiLCJyb2xlIjoiY2xpZW50IiwiaWF0IjoxNzQ5NTY0NjkzLCJleHAiOjE3NDk2NTEwOTN9.MOJVTdBCTlWBdGTLGslioPaTsP7k2yi1uvGkWkN35YY",
+  "Contact ID": "COC1001"
+}
+
 print("Antes dataframe")
 entrada = nueva_entrada(dic)
 print(entrada.keys())
@@ -154,10 +174,12 @@ for i in df["Issue ID"]:
     suma_not.append(suma_na(i))
 suma_not
 
+sentimiento = {0: "Negative", 1: "Neutral", 2: "Positive"}
+
 sentiment = []
 for i in df["Issue ID"]:
     req = df[df["Issue ID"] == i]["Request"].values[0]
-    sentiment.append(ejecuta_modelo.predict_sentiment(req)[0])
+    sentiment.append(sentimiento[ejecuta_modelo.predict_sentiment(req)[0]])
 
 hist_neg = []
 for i in df["Issue ID"]:
@@ -188,6 +210,5 @@ df2["Input Date"] = pd.to_datetime(df2["Input Date"])
 
 df["Urgency"] = urg_func.urgencia(df2)
 
-df_orig = pd.concat([df_orig,df], axis = 0)
+df_orig = pd.concat([df_orig,df], axis = 0, ignore_index = True)
 
-print(df)
