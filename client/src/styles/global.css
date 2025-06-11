@@ -11,11 +11,6 @@
     --color-gray-dark: #222;
     --color-gray-darker: #111;
     --color-shadow: rgba(0, 0, 0, 0.7);
-
-    width: 100vw;
-    height: 100vh;
-    /* overflow-x: clip;
-    overflow-y: clip; */
 }
   
 * {

@@ -34,6 +34,13 @@
   margin-bottom: 1rem;
 }
 
+/* Esto es para romper palabras que sean muy largas (codigos hashes, etc) y no se desborde de la caja. */
+.card p {
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
 .title {
   font-size: 1.25rem;
   margin: 0 0 0.25rem 0;

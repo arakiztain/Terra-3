@@ -2,8 +2,10 @@ import { useState } from "react";
 import styles from "./ProjectList.module.css";
 
 const ProjectList = ({ projectList = [], onEditProject, userMode }) => {
+  console.log("projectList:", projectList, "type:", typeof projectList);
   const [search, setSearch] = useState("");
-const filtered = (projectList || [])
+  const list = Array.isArray(projectList) ? projectList : [];
+const filtered = list
   .filter(project => project && typeof project === "object")
   .filter(({ title, url, description, users }) =>
     title?.toLowerCase().includes(search.toLowerCase()) ||

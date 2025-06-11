@@ -100,7 +100,7 @@ const setPassword = ({ password, token }) => {
 
 const getProjects = async () => {
   const token = localStorage.getItem("token");
-  console.log("Does");
+  console.log("getProjects token: ",token);
   try {
     const response = await fetch(`${serverUrl}/project`, {
       method: "GET",

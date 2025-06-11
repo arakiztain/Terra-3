@@ -1,7 +1,10 @@
+/* evitar la barra de desplazamiento  */
+body {
+  overflow: hidden; 
+}
 
 .fullScreen{
   background-color: #0F0F0F;
-  height: 100vh;
   display: grid;
   grid-template-columns: 3fr 2fr;
   grid-template-rows: 1fr 2fr;

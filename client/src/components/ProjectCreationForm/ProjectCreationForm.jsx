@@ -84,7 +84,7 @@ const ProjectCreationForm = ({ promptReload, reloadFlag, project }) => {
             ref={textareaRef}
             value={formData.description}
             rows="1"
-            maxLength="500"
+            maxLength="350"
             name="description"
             required
           />
