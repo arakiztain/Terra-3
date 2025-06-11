@@ -24,7 +24,7 @@ const extractMetadata = ( description ) => {
   }
 }
 
-const IssueCard = ({ issue, className }) => {
+const IssueCard = ({ issue, className, review }) => {
   const [toggleInput, setToggleInput] = useState(false);
   const [newDescription, setNewDescription] = useState('');
   const handleReject = async () => {
@@ -59,11 +59,14 @@ const IssueCard = ({ issue, className }) => {
       <div className={styles.row}>
         <span className={styles.label}>Project:</span> {issue.project?.name}
       </div>
-      <button onClick={acceptHandler}>Accept</button>
-      <button onClick={toggleInputHandler}>Reject</button>
+      
+      { review && <div className={styles.buttons}>
+      <button className={styles.clickable1} onClick={acceptHandler}>Accept</button>
+      <button className={styles.clickable2} onClick={toggleInputHandler}>Reject</button>
       {toggleInput && <div className={styles.input}>
         <input value={newDescription} onChange={(e) => setNewDescription(e.target.value)} type="text" placeholder="What do you want changed?" />
         <button onClick={handleReject}>Submit</button>
+      </div>}
       </div>}
     </div>
   )

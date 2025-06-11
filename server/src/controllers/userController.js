@@ -186,6 +186,7 @@ const createUserWithEmail = async (email) => {
 
   await newUser.save();
   const activationUrl = `${process.env.CLIENT_URL}/user/setpass/${token}`;
+<<<<<<< Updated upstream
   
   const htmlContent = `
     <!DOCTYPE html>
@@ -350,6 +351,21 @@ const createUserWithEmail = async (email) => {
     htmlContent
   );
   
+=======
+await sendEmail(
+  email,
+  "Activate your account in Terra Ripple",
+  `
+  <div style="background-color: #000; color: #fff; font-family: 'Arial, sans-serif'; padding: 20px; text-align: center;">
+    <img src="https://i.imgur.com/l4nxHON.png" alt="Terra Ripple" style="max-width: 200px; margin-bottom: 20px;" />
+    <p style="font-size: 16px;">Click below to activate your account and set your password:</p>
+    <a href="${activationUrl}" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #fff; color: #000; text-decoration: none; font-weight: bold;">
+      Activate Account
+    </a>
+  </div>
+  `
+);
+>>>>>>> Stashed changes
   return newUser;
 }
 

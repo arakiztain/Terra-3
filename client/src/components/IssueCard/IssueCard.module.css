@@ -28,3 +28,19 @@
     border-bottom-right-radius: 60px;
     border-bottom-left-radius: 60px;
 }
+
+.buttons{
+    position: absolute;
+    right: 3em;
+    top: 1em;
+    width:50%;
+}
+
+.clickable1{
+    background-color:#189B5C;
+}
+
+.clickable2{
+    margin-left:1em;
+    background-color:red;
+}
