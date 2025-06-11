@@ -6,7 +6,7 @@ import torch.nn.functional as F
 # import download_model
 # import descomprimir_modelo
 
-
+path = "C:\\Users\\pacof\\Data_Science\\The_Bridge\\TerraRipple_backup2\\Modelo sentimiento Terra\\deberta_sentiment_model\\"
 tokenizer = DebertaV2Tokenizer.from_pretrained(path)
 model = DebertaV2ForSequenceClassification.from_pretrained(path)
 model.eval()
@@ -18,7 +18,7 @@ def predict_sentiment(texts):
         logits = outputs.logits
         probs = F.softmax(logits, dim=-1)
         predicted_class = torch.argmax(probs, dim=1)    
-    return predicted_class.tolist(), probs.tolist()  # Devuelve clases y probabilidades
+    return predicted_class.tolist()  # Devuelve clases y probabilidades
 
 
 

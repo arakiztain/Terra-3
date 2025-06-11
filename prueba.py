@@ -1,11 +1,10 @@
 import numpy as np
 import pandas as pd
 import urg_func
+import ejecuta_modelo
 
-print("hola")
-df = pd.read_csv("csv_prueba.csv")
-df["Input Date"] = pd.to_datetime(df["Input Date"])
-df["Budget"] = df["Budget"].astype(float)
-
-urg_func.urgencia(df)
-
+dic = {"Issue ID": "IPC10010111","Project ID": "PC1001","Input Date": "2025-06-10","Device": "Desktop","Page": "Home",
+       "Browser": "Chrome", "Contact ID": "COC101", "Request": "This is a very good job","Classification": "Bug fix",
+       "Screenshot": True}
+df = pd.DataFrame(dic)
+print(df)
