@@ -113,7 +113,7 @@ const handleSubmit = async (e) => {
               value={Array.isArray(formData.reviewerEmails) ? formData.reviewerEmails.join(', ') : ''}
               type="text" name="reviewerEmails" placeholder="email1@example.com, email2@example.com" />
           </label>
-          <button type="submit">{project ? "Edit" : "Submit"}</button>
+          <button className={style.button} type="submit">{project ? "Edit" : "Submit"}</button>
           <ToastContainer />
         </form>
     );

@@ -311,12 +311,123 @@ async function sendReminderEmail(req, res, next) {
 
     const emails = project.users.map(user => user.email).filter(Boolean);
 
+    const htmlContent = (title) => `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Terra Ripple - Reminder</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0F0F0F;
+            color: #FFFFFF;
+          }
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #0F0F0F;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #333333;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+          }
+          .header {
+            background-color: #0F0F0F;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #333333;
+          }
+          .logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+          }
+          .logo img {
+            height: 40px;
+            margin: 0 5px;
+          }
+          .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            color: #FFFFFF;
+          }
+          .content {
+            padding: 30px 20px;
+            line-height: 1.5;
+            color: #FFFFFF;
+          }
+          .content p {
+            color: #FFFFFF !important;
+          }
+          .footer {
+            background-color: #151515;
+            padding: 20px;
+            text-align: center;
+            color: #999999;
+            font-size: 12px;
+            border-top: 1px solid #333333;
+          }
+          .footer p {
+            color: #999999 !important;
+          }
+          .icons {
+            margin: 15px 0;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+          }
+          .icons img {
+            height: 30px;
+            margin: 0 5px;
+          }
+          h2 {
+            color: #FFFFFF !important;
+            margin-bottom: 20px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <div class="logo">
+              <img src="https://i.imgur.com/KwCgOBD.png" alt="Logo 1">
+              <img src="https://i.imgur.com/KoHaqQM.png" alt="Logo 2">
+              <img src="https://i.imgur.com/VFP5Bse.png" alt="Logo 3">
+              <h1>terra ripple</h1>
+            </div>
+          </div>
+          <div class="content">
+            <h2>Task Feedback Reminder</h2>
+            <p>This is a reminder to check your tasks for the project <strong>${title}</strong>.</p>
+            <p>Feedback is important for maintaining progress and collaboration within the team.</p>
+            <p>Please log in to the platform to review and leave your input where needed.</p>
+          </div>
+          <div class="footer">
+            <div class="icons">
+              <img src="https://i.imgur.com/KwCgOBD.png" alt="Logo 1">
+              <img src="https://i.imgur.com/KoHaqQM.png" alt="Logo 2">
+              <img src="https://i.imgur.com/VFP5Bse.png" alt="Logo 3">
+            </div>
+            <p>© ${new Date().getFullYear()} Terra Ripple. All rights reserved.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
     await Promise.all(
       emails.map(email =>
         sendEmail(
           email,
-          `You have tasks pending for feedback!`,
-          `<p>This is a reminder to check your tasks for the project <strong>${project.title}</strong>.</p>`
+          "You have tasks pending for feedback!",
+          htmlContent(project.title)
         )
       )
     );

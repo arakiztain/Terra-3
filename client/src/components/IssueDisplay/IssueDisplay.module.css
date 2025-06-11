@@ -172,3 +172,7 @@
     flex-direction: column;
     margin-top:3em;
 }
+
+.finished{
+  filter: grayscale(100%);
+}

@@ -52,7 +52,7 @@ const IssueDisplay = ({ issues }) => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.twoColumns}>
-        {pendingIssues && pendingIssues.length>0 && (
+        {toReviewIssues && toReviewIssues.length>0 && (
           <>
             <div className={styles.containerDouble}>
               <h2>Issues to be reviewed</h2>
@@ -71,7 +71,7 @@ const IssueDisplay = ({ issues }) => {
             </div>
           </>
         )}
-          {toReviewIssues && toReviewIssues.length>0 && (
+          {pendingIssues && pendingIssues.length>0 && (
             <>
               <div className={styles.containerDouble}>
                 <h2>Pending issues</h2>

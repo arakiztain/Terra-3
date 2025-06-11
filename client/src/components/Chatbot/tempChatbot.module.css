@@ -1,0 +1,248 @@
+.chatbotContainer {
+  position: fixed;
+  bottom: 5em;
+  right: 1em;
+  z-index: 1000;
+  font-family: "UncutSans", sans-serif;
+}
+
+.chatbotButton {
+  width: 53px;
+  height: 53px;
+  border-radius: 50%;
+  background-color: #ffb41d;
+  color: #0F0F0F;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.chatbotButton:hover {
+  transform: scale(1.05);
+}
+
+.chatbotButtonOpen {
+  background-color: #F78BD8;
+}
+
+.chatbotWindow {
+  position: absolute;
+  bottom: 80px;
+  right: 0;
+  width: 1200px;
+  height: 500px;
+  background-color: #222222;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.3s forwards;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chatbotHeader {
+  background-color: #0F0F0F;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #333333;
+}
+
+.chatbotHeaderContent {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chatbotIcon {
+  width: 32px;
+  height: 32px;
+}
+
+.chatbotHeaderText h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.chatbotHeaderText p {
+  margin: 0;
+  font-size: 12px;
+  color: #CCCCCC;
+}
+
+.chatbotCloseButton {
+  background: transparent;
+  border: none;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 50%;
+}
+
+.chatbotCloseButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.chatbotMessageList {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height:800px;
+}
+
+.chatbotMessage {
+  display: flex;
+  max-width: 80%;
+}
+
+.chatbotMessageBot {
+  align-self: flex-start;
+}
+
+.chatbotMessageUser {
+  align-self: flex-end;
+}
+
+.chatbotMessageContent {
+  padding: 10px 14px;
+  border-radius: 18px;
+  position: relative;
+}
+
+.chatbotMessageContent>p{
+    font-size:30px !important;
+}
+
+.chatbotMessageBot .chatbotMessageContent {
+  background-color: #333333;
+  border-bottom-left-radius: 4px;
+}
+
+.chatbotMessageUser .chatbotMessageContent {
+  background-color: #7CE55E;
+  color: #0F0F0F;
+  border-bottom-right-radius: 4px;
+}
+
+.chatbotMessageContent p {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.chatbotMessageTime {
+  font-size: 10px;
+  opacity: 0.7;
+  text-align: right;
+  display: block;
+}
+
+.chatbotInputContainer {
+  padding: 12px 16px;
+  background-color: #1A1A1A;
+  display: flex;
+  gap: 8px;
+}
+
+.chatbotInput {
+  flex: 1;
+  padding: 12px;
+  border-radius: 24px;
+  border: 1px solid #333333;
+  background-color: #222222;
+  color: #FFFFFF;
+  outline: none;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.chatbotInput:focus {
+  border-color: #7CE55E;
+}
+
+.chatbotSendButton {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #7CE55E;
+  color: #0F0F0F;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chatbotSendButton:hover {
+  transform: scale(1.05);
+}
+
+.chatbotSendButton:disabled {
+  background-color: #333333;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.chatbotTypingIndicator {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px;
+}
+
+.chatbotTypingIndicator span {
+  width: 8px;
+  height: 8px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  display: block;
+  animation: typing 1s infinite ease-in-out;
+}
+
+.chatbotTypingIndicator span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.chatbotTypingIndicator span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.chatbotTypingIndicator span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typing {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  30% {
+    transform: translateY(-5px);
+    opacity: 1;
+  }
+}

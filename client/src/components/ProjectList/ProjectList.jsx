@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styles from "./ProjectList.module.css";
 import fetchServer from "../../utils/fetchServer";
+import { ToastContainer, toast, Bounce } from 'react-toastify';
 const ProjectList = ({ projectList = [], onEditProject, userMode }) => {
   const [search, setSearch] = useState("");
 const filtered = (projectList || [])
@@ -13,9 +14,24 @@ const filtered = (projectList || [])
   );
 
   const handleSendReminder = (_id) => {
-    console.log(_id)
     fetchServer.sendReminderEmail(_id);
+    notify();
   }
+
+    const notify = () => 
+      toast(' 📧 Mail sent!', {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+        className: styles.toast
+      });
+
   return (<>
     <div className={styles.container}>
       <input
@@ -51,6 +67,7 @@ const filtered = (projectList || [])
           <p className={styles.noResults}>No projects found.</p>
         )}
       </div>
+            <ToastContainer />
     </div>
   </>);
 }
