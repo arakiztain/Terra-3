@@ -12,6 +12,8 @@ import icon2 from "../../assets/_Terraforms/Individual/SVG/Punky-Lime.svg";
 import icon3 from "../../assets/_Terraforms/Individual/SVG/Boba-Orange.svg";
 import TourIssueForm from '../../components/TourIssueForm/TourIssueForm';
 import LoadSpinner from '../../components/LoadSpinner/LoadSpinner';
+import Chatbot from '../../components/Chatbot/Chatbot';
+
 const Feedback = () => {
     const [issues, setIssues] = useState([]);
     const [project, setProject] = useState([]);
@@ -45,6 +47,7 @@ const Feedback = () => {
                 <ProjectHeader siteUrl={project.url} formState={toggleForm} newIssueHandler={handleToggleForm} />
             </div>
                 <TourIssueForm />
+                <Chatbot />
                 {toggleForm ? 
                 <div className={styles.formContainer}>
                     <FeedbackForm project={project} toggleForm={handleToggleForm}/> 

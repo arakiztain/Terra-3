@@ -12,7 +12,6 @@ import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import Guide from './pages/Guide/Guide'
 import Faq from './pages/Faq/Faq';
 import IssueLogged from './pages/IssueLogged/IssueLogged';
-import Chatbot from './components/Chatbot/Chatbot';
 import './global.css';
 
 const router = createBrowserRouter([
@@ -23,7 +22,6 @@ const router = createBrowserRouter([
       <AuthProvider>
         <Title />
         <Outlet />
-        <Chatbot />
       </AuthProvider>
     </>
   ),

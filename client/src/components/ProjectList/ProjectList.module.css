@@ -8,14 +8,17 @@
 
 .searchInput {
   width: 100%;
+  min-width:260px;
   padding: 10px 12px;
-  border-radius: 3px;
-  border: 1px solid #ccc;
   background-color: #2c2c3e;
   color: #f0f0f0;
   margin-bottom: 24px;
   font-size: 14px;
   transition: border-color 0.2s ease-in-out;
+  border-radius:30px;
+  border-width:3px;
+  border-style:solid;
+  border-color:white;
 }
 
 .searchInput:focus {
