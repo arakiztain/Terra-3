@@ -170,6 +170,17 @@ const createUserWithEmail = async ( email ) =>{
   );
 }
 
+export const logout = (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      console.error('Error al cerrar sesión:', err);
+      return res.status(500).json({ message: 'Error al cerrar sesión' });
+    }
+    res.clearCookie('connect.sid'); // o el nombre de tu cookie de sesión
+    res.status(200).json({ message: 'Logout exitoso' });
+  });
+};
+
 
 export default {
 	getUserInfo,
@@ -177,5 +188,6 @@ export default {
 	register,
   sendEmail,
   resetPassword,
-  setPassword
+  setPassword,
+  logout
 };

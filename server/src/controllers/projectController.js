@@ -9,7 +9,7 @@ async function createProject(req, res, next) {
     const { title, description, url, email } = req.body;
     //TODO this email concatenation thing could be cleaner
     let foundUsers = [];
-
+ 
     if (email) {
       const emails = email.map(e => e.trim());
       const users = await User.find({ email: { $in: emails } });
