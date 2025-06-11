@@ -65,7 +65,7 @@
     z-index:2;
 }
 
-.menuProfile, .menuRecord, .menuContact, .menuGuide, .menuTerrahq, .menuSignout{
+.menuProfile, .menuFaq, .menuContact, .menuGuide, .menuTerrahq, .menuSignout{
     margin:0.45rem 0 0.45rem 0;
     font-weight:700;
     display:flex;
@@ -78,7 +78,7 @@
     color:#7CE55E;
 }
 
-.menuRecord:hover{
+.menuFaq:hover{
     color:#F78BD8;
 }
 
