@@ -1,34 +1,144 @@
 .container {
-    padding: 40px;
-    font-family: Arial, sans-serif;
-    border-radius: 8px;
+  min-height: 100vh;
+  background-color: #0F0F0F;
+  color: #FFFFFF;
+  font-family: "UncutSans", sans-serif;
+  padding: 40px;
+  padding-top: 100px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.section {
+  margin-bottom: 40px;
+  border-left: 3px solid #7CE55E;
+  padding-left: 20px;
+}
+
+.section:nth-child(3) {
+  border-left-color: #F78BD8;
+}
+
+.section:nth-child(4) {
+  border-left-color: #FFB41D;
+}
+
+.section:nth-child(5) {
+  border-left-color: #3D9DD8;
+}
+
+.section:nth-child(6) {
+  border-left-color: #189B5C;
+}
+
+.sectionTitle {
+  color: #FFFFFF;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.text {
+  line-height: 1.6;
+  color: #FFFFFF;
+  font-size: 1rem;
+}
+
+.list {
+  line-height: 1.6;
+  color: #FFFFFF;
+  padding-left: 20px;
+}
+
+.listItem {
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.listItem strong {
+  color: #7CE55E;
+  font-weight: 700;
+}
+
+.listItem:nth-child(2n) strong {
+  color: #F78BD8;
+}
+
+.listItem:nth-child(3n) strong {
+  color: #FFB41D;
+}
+
+.listItem:nth-child(4n) strong {
+  color: #3D9DD8;
+}
+
+.listItem p {
+  margin-top: 5px;
+}
+
+.listItem ul {
+  margin-top: 10px;
+}
+
+.listItem:hover {
+  transform: translateX(5px);
+  transition: transform 0.3s ease;
+}
+
+.section::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+    padding-top: 80px;
   }
   
   .title {
-    text-align: center;
-    /* color: #333; */
-    margin-bottom: 20px;
-    margin-top: 60px;
+    font-size: 2rem;
   }
   
-  .section {
-    margin-bottom: 30px;
+  .sectionTitle {
+    font-size: 1.3rem;
   }
-  
-  /* .sectionTitle {
-    color: #555;
-  }
-  
-  .text {
-    line-height: 1.6;
-    color: #666;
-  } */
-  
-  /* .list {
-    line-height: 1.6;
-    color: #666;
-  } */
-  
-  .listItem {
-    margin-bottom: 10px;
-  }
+}
+
+
+.subtitle {
+  font-size: 1.3rem;
+  color: #7CE55E;
+  margin-top: 10px;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 60px;
+  padding-bottom: 30px;
+}
+
+.icon {
+  height: 40px;
+  object-fit: contain;
+}
+
+.icon:hover {
+  transform: scale(1.2);
+  transition: transform 0.3s ease;
+}
