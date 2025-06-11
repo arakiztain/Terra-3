@@ -14,8 +14,8 @@
 
     width: 100vw;
     height: 100vh;
-    overflow-x: clip;
-    overflow-y: clip;
+    /* overflow-x: clip;
+    overflow-y: clip; */
 }
   
 * {

@@ -1,4 +1,8 @@
 .fullScreen {
-    composes: fullScreen from '../../styles/gstyles.module.css'; 
-    flex-direction: column;    
-}    
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    width: 100vw; 
+    padding:1rem;
+  }

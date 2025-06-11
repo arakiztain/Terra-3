@@ -4,15 +4,20 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const DB_HOST = process.env.DB_HOST;
-const DB_PORT = 27017;
+
+//No usamos proces.env.DB_PORT porque es el externo, en la conexion se llama al interno que siempre es 27017
+const DB_PORT = 27017; 
+
 const DB_USER = process.env.DB_USER;
 const DB_PASSWORD = process.env.DB_PASSWORD;
 const DB_NAME = process.env.DB_NAME;
 
 export const connectDB = async () => {
     try {
+        const uri = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?authSource=admin`;
+        console.log("trying: ",uri);
         await mongoose.connect(
-            `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?authSource=admin`
+            uri
         );
         console.log("✅ Connected to MongoDB");
     } catch (error) {

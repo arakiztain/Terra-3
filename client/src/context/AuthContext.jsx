@@ -9,7 +9,7 @@ const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
 
     const handleLogin = async (email, password) => {
-        const result = await fetchServer.loginFetch({ email, password });
+        const result = await fetchServer.loginFetch( email, password );
         if (result.error) {
             return result.error;
         } else {

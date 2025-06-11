@@ -1,13 +1,16 @@
 .container {
   height: 100vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: row;
+  padding: 0 2rem;
+  align-items: flex-start;
+  overflow-y:scroll
 }
 
+/* 
 .buttonTour {
   composes: buttonTour from '../../styles/gstyles.module.css';
-}
+} */
 
 /* .fullscreen{
   background-color:#0F0F0F;
@@ -29,3 +32,9 @@
   justify-content: center;
   align-items: center;
 } */
+
+@media (max-width: 1100px) {
+  .container {
+    flex-direction: column;
+  }
+}

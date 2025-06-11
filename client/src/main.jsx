@@ -13,7 +13,7 @@ import Guide from './pages/Guide/Guide'
 import Faq from './pages/Faq/Faq';
 import IssueLogged from './pages/IssueLogged/IssueLogged';
 import Chatbot from './components/Chatbot/Chatbot';
-import './global.css';
+import './styles/global.css';
 
 const router = createBrowserRouter([
 {

@@ -1,14 +1,16 @@
 const serverUrl = "http://localhost:3004";
 
-const loginFetch = async ({ email, password }) => {
-  console.log({ email, password });
+const loginFetch = async (email, password) => {
+  console.log(email, password);
   try {
     console.log("serverurl:", serverUrl);
-    const response = await fetch(`${serverUrl}/login`, {
+    const OPTIONS = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
-    });
+    };
+    console.log("OPTIONS: ", OPTIONS);
+    const response = await fetch(`${serverUrl}/login`, OPTIONS);
     const data = await response.json();
     return data;
   } catch (error) {
