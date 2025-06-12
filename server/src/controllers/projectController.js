@@ -2,7 +2,14 @@ import Project from "../models/project.js";
 import User from "../models/user.js";
 import axios from "axios";
 import userController from "./userController.js";
-import { NotFoundError, ForbiddenError, UserNotFound, ProjectAlreadyExists, ProjectNotFound, UsersAssigned} from "../utils/errors.js";
+import {
+  NotFoundError,
+  ForbiddenError,
+  UserNotFound,
+  ProjectAlreadyExists,
+  ProjectNotFound,
+  UsersAssigned,
+} from "../utils/errors.js";
 
 async function createProject(req, res, next) {
   try {
@@ -11,67 +18,79 @@ async function createProject(req, res, next) {
     let foundUsers = [];
 
     if (email) {
-      const emails = email.map(e => e.trim());
+      const emails = email.map((e) => e.trim());
       const users = await User.find({ email: { $in: emails } });
       if (users.length !== emails.length) {
-        const foundEmails = users.map(u => u.email);
-        const notFoundEmails = emails.filter(e => !foundEmails.includes(e));
+        const foundEmails = users.map((u) => u.email);
+        const notFoundEmails = emails.filter((e) => !foundEmails.includes(e));
         const newUsers = await Promise.all(
-          notFoundEmails.map(email => userController.createUserWithEmail(email))
+          notFoundEmails.map((email) =>
+            userController.createUserWithEmail(email)
+          )
         );
         users.push(...newUsers);
         // This should send emails to the unkown users in order to make accounts
         // throw new UserNotFound(`The following emails were not found: ${notFoundEmails.join(', ')}`);
       }
-      foundUsers = users.map(u => u._id);
+      foundUsers = users.map((u) => u._id);
     }
     const existingProject = await Project.findOne({ title });
     if (existingProject) throw new ProjectAlreadyExists();
 
-    const responseWorkSpace = await axios.get('https://api.clickup.com/api/v2/team', {
-      headers: {
-        Authorization: process.env.CLICKUP_API_TOKEN,
-      }
-    });
-    //Buscar workspace por nombre (?)
-    const workspaceName = process.env.CLICKUP_WORKSPACE_NAME;
-    const workSpaceId = responseWorkSpace.data.teams.find(team => team.name === workspaceName).id;
-    console.log(workSpaceId);
-    //CreateSpace (project)
-    
-    const responseSpace = await axios.post(
-    `https://api.clickup.com/api/v2/team/${workSpaceId}/space`,
-    {
-      name: title/* ,
-      content: description */
-    },
+    const responseWorkSpace = await axios.get(
+      "https://api.clickup.com/api/v2/team",
       {
         headers: {
           Authorization: process.env.CLICKUP_API_TOKEN,
-          "Content-Type": "application/json"
-        }
+        },
       }
     );
-    
+    //Buscar workspace por nombre (?)
+    const workspaceName = process.env.CLICKUP_WORKSPACE_NAME;
+    const workSpaceId = responseWorkSpace.data.teams.find(
+      (team) => team.name === workspaceName
+    ).id;
+    console.log(workSpaceId);
+    //CreateSpace (project)
+
+    const responseSpace = await axios.post(
+      `https://api.clickup.com/api/v2/team/${workSpaceId}/space`,
+      {
+        name: title /* ,
+      content: description */,
+      },
+      {
+        headers: {
+          Authorization: process.env.CLICKUP_API_TOKEN,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
     const spaceId = responseSpace.data.id;
 
-    const listNames = ["copy revision", "design issues", "requested change", "new item"];
+    const listNames = [
+      "copy revision",
+      "design issues",
+      "requested change",
+      "new item",
+    ];
     const createdLists = [];
 
     //Crear FolderId con los equipos de cada proyecto (space)
     const responseFolder = await axios.post(
-    `https://api.clickup.com/api/v2/space/${spaceId}/folder`,
-    {
-      //name : folderName (equipo)
-      name: "Folder prueba"
-    },
-    {
-      headers: {
-        Authorization: process.env.CLICKUP_API_TOKEN,
-        "Content-Type": "application/json"
+      `https://api.clickup.com/api/v2/space/${spaceId}/folder`,
+      {
+        //name : folderName (equipo)
+        name: "Folder prueba",
+      },
+      {
+        headers: {
+          Authorization: process.env.CLICKUP_API_TOKEN,
+          "Content-Type": "application/json",
+        },
       }
-    }
-  );
+    );
 
     const folderId = responseFolder.data.id;
     for (const name of listNames) {
@@ -81,14 +100,14 @@ async function createProject(req, res, next) {
         {
           headers: {
             Authorization: process.env.CLICKUP_API_TOKEN,
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         }
       );
 
       createdLists.push({
         name,
-        listId: responseList.data.id
+        listId: responseList.data.id,
       });
     }
 
@@ -98,20 +117,19 @@ async function createProject(req, res, next) {
       url,
       users: foundUsers.length > 0 ? foundUsers : undefined,
       spaceId,
-      clickupLists: createdLists
+      clickupLists: createdLists,
     });
 
     res.status(201).json({
-      message: `Project created${foundUsers.length > 0 ? '' : ' (without users)'}`,
+      message: `Project created${foundUsers.length > 0 ? "" : " (without users)"}`,
       project,
-      clickupProject: responseFolder.data
+      clickupProject: responseFolder.data,
     });
-
   } catch (error) {
-      console.error("ClickUp Error:", error.response?.data || error.message);
-  next(error);
+    console.error("ClickUp Error:", error.response?.data || error.message);
+    next(error);
   }
-};
+}
 
 async function updateProject(req, res, next) {
   console.log("Reaches");
@@ -120,21 +138,25 @@ async function updateProject(req, res, next) {
     const project = await Project.findById(id);
     if (!project) throw new ProjectNotFound();
 
-    const emails = (email || []).map(e => e.trim());
+    const emails = (email || []).map((e) => e.trim());
     const existingUsers = await User.find({ email: { $in: emails } });
-    const existingUserEmails = existingUsers.map(u => u.email);
+    const existingUserEmails = existingUsers.map((u) => u.email);
 
-    const missingEmails = emails.filter(e => !existingUserEmails.includes(e));
+    const missingEmails = emails.filter((e) => !existingUserEmails.includes(e));
     const newUsers = await Promise.all(
-      missingEmails.map(email => userController.createUserWithEmail(email))
+      missingEmails.map((email) => userController.createUserWithEmail(email))
     );
 
     const allUsers = [...existingUsers, ...newUsers];
-    const updatedUserIds = allUsers.map(u => u._id.toString());
+    const updatedUserIds = allUsers.map((u) => u._id.toString());
 
-    const currentUserIds = project.users.map(id => id.toString());
-    const removedUserIds = currentUserIds.filter(id => !updatedUserIds.includes(id));
-    const addedUserIds = updatedUserIds.filter(id => !currentUserIds.includes(id));
+    const currentUserIds = project.users.map((id) => id.toString());
+    const removedUserIds = currentUserIds.filter(
+      (id) => !updatedUserIds.includes(id)
+    );
+    const addedUserIds = updatedUserIds.filter(
+      (id) => !currentUserIds.includes(id)
+    );
 
     project.description = description ?? project.description;
     project.url = url ?? project.url;
@@ -144,10 +166,13 @@ async function updateProject(req, res, next) {
 
     res.status(200).json({
       message: `Project updated. Users removed: ${removedUserIds.length}, users added: ${addedUserIds.length}`,
-      project
+      project,
     });
   } catch (error) {
-    console.error("UpdateProject Error:", error.response?.data || error.message);
+    console.error(
+      "UpdateProject Error:",
+      error.response?.data || error.message
+    );
     next(error);
   }
 }
@@ -155,69 +180,97 @@ async function updateProject(req, res, next) {
 async function getAllProjects(req, res, next) {
   try {
     let projects = [];
-
-    const responseWorkSpace = await axios.get('https://api.clickup.com/api/v2/team', {
-      headers: {
-        Authorization: process.env.CLICKUP_API_TOKEN,
+    console.log(
+      "GetAllProjects usando APITOKEN:",
+      process.env.CLICKUP_API_TOKEN
+    );
+    console.log("solicitando workspaces: https://api.clickup.com/api/v2/team");
+    const responseWorkSpace = await axios.get(
+      "https://api.clickup.com/api/v2/team",
+      {
+        headers: {
+          Authorization: process.env.CLICKUP_API_TOKEN,
+        },
       }
-    });
+    );
+    console.log("Workspaces encontrados:", responseWorkSpace.data.teams);
     //Change name ?
     const workspaceName = process.env.CLICKUP_WORKSPACE_NAME;
-    const workSpaceId = responseWorkSpace.data.teams.find(team => team.name === workspaceName).id;
+    const workSpaceId = responseWorkSpace.data.teams.find(
+      (team) => team.name === workspaceName
+    ).id;
 
+    console.log("workspaceName:", workspaceName, "-->workSpaceId:", workSpaceId);
     if (req.user.role === "admin") {
+
+      console.log("Verificado que quien consulta es admin");
+      console.log(
+        `solicitando spaces: https://api.clickup.com/api/v2/team/${workSpaceId}/space`
+      );
+
       const SpaceResponse = await axios.get(
-      `https://api.clickup.com/api/v2/team/${workSpaceId}/space`,
-          {
-            headers: {
-              Authorization: process.env.CLICKUP_API_TOKEN,
-              "Content-Type": "application/json"
-            }
-          }
-        );
+        `https://api.clickup.com/api/v2/team/${workSpaceId}/space`,
+        {
+          headers: {
+            Authorization: process.env.CLICKUP_API_TOKEN,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-        const spaces = SpaceResponse.data.spaces;
-
-    projects = (
-      await Promise.all(
-        spaces.map(async (folder) => {
-          const mongoProject = await Project.findOne({ spaceId: folder.id }).populate("users", "email");
-          return mongoProject ? mongoProject : null;
-        })
-      )
-    ).filter(Boolean);
+      const spaces = SpaceResponse.data.spaces;
+      console.log("spaces encontrados:", spaces);
+      projects = (
+        await Promise.all(
+          spaces.map(async (folder) => {
+            const mongoProject = await Project.findOne({
+              spaceId: folder.id,
+            }).populate("users", "email");
+            console.log("-folder:", folder);
+            console.log("-Project:", mongoProject);
+            return mongoProject ? mongoProject : null;
+          })
+        )
+      ).filter(Boolean);
     } else {
-      projects = await Project.find({ users: req.user._id }).populate("users", "email");
-      if (!projects || projects.length === 0) throw new NotFoundError("You have no projects");
-      //clickup llamada id
+      console.log("Verificado que quien consulta es usuario");
+      console.log(
+        "buscando projects de usuario:",req.user._id
+      );
+      projects = await Project.find({ users: req.user._id }).populate(
+        "users",
+        "email"
+      );
+      console.log("projects:", projects);
     }
-    res.json(projects);
+    res.json(projects || []);
   } catch (error) {
-    next(error);
+    res.status(500).json([]); 
   }
-};
+}
 
 //MongoDb en clikcup no hay manera de buscar por id el folder, es esto o sacar todos y buscar por id en el response.data
 async function getProjectById(req, res, next) {
   try {
     const projectId = req.params.projectId.trim();
 
-    const project = await Project.findById(projectId).populate("users", "email");
-    if (!project) throw new ProjectNotFound();
-
-    const isUserInProject = project.users.some(
-      user => user._id.toString() === req.user._id.toString()
+    const project = await Project.findById(projectId).populate(
+      "users",
+      "email"
     );
 
-/*     if (req.user.role !== "admin" && !isUserInProject) {
-      throw new ForbiddenError("You don't have permission to access this project");
+    // CAMBIO PRINCIPAL: Devuelve null en lugar de lanzar error
+    if (!project) {
+      return res.status(404).json(null); // ✅ Frontend puede manejar null fácilmente
     }
- */
+
     res.json(project);
   } catch (error) {
-    next(error);
+    // CAMBIO: Envía null o error estructurado en lugar del error crudo
+    res.status(500).json(null);
+    // O bien: res.status(500).json({ error: "Server error", code: "INTERNAL_ERROR" });
   }
-};
+}
 
 async function assignProject(req, res, next) {
   try {
@@ -226,30 +279,35 @@ async function assignProject(req, res, next) {
 
     let foundUsers = [];
     if (email) {
-      const emails = email.map(e => e.trim());
+      const emails = email.map((e) => e.trim());
       const users = await User.find({ email: { $in: emails } });
 
       if (users.length !== emails.length) {
-        const foundEmails = users.map(u => u.email);
-        const notFoundEmails = emails.filter(e => !foundEmails.includes(e));
-        throw new UserNotFound(`The following emails were not found: ${notFoundEmails.join(', ')}`);
+        const foundEmails = users.map((u) => u.email);
+        const notFoundEmails = emails.filter((e) => !foundEmails.includes(e));
+        throw new UserNotFound(
+          `The following emails were not found: ${notFoundEmails.join(", ")}`
+        );
       }
 
-      foundUsers = users.map(u => u._id);
+      foundUsers = users.map((u) => u._id);
     }
 
-    const project = await Project.findById(projectId).populate("users", "email");
+    const project = await Project.findById(projectId).populate(
+      "users",
+      "email"
+    );
     if (!project) throw new ProjectNotFound();
 
     // Verificación de permisos
     const isUserInProject = project.users.some(
-      user => user._id.toString() === req.user._id.toString()
+      (user) => user._id.toString() === req.user._id.toString()
     );
 
-    const existingUserIds = project.users.map(u => u._id.toString());
-    const newUserIds = foundUsers.map(id => id.toString());
+    const existingUserIds = project.users.map((u) => u._id.toString());
+    const newUserIds = foundUsers.map((id) => id.toString());
 
-    const usersToAdd = newUserIds.filter(id => !existingUserIds.includes(id));
+    const usersToAdd = newUserIds.filter((id) => !existingUserIds.includes(id));
 
     if (usersToAdd.length === 0) {
       throw new UsersAssigned();
@@ -272,11 +330,14 @@ async function deleteProject(req, res, next) {
     console.log(project.spaceId);
     if (!project) throw new ProjectNotFound();
 
-    await axios.delete(`https://api.clickup.com/api/v2/space/${project.spaceId}`, {
-      headers: {
-        Authorization: process.env.CLICKUP_API_TOKEN
+    await axios.delete(
+      `https://api.clickup.com/api/v2/space/${project.spaceId}`,
+      {
+        headers: {
+          Authorization: process.env.CLICKUP_API_TOKEN,
+        },
       }
-    });
+    );
 
     await Project.findByIdAndDelete(projectId);
 
@@ -284,7 +345,7 @@ async function deleteProject(req, res, next) {
   } catch (error) {
     next(error);
   }
-};
+}
 
 export default {
   createProject,
@@ -293,5 +354,5 @@ export default {
   deleteProject,
   updateProject,
   assignProject,
-  deleteProject
+  deleteProject,
 };
