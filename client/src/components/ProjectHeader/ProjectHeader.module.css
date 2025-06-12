@@ -20,8 +20,9 @@
 
 .projectLinkButton:hover{
     border-color: #49ff86;
-
+    background-color:#0F0F0F
 }
+
 .issueButton:hover{
     background-color:#F78BD8;
     color:#0F0F0F;
@@ -38,6 +39,11 @@
     font-size:1.1rem;
     font-weight:700;
 }
+
+.menuButton:hover{
+    background-color:white;
+}
+
 
 .issueButton{
     grid-column:4;

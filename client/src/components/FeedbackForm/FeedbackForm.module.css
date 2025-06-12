@@ -116,3 +116,39 @@ select{
   margin-left:1em;
   margin-top:0;
 }
+
+.form[data-request-type="copy-revision"] input,
+.form[data-request-type="copy-revision"] textarea,
+.form[data-request-type="copy-revision"] select,
+.form[data-request-type="copy-revision"] .react-select__control,
+form[data-request-type="copy-revision"] .react-select__control.react-select__control {
+  border-color: #3D9DD8 !important; /* .revision */
+}
+
+.form[data-request-type="requested-change"] input,
+.form[data-request-type="requested-change"] textarea,
+.form[data-request-type="requested-change"] select,
+.form[data-request-type="requested-change"] .react-select__control,
+form[data-request-type="requested-change"] .react-select__control.react-select__control {
+  border-color: #189B5C !important; /* .changes */
+}
+
+.form[data-request-type="design-issues"] input,
+.form[data-request-type="design-issues"] textarea,
+.form[data-request-type="design-issues"] select,
+.form[data-request-type="design-issues"] .react-select__control,
+form[data-request-type="design-issues"] .react-select__control.react-select__control {
+  border-color: #FFB41D !important; /* .design */
+}
+
+.form[data-request-type="new-item"] input,
+.form[data-request-type="new-item"] textarea,
+.form[data-request-type="new-item"] select,
+.form[data-request-type="new-item"] .react-select__control,
+form[data-request-type="new-item"] .react-select__control.react-select__control {
+  border-color: #F78BD8 !important; /* .item */
+}
+
+.toast{
+    font-family: "UncutSans" !important;
+}

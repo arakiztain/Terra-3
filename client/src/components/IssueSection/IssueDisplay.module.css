@@ -152,27 +152,3 @@
     align-items: center;
     font-size:3rem;
 }
-
-.twoColumns{
-    display:flex;
-    margin-top:5em;
-}
-
-.containerDouble{
-    width: 100%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-}
-
-.lastContainer{
-    width: 100%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    margin-top:3em;
-}
-
-.finished{
-  filter: grayscale(100%);
-}

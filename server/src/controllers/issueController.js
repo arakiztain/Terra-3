@@ -18,7 +18,7 @@ async function getIssues(req, res) {
 
     for (const listId of listIds) {
       const tasksResponse = await axios.get(
-        `https://api.clickup.com/api/v2/list/${listId}/task`,
+        `https://api.clickup.com/api/v2/list/${listId}/task?include_closed=true`,
         {
           headers: {
             Authorization: process.env.CLICKUP_API_TOKEN,
@@ -135,7 +135,61 @@ const generateMarkdown = ({
 async function updateIssue(req, res) {
   try {
     const issueId = req.params.issueId;
-    const updateFields = req.body;
+    let updateFields = req.body;
+    updateFields.status = "to do";
+
+    const { 
+      name, 
+      request_type,
+      browser,
+      device,
+      description, 
+      pageUrl,
+      screenshot,
+      requestId,
+      projectId
+    } = updateFields;
+
+    const { headers, emphasis } = markdown;
+
+    const generateMarkdown = ({
+      description,
+      browser,
+      device,
+      pageUrl,
+      requestId,
+      projectId
+    }) => {
+      let md = '';
+
+      if (description) {
+        md += headers.h2('Description: ');
+        md += description + '\n\n';
+      }
+      if (browser) md += emphasis.b('Browser:') + ' ' + browser + '\n\n';
+      if (device) md += emphasis.b('Device:') + ' ' + device + '\n\n';
+      if (pageUrl) md += emphasis.b('Page URL:') + ' ' + pageUrl + '\n\n';
+      if (requestId) md += emphasis.b('Request ID:') + ' ' + requestId + '\n\n';
+      if (projectId) md += emphasis.b('Project ID:') + ' ' + projectId + '\n\n';
+
+      return md.trim();
+    };
+
+    const fullRequestData = JSON.stringify({
+      name, 
+      request_type,
+      browser,
+      device,
+      description, 
+      pageUrl,
+      screenshot,
+      requestId 
+    });
+
+    const metadata = "\n\n\n <!-- METADATA \n" + fullRequestData + "\n -->";
+    const fullDescription = generateMarkdown({ description, browser, device, pageUrl, requestId, projectId }) + "\n\n" + metadata;
+
+    updateFields.markdown_description = fullDescription;
 
     const response = await axios.put(
       `https://api.clickup.com/api/v2/task/${issueId}`,
@@ -149,6 +203,30 @@ async function updateIssue(req, res) {
     );
 
     console.log("✅ Task updated:", response.data);
+    return res.json(response.data);
+
+  } catch (error) {
+    console.error("❌ Error updating task:", error.response?.data || error.message);
+    res.status(500).json({ error: "Could not update the task" });
+  }
+}
+
+async function acceptIssue(req, res) {
+  try {
+    const issueId = req.params.issueId;
+    let updateFields = req.body;
+    const response = await axios.put(
+      `https://api.clickup.com/api/v2/task/${issueId}`,
+      updateFields,
+      {
+        headers: {
+          Authorization: process.env.CLICKUP_API_TOKEN,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    console.log("✅ Task accepted:", response.data);
     return res.json(response.data);
 
   } catch (error) {
@@ -287,5 +365,6 @@ export default {
   reportIssue,
   updateIssue,
   deleteIssue,
-  uploadScreenshot
+  uploadScreenshot,
+  acceptIssue
 };

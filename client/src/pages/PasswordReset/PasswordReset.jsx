@@ -22,11 +22,11 @@ const PasswordReset = () => {
     return(
         <div className={styles.fullscreen}>
             <form onSubmit={handleSubmit} className={styles.form}>
-                <h3>Set password form</h3>
+                <h3>Set your password</h3>
                 <label htmlFor="password">Password: </label>
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                <input className={styles.input} type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
                 <label htmlFor="password">Repeat password: </label>
-                <input type="password" value={repeatPassword} onChange={(e) => setRepeatPassword(e.target.value)}/>
+                <input className={styles.input} type="password" value={repeatPassword} onChange={(e) => setRepeatPassword(e.target.value)}/>
                 <button type="submit">Submit</button>
             </form>
         </div>
