@@ -5,7 +5,8 @@ import urg_func
 import ejecuta_modelo
 import urg_func
 
-print("Bienvenido a la espiral de autodestrucción")
+
+# print("Bienvenido a la espiral de autodestrucción")
 
 ## LEEMOS LAS TABLAS RELEVANTES
 
@@ -91,8 +92,23 @@ def suma_neg(issue_id):
     # print(aux)
     return int(aux["Issue ID"].count())
 
+def dead(issue_id):
+    input = df[df["Issue ID"] == issue_id]["Input Date"].values[0]
+    input = pd.to_datetime(input)
+    urg = df[df["Issue ID"] == issue_id]["Urgency"].values[0]
+    if urg == "Critical":
+        dias = 1
+    if urg == "Urgent":
+        dias = 4
+    if urg == "Medium":
+        dias = 10
+    if urg == "Low":
+        dias = 15
+    fecha = input + pd.DateOffset(days=dias)
+    return fecha
 
-issue_type = {"Copy Issues": "E1",
+
+issue_type = {"Copy revision": "E1",
               "Design Issues": "E2",
               "Request Change": "E2",
               "New Item": "E3",
@@ -102,7 +118,7 @@ issue_type = {"Copy Issues": "E1",
 def nueva_entrada(lectura):
     dic = {
             "Issue ID": [lectura["requestId"]],
-            "Project ID": [lectura["projectId"]],
+            "Project ID": ["PC101"],
             "Classification": [lectura["request_type"]],
             "Screenshot": [int(bool(lectura["screenshotPresent"]))],
             "Urgency": [None],
@@ -113,7 +129,7 @@ def nueva_entrada(lectura):
             "Device": [lectura["device"]],
             "Browser": [lectura["browser"]],
             "Page": [lectura["pageUrl"]],
-            "Contact ID": [lectura["Contact ID"]],
+            "Contact ID": ["COC1001"],
             "Request": [lectura["description"]],
             "Iteraciones": [0],
             "Iteraciones 30 dias": [None],
@@ -124,22 +140,23 @@ def nueva_entrada(lectura):
     return dic
 
 
+
 ### GENERAMOS DATAFRAME CON LA ENTRADA
 
 dic = {
-  "name": "fdss",
-  "request_type": "Design Issues",
+  "name": "I want new texts below the header",
+  "request_type": "Copy revision",
   "browser": "Firefox",
   "device": "desktop",
-  "description": "asdasd",
-  "pageUrl": "asdasd",
+  "description": "Maybe something inspired by current events",
+  "pageUrl": "http://www.terraRipple.com",
   "requestId": "2ba5def5-8ffa-420b-9e64-7398e84f9a3f",
-  "projectId": "PC1001",
-  "nombreProyecto": "projectname",
+  "projectId": "6848078fc3e33097df266441",
+  "nombreProyecto": "TerraRipple",
   "fecha": 1749565515781,
   "screenshotPresent": False,
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODQ4MDc4YWMzZTMzMDk3ZGYyNjY0M2QiLCJyb2xlIjoiY2xpZW50IiwiaWF0IjoxNzQ5NTY0NjkzLCJleHAiOjE3NDk2NTEwOTN9.MOJVTdBCTlWBdGTLGslioPaTsP7k2yi1uvGkWkN35YY",
-  "Contact ID": "COC1001"
+  "email":"bitonol425@linacit.com"
 }
 
 print("Antes dataframe")
@@ -196,6 +213,8 @@ df["Iteraciones 30 dias"] = sumas
 
 df["Not addressing historico"] = suma_not
 
+df["Sentiment"] = sentiment
+
 df["Sentiment historico"] = hist_neg
 
 
@@ -210,5 +229,25 @@ df2["Input Date"] = pd.to_datetime(df2["Input Date"])
 
 df["Urgency"] = urg_func.urgencia(df2)
 
+
+deadline = []
+for i in df["Issue ID"]:
+    deadline.append(dead(i))
+deadline
+
+df["Deadline Theor"] = deadline 
+
 df_orig = pd.concat([df_orig,df], axis = 0, ignore_index = True)
 
+
+
+df2["Project ID"] = dic["projectId"]
+df2["Issue ID"] = dic["requestId"]
+df2["Urgency"] = df["Urgency"]
+df2["Request"] = dic["name"] + ' ' + df2["Request"]
+df2["Deadline Theor"] = df["Deadline Theor"]
+
+
+df2.iloc[-1,:].to_json("output.json")
+
+print(df_orig.tail(1))
