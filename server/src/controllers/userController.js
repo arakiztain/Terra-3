@@ -185,8 +185,9 @@ const createUserWithEmail = async (email) => {
   });
 
   await newUser.save();
-  const activationUrl = `${process.env.CLIENT_URL}/user/setpass/${token}`;
-  
+
+  const activationUrl = `${process.env.CLIENT_URL}/user/setpass/${token}`;  
+
   const htmlContent = `
     <!DOCTYPE html>
     <html lang="en">

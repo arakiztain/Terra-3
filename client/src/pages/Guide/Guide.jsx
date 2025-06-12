@@ -9,7 +9,9 @@ const Guide = () => {
     <div className={styles.container}>
       <h1 className={styles.title}>
         USER GUIDE
+
         <div className={styles.subtitle}>TERRA RIPPLE</div>
+
       </h1>
 
       <section className={styles.section}>

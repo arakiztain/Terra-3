@@ -76,3 +76,7 @@
     grid-template-rows: 75px 1fr;
     grid-template-columns: 1fr minmax(0, 2fr) minmax(0, 2fr) minmax(0, 2fr) 1fr;
 }
+
+.toast{
+    font-family: "UncutSans" !important;
+}

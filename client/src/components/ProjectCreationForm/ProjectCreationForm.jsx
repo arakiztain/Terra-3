@@ -1,6 +1,7 @@
 import style from './ProjectCreationForm.module.css';
 import { useState, useEffect } from 'react';
 import fetchServer from '../../utils/fetchServer';
+import { ToastContainer, toast, Bounce } from 'react-toastify';
 const ProjectCreationForm = ({ promptReload, reloadFlag, project }) => {
   const [formData, setFormData] = useState({
     title: "",
@@ -20,6 +21,47 @@ const ProjectCreationForm = ({ promptReload, reloadFlag, project }) => {
     }
   }, [project]);
 
+  const notifyError = () => 
+    toast('❌ There was a problem', {
+      position: "bottom-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      transition: Bounce,
+      className: style.toast
+    });
+    
+      const notifySuccess = () => 
+        toast('✅ Queried successfully!', {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Bounce,
+          className: style.toast
+        });
+
+  const working = () => 
+    toast('Working... 🕒', {
+      position: "bottom-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      transition: Bounce,
+      className: style.toast
+    });
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
@@ -29,15 +71,28 @@ const ProjectCreationForm = ({ promptReload, reloadFlag, project }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  working();
+  e.preventDefault();
+  try {
+    let res;
     if (project && project._id) {
-      fetchServer.updateProject(project._id, { ...formData });
+      res = await fetchServer.updateProject(project._id, { ...formData });
+          if (res.message && res.message.includes("Project updated")) notifySuccess();
     } else {
-      fetchServer.createProject({ ...formData });
+      res = await fetchServer.createProject({ ...formData });
+      if (res.message=="Project created") notifySuccess();
+      if (res.message!="Project created") notifyError();
     }
-    promptReload(!reloadFlag);
-  };
+    console.log("What");
+    console.log(res);
+
+  } catch {
+    notifyError();
+  }
+  promptReload(!reloadFlag);
+};
+
     return (
         <form onSubmit={handleSubmit} className={style.form}>
           <label>
@@ -58,7 +113,8 @@ const ProjectCreationForm = ({ promptReload, reloadFlag, project }) => {
               value={Array.isArray(formData.reviewerEmails) ? formData.reviewerEmails.join(', ') : ''}
               type="text" name="reviewerEmails" placeholder="email1@example.com, email2@example.com" />
           </label>
-          <button type="submit">{project ? "Edit" : "Submit"}</button>
+          <button className={style.button} type="submit">{project ? "Edit" : "Submit"}</button>
+          <ToastContainer />
         </form>
     );
 };

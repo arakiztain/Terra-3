@@ -53,7 +53,63 @@ const formSteps = [
         arrowColor: "transparent", // Oculta la flecha
       },
     },
-  }
+  },
+  {
+    target: "#name",
+    content: "Here you can name your issue",
+    disableBeacon: true,
+  },
+  {
+    target: "#requestType",
+    content: "Use this field to explain what kind of problem you are finding. Copy revisions are for text, New item for additions, design issues and requested changes are self-explanatory, while bugfixes are for technical problems!",
+    disableBeacon: true,
+  },
+  {
+    target: "#browser",
+    content: "This field is for the browser you are finding the problem with",
+    disableBeacon: true,
+  },
+  {
+    target: "#device",
+    content: "This field is for the device you are finding the problem with",
+    disableBeacon: true,
+  },
+  {
+    target: "#description",
+    content: "The request body! Tell us as much as you can about what you want.",
+    disableBeacon: true,
+  },
+    {
+    target: "#pageUrl",
+    content: "Here you can point us to the specific URL you want to deal with",
+    disableBeacon: true,
+  },
+  {
+    target: "#screenshot",
+    content: "And even add a screenshot of the problem!",
+    disableBeacon: true,
+  },
+  {
+    target: "#buttonContainer1",
+    content: "Finally, send the issues with these two buttons, the first one will return you to the issues page,",
+    disableBeacon: true,
+  },
+  {
+    target: "#buttonContainer2",
+    content: "While the second one will clear the form to send another issue.",
+    disableBeacon: true,
+  },
+  {
+    target: "body",
+    content: "Thanks for your attention! Click the button again anytime to get an explanation of the form fields",
+    disableBeacon: true,
+    placement: "center", // Centra el tooltip en la pantalla
+    styles: {
+      options: {
+        arrowColor: "transparent", // Oculta la flecha
+      },
+    },
+  },
 ]
 const tourFork = () =>{
   if(document.querySelector('#lettering')==null){
