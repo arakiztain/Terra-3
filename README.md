@@ -24,6 +24,9 @@
   - Gestión centralizada de errores.
 
 ---
+## 🖼️ Previsualización
+
+![Vista previa de Terra Ripple](./client/src/assets/preview.png)
 
 ## 🖥️ Tecnologías utilizadas
 
