@@ -1,25 +1,36 @@
 .container {
+  min-height: 100vh;
+  background-color: #0F0F0F;
+  color: #FFFFFF;
+  font-family: "UncutSans", sans-serif;
   padding: 40px;
-  font-family: Arial, sans-serif;
+  padding-top: 100px;
   max-width: 800px;
   margin: 0 auto;
-  margin-top: 50px;
 }
 
 .title {
   text-align: center;
-  margin-bottom: 30px;
-  color: white;
+  margin-bottom: 40px;
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #3D9DD8;
 }
 
-/* Estilos para el acordeón */
+.subtitle {
+  font-size: 1.3rem;
+  color: #7CE55E;
+  margin-top: 10px;
+}
+
 .accordion {
-  border-top: 1px solid #444;
-  margin-top: 1rem;
+  border-top: 1px solid #333333;
+  margin-top: 2rem;
 }
 
 .item {
-  border-bottom: 1px solid #444;
+  border-bottom: 1px solid #333333;
 }
 
 .itemBtn {
@@ -29,15 +40,34 @@
   width: 100%;
   margin: 0;
   padding: 1rem;
-  font-size: 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
   text-align: left;
-  /* color: #F78BD8; */
   background-color: transparent;
   border: none;
+  color: #FFFFFF;
+  transition: all 0.2s ease;
+}
+
+.itemBtn:nth-child(4n+1) {
+  color: #FFFFFF;
+}
+
+.itemBtn:nth-child(4n+2) {
+  color: #F78BD8;
+}
+
+.itemBtn:nth-child(4n+3) {
+  color: #FFB41D;
+}
+
+.itemBtn:nth-child(4n+4) {
+  color: #3D9DD8;
 }
 
 .itemBtn:hover {
   background-color: rgba(255, 255, 255, 0.05);
+  transform: translateX(5px);
 }
 
 .itemBtnExpanded {
@@ -49,16 +79,55 @@
 }
 
 .itemPanel {
-  padding: 1rem;
-  color: #ccc;
+  padding: 1.5rem;
+  color: #FFFFFF;
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
 .chevron {
   margin-left: auto;
   transition: transform 0.25s cubic-bezier(0, 0, 0, 1);
-  filter: invert(1); /* Para que el icono se vea en blanco */
+  filter: invert(1);
+  width: 16px;
+  height: 16px;
 }
 
 .itemBtnExpanded .chevron {
   transform: rotate(180deg);
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 60px;
+  /* padding-bottom: 30px; */
+}
+
+.icon {
+  height: 40px;
+  object-fit: contain;
+}
+
+.icon:hover {
+  transform: scale(1.2);
+  transition: transform 0.3s ease;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+    padding-top: 80px;
+  }
+  
+  .title {
+    font-size: 2rem;
+    color: #3D9DD8;
+  }
+  
+  .itemPanel {
+    padding: 1rem;
+  }
 }
