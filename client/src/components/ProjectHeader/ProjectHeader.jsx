@@ -19,7 +19,7 @@ const ProjectHeader = ({ newIssueHandler, siteUrl }) => {
                 <button className={styles.menuButton}>Menu</button>
                 {menuOpen && <div className={styles.menuDropdown}>
                     <a className={styles.menuProfile} href="">Profile</a>
-                    <a className={styles.menuRecord} href="">Record</a>
+                    <a className={styles.menuFaq} onClick={() => handleNavigation('/faq')}>FAQ</a>
                     <a className={styles.menuContact} href="">Contact</a>
                     <a className={styles.menuGuide} onClick={() => handleNavigation('/guide')}>Guide</a>
                     <a className={styles.menuTerrahq} href="">Terra hq</a>
